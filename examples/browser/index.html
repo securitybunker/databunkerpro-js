@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databunkerpro API Browser Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .result {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Databunkerpro API Browser Demo</h1>
+    
+    <div class="container">
+        <h2>Configuration</h2>
+        <div>
+            <label for="apiUrl">API URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:3000" style="width: 250px;">
+        </div>
+        <div>
+            <label for="apiToken">API Token:</label>
+            <input type="text" id="apiToken" value="your-root-token" style="width: 250px;">
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>User Management</h2>
+        <button onclick="createUser()">Create User</button>
+        <button onclick="getUser()">Get User</button>
+        <button onclick="updateUser()">Update User</button>
+        <div id="userResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>App Data Management</h2>
+        <button onclick="storeAppData()">Store App Data</button>
+        <button onclick="getAppData()">Get App Data</button>
+        <button onclick="listApps()">List Apps</button>
+        <div id="appResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>Group Management</h2>
+        <button onclick="createGroup()">Create Group</button>
+        <button onclick="listGroups()">List Groups</button>
+        <div id="groupResult" class="result"></div>
+    </div>
+
+    <script src="../../src/databunkerpro-api.js"></script>
+    <script>
+        // Initialize API client
+        let api;
+        
+        function updateApiClient() {
+            const url = document.getElementById('apiUrl').value;
+            const token = document.getElementById('apiToken').value;
+            api = new DatabunkerproAPI(url, token);
+        }
+
+        // Update API client when configuration changes
+        document.getElementById('apiUrl').addEventListener('change', updateApiClient);
+        document.getElementById('apiToken').addEventListener('change', updateApiClient);
+        
+        // Initial API client setup
+        updateApiClient();
+
+        function displayResult(elementId, data) {
+            const element = document.getElementById(elementId);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+
+        function displayError(elementId, error) {
+            const element = document.getElementById(elementId);
+            element.textContent = `Error: ${error.message}`;
+            element.style.color = 'red';
+        }
+
+        async function createUser() {
+            try {
+                const user = await api.createUser({
+                    login: 'johndoe',
+                    email: 'john@example.com',
+                    name: 'John Doe'
+                });
+                displayResult('userResult', user);
+            } catch (error) {
+                displayError('userResult', error);
+            }
+        }
+
+        async function getUser() {
+            try {
+                const user = await api.getUser('login', 'johndoe');
+                displayResult('userResult', user);
+            } catch (error) {
+                displayError('userResult', error);
+            }
+        }
+
+        async function updateUser() {
+            try {
+                const user = await api.changeUser('login', 'johndoe', {
+                    name: 'John M. Doe',
+                    title: 'Senior Developer'
+                });
+                displayResult('userResult', user);
+            } catch (error) {
+                displayError('userResult', error);
+            }
+        }
+
+        async function storeAppData() {
+            try {
+                const data = await api.createAppData('login', 'johndoe', 'myapp', {
+                    preferences: {
+                        theme: 'dark',
+                        notifications: true
+                    }
+                });
+                displayResult('appResult', data);
+            } catch (error) {
+                displayError('appResult', error);
+            }
+        }
+
+        async function getAppData() {
+            try {
+                const data = await api.getAppData('login', 'johndoe', 'myapp');
+                displayResult('appResult', data);
+            } catch (error) {
+                displayError('appResult', error);
+            }
+        }
+
+        async function listApps() {
+            try {
+                const apps = await api.listAppNames();
+                displayResult('appResult', apps);
+            } catch (error) {
+                displayError('appResult', error);
+            }
+        }
+
+        async function createGroup() {
+            try {
+                const group = await api.createGroup('engineering', 'Engineering Team');
+                displayResult('groupResult', group);
+            } catch (error) {
+                displayError('groupResult', error);
+            }
+        }
+
+        async function listGroups() {
+            try {
+                const groups = await api.listAllGroups();
+                displayResult('groupResult', groups);
+            } catch (error) {
+                displayError('groupResult', error);
+            }
+        }
+    </script>
+</body>
+</html>
