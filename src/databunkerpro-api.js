@@ -114,6 +114,24 @@ class DatabunkerproAPI {
   async getAuditEvent(auditeventuuid) {
     return this.makeRequest('AuditGetEvent', 'POST', { auditeventuuid });
   }
+
+  // Tenant Management
+  async createTenant(data) {
+    return this.makeRequest('TenantCreate', 'POST', data);
+  }
+
+  async getTenant(tenantid) {
+    return this.makeRequest('TenantGet', 'POST', { tenantid });
+  }
+
+  async renameTenant(tenantid, tenantname) {
+    return this.makeRequest('TenantRename', 'POST', { tenantid, tenantname });
+  }
+
+  async listTenants() {
+    return this.makeRequest('TenantListTenants', 'POST');
+  }
+
 }
 
 // Export for Node.js and browser environments
