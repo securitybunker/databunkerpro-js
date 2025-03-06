@@ -81,10 +81,20 @@
         <div id="groupResult" class="result"></div>
     </div>
 
+    <div class="container">
+        <h2>Tenant Management</h2>
+        <button onclick="createTenant()">Create Tenant</button>
+        <button onclick="getTenant()">Get Tenant</button>
+        <button onclick="renameTenant()">Rename Tenant</button>
+        <button onclick="listTenants()">List Tenants</button>
+        <div id="tenantResult" class="result"></div>
+    </div>
+    
     <script src="../../src/databunkerpro-api.js"></script>
     <script>
         // Initialize API client
         let api;
+        let currentTenantId = null;
         
         function updateApiClient() {
             const url = document.getElementById('apiUrl').value;
@@ -191,6 +201,55 @@
                 displayResult('groupResult', groups);
             } catch (error) {
                 displayError('groupResult', error);
+            }
+        }
+
+        
+        // Tenant Management Functions
+        async function createTenant() {
+            try {
+                const tenant = await api.createTenant({
+                    tenantname: 'acme-corp',
+                    email: 'admin@acme-corp.com',
+                    tenantorg: 'ACME Corporation'
+                });
+                currentTenantId = tenant.tenantid;
+                displayResult('tenantResult', tenant);
+            } catch (error) {
+                displayError('tenantResult', error);
+            }
+        }
+
+        async function getTenant() {
+            try {
+                if (!currentTenantId) {
+                    throw new Error('Please create a tenant first');
+                }
+                const tenant = await api.getTenant(currentTenantId);
+                displayResult('tenantResult', tenant);
+            } catch (error) {
+                displayError('tenantResult', error);
+            }
+        }
+
+        async function renameTenant() {
+            try {
+                if (!currentTenantId) {
+                    throw new Error('Please create a tenant first');
+                }
+                const tenant = await api.renameTenant(currentTenantId, 'acme-corp-renamed');
+                displayResult('tenantResult', tenant);
+            } catch (error) {
+                displayError('tenantResult', error);
+            }
+        }
+
+        async function listTenants() {
+            try {
+                const tenants = await api.listTenants();
+                displayResult('tenantResult', tenants);
+            } catch (error) {
+                displayError('tenantResult', error);
             }
         }
     </script>
