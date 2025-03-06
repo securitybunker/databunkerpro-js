@@ -2,8 +2,8 @@ const DatabunkerproAPI = require('../../lib/databunkerpro-api');
 
 // Initialize the API client
 const api = new DatabunkerproAPI(
-  process.env.DATABUNKER_URL || 'http://localhost:3000',
-  process.env.DATABUNKER_TOKEN || 'your-root-token'
+  process.env.DATABUNKERPRO_URL || 'http://localhost:3000',
+  process.env.DATABUNKERPRO_TOKEN || 'your-root-token'
 );
 
 async function basicUsageDemo() {
@@ -40,7 +40,30 @@ async function basicUsageDemo() {
     });
     console.log('Updated user:', updatedUser);
 
-    // 2. App Data Management
+    // 2. Tenant Management
+    console.log('\n=== Tenant Management ===');
+    
+    // Create a new tenant
+    const newTenant = await api.createTenant({
+      tenantname: 'acme-corp',
+      email: 'admin@acme-corp.com',
+      tenantorg: 'ACME Corporation'
+    });
+    console.log('Created tenant:', newTenant);
+    
+    // Get tenant information
+    const tenantInfo = await api.getTenant(newTenant.tenantid);
+    console.log('Retrieved tenant:', tenantInfo);
+
+    // Rename tenant
+    const renamedTenant = await api.renameTenant(newTenant.tenantid, 'acme-corp-new');
+    console.log('Renamed tenant:', renamedTenant);
+
+    // List all tenants
+    const tenants = await api.listTenants();
+    console.log('All tenants:', tenants);
+
+    // 3. App Data Management
     console.log('\n=== App Data Management ===');
     
     // Store app-specific data
@@ -66,7 +89,7 @@ async function basicUsageDemo() {
     const apps = await api.listAppNames();
     console.log('Available apps:', apps);
 
-    // 3. Group Management
+    // 4. Group Management
     console.log('\n=== Group Management ===');
     
     // Create a new group
@@ -86,7 +109,7 @@ async function basicUsageDemo() {
     const groups = await api.listAllGroups();
     console.log('All groups:', groups);
 
-    // 4. Agreement Management
+    // 5. Agreement Management
     console.log('\n=== Agreement Management ===');
     
     // Accept privacy policy agreement
@@ -103,7 +126,7 @@ async function basicUsageDemo() {
     const userAgreements = await api.listUserAgreements('login', 'johndoe');
     console.log('User agreements:', userAgreements);
 
-    // 5. Audit & Security
+    // 6. Audit & Security
     console.log('\n=== Audit & Security ===');
     
     // Create access token
@@ -120,7 +143,7 @@ async function basicUsageDemo() {
       console.log('Audit event details:', eventDetails);
     }
 
-    // 6. Cleanup (Optional - uncomment if needed)
+    // 7. Cleanup (Optional - uncomment if needed)
     // console.log('\n=== Cleanup ===');
     // const deleteResult = await api.deleteUser('login', 'johndoe');
     // console.log('User deleted:', deleteResult);
