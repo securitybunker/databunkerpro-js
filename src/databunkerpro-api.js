@@ -37,6 +37,7 @@ class DatabunkerproAPI {
 
     // Handle groupname/groupid
     if (options.groupname) {
+      // Check if groupname is actually a numeric id
       if (Number.isInteger(Number(options.groupname))) {
         data.groupid = options.groupname;
       } else {
@@ -48,6 +49,7 @@ class DatabunkerproAPI {
 
     // Handle rolename/roleid
     if (options.rolename) {
+      // Check if rolename is actually a numeric id
       if (Number.isInteger(Number(options.rolename))) {
         data.roleid = options.rolename;
       } else {
