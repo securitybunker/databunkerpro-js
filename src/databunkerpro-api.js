@@ -32,8 +32,42 @@ class DatabunkerproAPI {
   }
 
   // User Management
-  async createUser(profile) {
-    return this.makeRequest('UserCreate', 'POST', { profile });
+  async createUser(profile, options = {}) {
+    const data = { profile };
+
+    // Handle groupname/groupid
+    if (options.groupname) {
+      // Check if groupname is actually a numeric id
+      if (Number.isInteger(Number(options.groupname))) {
+        data.groupid = options.groupname;
+      } else {
+        data.groupname = options.groupname;
+      }
+    } else if (options.groupid) {
+      data.groupid = options.groupid;
+    }
+
+    // Handle rolename/roleid
+    if (options.rolename) {
+      // Check if rolename is actually a numeric id
+      if (Number.isInteger(Number(options.rolename))) {
+        data.roleid = options.rolename;
+      } else {
+        data.rolename = options.rolename;
+      }
+    } else if (options.roleid) {
+      data.roleid = options.roleid;
+    }
+
+    // Handle time parameters
+    if (options.slidingtime) {
+      data.slidingtime = options.slidingtime;
+    }
+    if (options.expirationtime) {
+      data.expirationtime = options.expirationtime;
+    }
+
+    return this.makeRequest('UserCreate', 'POST', data);
   }
 
   async getUser(mode, identity) {

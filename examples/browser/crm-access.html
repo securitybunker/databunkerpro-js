@@ -167,25 +167,21 @@ return groupMembership;</textarea>
 
     <div class="step" id="step6">
         <h2>Step 6: Create lead user</h2>
-        <div class="description">Create a lead user and add them to the leads group.</div>
+        <div class="description">Create a lead user and automatically add them to the leads group with lead role.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code6">// First create the lead user
+            <textarea class="code-editor" id="code6">// Create lead user with group and role in one command
 const leadUser = await api.createUser({
     login: 'lead1',
     email: 'lead1@example.com',
     name: 'Lead User',
     phone: '+1234567890'
+}, {
+    groupname: 'leads-group',  // from step 1
+    rolename: 'lead',
+    expirationtime: '90d'  // Optional: expire after 90 days
 });
 
-// Then add them to the leads group
-const groupMembership = await api.addUserToGroup(
-   'leads-group',
-    'login',
-    'lead1',
-    'lead'
-);
-
-return { leadUser, groupMembership };</textarea>
+return leadUser;</textarea>
             <button onclick="executeStep(6)">Run</button>
             <div class="result" id="result6"></div>
         </div>
