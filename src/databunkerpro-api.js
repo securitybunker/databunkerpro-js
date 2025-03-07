@@ -37,7 +37,6 @@ class DatabunkerproAPI {
 
     // Handle groupname/groupid
     if (options.groupname) {
-      // Check if groupname is actually a numeric id
       if (Number.isInteger(Number(options.groupname))) {
         data.groupid = options.groupname;
       } else {
@@ -49,7 +48,6 @@ class DatabunkerproAPI {
 
     // Handle rolename/roleid
     if (options.rolename) {
-      // Check if rolename is actually a numeric id
       if (Number.isInteger(Number(options.rolename))) {
         data.roleid = options.rolename;
       } else {
@@ -145,7 +143,7 @@ class DatabunkerproAPI {
         data.rolename = rolename;
       }
     }
-
+    
     return this.makeRequest('GroupAddUser', 'POST', data);
   }
 
@@ -196,6 +194,33 @@ class DatabunkerproAPI {
 
   async listPolicies() {
     return this.makeRequest('PolicyListAllPolicies', 'POST');
+  }
+
+  // Bulk Operations
+  async bulkListUnlock() {
+    return this.makeRequest('BulkListUnlock', 'POST');
+  }
+
+  async bulkListUsers(unlockuuid) {
+    return this.makeRequest('BulkListUsers', 'POST', { unlockuuid });
+  }
+
+  async bulkListGroupUsers(unlockuuid, groupname) {
+    const data = { unlockuuid };
+    if (Number.isInteger(Number(groupname))) {
+      data.groupid = groupname;
+    } else {
+      data.groupname = groupname;
+    }    
+    return this.makeRequest('BulkListGroupUsers', 'POST', data);
+  }
+
+  async bulkListUserRequests(unlockuuid) {
+    return this.makeRequest('BulkListUserRequests', 'POST', { unlockuuid });
+  }
+
+  async bulkListAuditEvents(unlockuuid) {
+    return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid });
   }
 }
 

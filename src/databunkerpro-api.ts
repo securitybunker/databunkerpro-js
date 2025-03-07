@@ -213,6 +213,35 @@ export class DatabunkerproAPI {
   async listPolicies(): Promise<any> {
     return this.makeRequest('PolicyListAllPolicies', 'POST');
   }
+
+  // Bulk Operations
+  async bulkListUnlock(): Promise<any> {
+    return this.makeRequest('BulkListUnlock', 'POST');
+  }
+
+  async bulkListUsers(unlockuuid: string): Promise<any> {
+    return this.makeRequest('BulkListUsers', 'POST', { unlockuuid });
+  }
+
+  async bulkListGroupUsers(unlockuuid: string, groupname: string | number): Promise<any> {
+    const data: any = { unlockuuid };
+    
+    if (Number.isInteger(Number(groupname))) {
+      data.groupid = groupname;
+    } else {
+      data.groupname = groupname;
+    }
+    
+    return this.makeRequest('BulkListGroupUsers', 'POST', data);
+  }
+
+  async bulkListUserRequests(unlockuuid: string): Promise<any> {
+    return this.makeRequest('BulkListUserRequests', 'POST', { unlockuuid });
+  }
+
+  async bulkListAuditEvents(unlockuuid: string): Promise<any> {
+    return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid });
+  }
 }
 
 // Export for Node.js and browser environments

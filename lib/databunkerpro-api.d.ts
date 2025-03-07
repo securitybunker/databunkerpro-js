@@ -36,5 +36,10 @@ export declare class DatabunkerproAPI {
     linkPolicy(rolename: string, policyname: string): Promise<any>;
     createPolicy(data: Record<string, any>): Promise<any>;
     listPolicies(): Promise<any>;
+    bulkListUnlock(): Promise<any>;
+    bulkListUsers(unlockuuid: string): Promise<any>;
+    bulkListGroupUsers(unlockuuid: string, groupname: string | number): Promise<any>;
+    bulkListUserRequests(unlockuuid: string): Promise<any>;
+    bulkListAuditEvents(unlockuuid: string): Promise<any>;
 }
 export default DatabunkerproAPI;

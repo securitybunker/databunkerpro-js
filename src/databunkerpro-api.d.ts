@@ -53,4 +53,12 @@ declare class DatabunkerproAPI {
   // Policy Management
   createPolicy(data: object): Promise<any>;
   listPolicies(): Promise<any>;
+
+  // Bulk Operations
+
+  bulkListUnlock(): Promise<any>;
+  bulkListUsers(unlockuuid: string): Promise<any>;
+  bulkListGroupUsers(unlockuuid: string, groupname: string | number): Promise<any>;
+  bulkListUserRequests(unlockuuid: string): Promise<any>;
+  bulkListAuditEvents(unlockuuid: string): Promise<any>;
 } 
