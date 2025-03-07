@@ -5,7 +5,14 @@ declare class DatabunkerproAPI {
   private makeRequest(endpoint: string, method?: string, data?: any): Promise<any>;
 
   // User Management
-  createUser(profile: object): Promise<any>;
+  createUser(profile: object, options?: {
+    groupname?: string | number;
+    groupid?: number;
+    rolename?: string | number;
+    roleid?: number;
+    slidingtime?: string;
+    expirationtime?: string;
+  }): Promise<any>;
   getUser(mode: string, identity: string): Promise<any>;
   deleteUser(mode: string, identity: string): Promise<any>;
   changeUser(mode: string, identity: string, profile: object): Promise<any>;
@@ -24,7 +31,7 @@ declare class DatabunkerproAPI {
   createGroup(groupname: string, groupdesc?: string): Promise<any>;
   getGroup(groupid: string | number): Promise<any>;
   listAllGroups(): Promise<any>;
-  addUserToGroup(groupid: string | number, mode: string, identity: string, rolename?: string): Promise<any>;
+  addUserToGroup(groupname: string | number, mode: string, identity: string, rolename?: string | number): Promise<any>;
 
   // Token Management
   createXToken(mode: string, identity: string): Promise<any>;
@@ -32,4 +39,18 @@ declare class DatabunkerproAPI {
   // Audit Management
   listUserEvents(mode: string, identity: string): Promise<any>;
   getAuditEvent(auditeventuuid: string): Promise<any>;
+
+  // Tenant Management
+  createTenant(data: object): Promise<any>;
+  getTenant(tenantid: string | number): Promise<any>;
+  renameTenant(tenantid: string | number, tenantname: string): Promise<any>;
+  listTenants(): Promise<any>;
+
+  // Role Management
+  createRole(rolename: string): Promise<any>;
+  linkPolicy(rolename: string, policyname: string): Promise<any>;
+
+  // Policy Management
+  createPolicy(data: object): Promise<any>;
+  listPolicies(): Promise<any>;
 } 

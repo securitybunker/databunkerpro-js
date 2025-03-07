@@ -1,0 +1,33 @@
+{
+  "name": "databunkerpro-js",
+  "version": "1.0.0",
+  "description": "JavaScript client library for Databunkerpro API",
+  "main": "lib/databunkerpro-api.js",
+  "types": "lib/databunkerpro-api.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "databunkerpro",
+    "privacy",
+    "gdpr",
+    "data-protection"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/securitybunker/databunkerpro-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/securitybunker/databunkerpro-js/issues"
+  },
+  "homepage": "https://github.com/securitybunker/databunkerpro-js#readme",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  }
+}
