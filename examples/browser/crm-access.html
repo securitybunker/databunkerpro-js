@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databunkerpro API Step-by-Step Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .step {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .code-container {
+            position: relative;
+        }
+        .code-editor {
+            width: 100%;
+            height: 150px;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        .result {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            min-height: 50px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .config {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .config input {
+            width: 300px;
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Databunkerpro API Step-by-Step Demo</h1>
+    
+    <div class="config">
+        <h2>Configuration</h2>
+        <div>
+            <label for="apiUrl">API URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:3000">
+        </div>
+        <div>
+            <label for="apiToken">API Token:</label>
+            <input type="text" id="apiToken" value="your-root-token">
+        </div>
+    </div>
+
+    <div class="step" id="step1">
+        <h2>Step 1: Create a group of leads</h2>
+        <div class="description">Create a new group that will contain all lead users.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code1">const group = await api.createGroup('leads-group', 'Group containing all leads');
+return group;</textarea>
+            <button onclick="executeStep(1)">Run</button>
+            <div class="result" id="result1"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <h2>Step 2: Create sales role</h2>
+        <div class="description">Create a role for sales team members.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code2">const salesRole = await api.createRole('sales');
+return salesRole;</textarea>
+            <button onclick="executeStep(2)">Run</button>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h2>Step 3: Create lead role</h2>
+        <div class="description">Create a role for lead users.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code3">const leadRole = await api.createRole('lead');
+return leadRole;</textarea>
+            <button onclick="executeStep(3)">Run</button>
+            <div class="result" id="result3"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h2>Step 4: Create sales user</h2>
+        <div class="description">Create a user account for a sales team member.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code4">const salesUser = await api.createUser({
+    login: 'sales1',
+    email: 'sales1@company.com',
+    name: 'Sales User',
+    department: 'Sales'
+});
+return salesUser;</textarea>
+            <button onclick="executeStep(4)">Run</button>
+            <div class="result" id="result4"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step5">
+        <h2>Step 5: Add sales user to leads group</h2>
+        <div class="description">Add the sales user to the leads group with sales role.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code5">const groupMembership = await api.addUserToGroup(
+    'leads-group',  // from step 1
+    'login',
+    'sales1',
+    'sales'  // role name
+);
+return groupMembership;</textarea>
+            <button onclick="executeStep(5)">Run</button>
+            <div class="result" id="result5"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step6">
+        <h2>Step 6: Create lead user</h2>
+        <div class="description">Create a lead user and add them to the leads group.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code6">// First create the lead user
+const leadUser = await api.createUser({
+    login: 'lead1',
+    email: 'lead1@example.com',
+    name: 'Lead User',
+    phone: '+1234567890'
+});
+
+// Then add them to the leads group
+const groupMembership = await api.addUserToGroup(
+   'leads-group',
+    'login',
+    'lead1',
+    'lead'
+);
+
+return { leadUser, groupMembership };</textarea>
+            <button onclick="executeStep(6)">Run</button>
+            <div class="result" id="result6"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step7">
+        <h2>Step 7: Create sales user policy</h2>
+        <div class="description">Create a policy that allows sales users to access lead information.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code7">const policy = await api.createPolicy({
+    policyname: 'SalesLeadAccess',
+    policy: {
+        Effect: 'Allow',
+        Principal: { Role: 'sales' },
+        Action: ['UserGet', 'UserChange'],
+        Resource: ['${target_group_members:role/lead}.profile.email'],
+        Condition: {
+            StringEquals: {
+                '${user_group_id}': '${target_group_id}'
+            }
+        }
+    }
+});
+
+// Link policy to sales role
+const linkResult = await api.linkPolicy('sales', 'SalesLeadAccess');
+return { policy, linkResult };</textarea>
+            <button onclick="executeStep(7)">Run</button>
+            <div class="result" id="result7"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step8">
+        <h2>Step 8: Create sales user access token</h2>
+        <div class="description">Create and save an access token for the sales user.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code8">const xtoken = await api.createXToken('login', 'sales1');
+window.stateData.salesToken = xtoken.xtoken;
+return xtoken;</textarea>
+            <button onclick="executeStep(8)">Run</button>
+            <div class="result" id="result8"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step9">
+        <h2>Step 9: Read lead user with sales token</h2>
+        <div class="description">Use the sales user's token to read lead user information.</div>
+        <div class="description">✱ Access is granted only to email address.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code9">// Switch to sales user token
+api.xBunkerToken = window.stateData.salesToken;
+
+const leadInfo = await api.getUser('login', 'lead1');
+return leadInfo;</textarea>
+            <button onclick="executeStep(9)">Run</button>
+            <div class="result" id="result9"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step10">
+        <h2>Step 10: Reset access token</h2>
+        <div class="description">Reset the API token back to the original admin token.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code10">// Reset to original token
+api.xBunkerToken = document.getElementById('apiToken').value;
+return { message: 'Token reset to original value' };</textarea>
+            <button onclick="executeStep(10)">Run</button>
+            <div class="result" id="result10"></div>
+        </div>
+    </div>
+
+    <script src="../../src/databunkerpro-api.js"></script>
+    <script>
+        // Initialize API client
+        let api;
+        // State data to store values between steps
+        window.stateData = {
+            groupId: null,
+            salesToken: null
+        };
+        
+        function updateApiClient() {
+            const url = document.getElementById('apiUrl').value;
+            const token = document.getElementById('apiToken').value;
+            api = new DatabunkerAPI(url, token);
+        }
+
+        document.getElementById('apiUrl').addEventListener('change', updateApiClient);
+        document.getElementById('apiToken').addEventListener('change', updateApiClient);
+        
+        // Initial setup
+        updateApiClient();
+
+        function displayResult(stepNumber, data) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.style.color = 'black';
+        }
+
+        function displayError(stepNumber, error) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = `Error: ${error.message}`;
+            element.style.color = 'red';
+        }
+
+        async function executeStep(stepNumber) {
+            try {
+                const code = document.getElementById(`code${stepNumber}`).value;
+                const result = await eval(`(async () => { ${code} })()`);
+                
+                // Store important results in state
+                if (stepNumber === 1) {
+                    window.stateData.groupId = result.groupid;
+                }
+                
+                displayResult(stepNumber, result);
+            } catch (error) {
+                displayError(stepNumber, error);
+            }
+        }
+    </script>
+</body>
+</html>

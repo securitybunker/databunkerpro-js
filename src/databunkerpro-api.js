@@ -93,11 +93,25 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupListAllGroups', 'POST');
   }
 
-  async addUserToGroup(groupid, mode, identity, rolename = null) {
-    const data = { groupid, mode, identity };
-    if (rolename) {
-      data.rolename = rolename;
+  async addUserToGroup(groupname, mode, identity, rolename = null) {
+    const data = { mode, identity };
+ 
+    // Check if groupname is an integer (group ID) or string (group name)
+    if (Number.isInteger(Number(groupname))) {
+      data.groupid = groupname;
+    } else {
+      data.groupname = groupname;
     }
+
+    if (rolename) {
+      // Check if rolename is an integer (role ID) or string (role name)
+      if (Number.isInteger(Number(rolename))) {
+        data.roleid = rolename;
+      } else {
+        data.rolename = rolename;
+      }
+    }
+
     return this.makeRequest('GroupAddUser', 'POST', data);
   }
 
@@ -132,6 +146,23 @@ class DatabunkerproAPI {
     return this.makeRequest('TenantListTenants', 'POST');
   }
 
+  // Role Management
+  async createRole(rolename) {
+    return this.makeRequest('RoleCreate', 'POST', { rolename });
+  }
+
+  async linkPolicy(rolename, policyname) {
+    return this.makeRequest('RoleLinkPolicy', 'POST', { rolename, policyname });
+  }
+
+  // Policy Management
+  async createPolicy(data) {
+    return this.makeRequest('PolicyCreate', 'POST', data);
+  }
+
+  async listPolicies() {
+    return this.makeRequest('PolicyListAllPolicies', 'POST');
+  }
 }
 
 // Export for Node.js and browser environments
