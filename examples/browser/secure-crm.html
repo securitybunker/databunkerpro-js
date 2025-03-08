@@ -76,10 +76,21 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .config .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .config label {
+            width: 100px;
+            display: inline-block;
+            text-align: left;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
         .config input {
             width: 300px;
             padding: 8px;
-            margin: 5px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
@@ -103,13 +114,13 @@
     
     <div class="config">
         <h2>Configuration</h2>
-        <div>
+        <div class="input-group">
             <label for="apiUrl">API URL:</label>
-            <input type="text" id="apiUrl" placeholder="Enter Databunkerpro API URL" value="http://localhost:3000">
+            <input type="text" id="apiUrl" value="http://localhost:3000">
         </div>
-        <div>
+        <div class="input-group">
             <label for="apiToken">API Token:</label>
-            <input type="text" id="apiToken" placeholder="Enter API key">
+            <input type="text" id="apiToken" value="your-root-token">
         </div>
     </div>
 
