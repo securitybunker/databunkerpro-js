@@ -10,12 +10,28 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-        }
-        .container {
             background-color: #f5f5f5;
+        }
+        .config {
+            background-color: white;
             padding: 20px;
             border-radius: 5px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .config input {
+            width: 300px;
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .result {
             background-color: #fff;
@@ -44,17 +60,17 @@
     </style>
 </head>
 <body>
-    <h1>Databunkerpro API Browser Demo</h1>
+    <h1>Databunkerpro API Sample Demo</h1>
     
-    <div class="container">
+    <div class="config">
         <h2>Configuration</h2>
         <div>
             <label for="apiUrl">API URL:</label>
-            <input type="text" id="apiUrl" value="http://localhost:3000" style="width: 250px;">
+            <input type="text" id="apiUrl" placeholder="Enter Databunkerpro API URL" value="http://localhost:3000">
         </div>
         <div>
             <label for="apiToken">API Token:</label>
-            <input type="text" id="apiToken" value="your-root-token" style="width: 250px;">
+            <input type="text" id="apiToken" placeholder="Enter API key">
         </div>
     </div>
 
@@ -112,6 +128,7 @@
         function displayResult(elementId, data) {
             const element = document.getElementById(elementId);
             element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.style.color = 'black';
         }
 
         function displayError(elementId, error) {
@@ -157,6 +174,7 @@
         async function storeAppData() {
             try {
                 const data = await api.createAppData('login', 'johndoe', 'myapp', {
+                    msg: 'Hello, world!',
                     preferences: {
                         theme: 'dark',
                         notifications: true
