@@ -88,15 +88,28 @@
 <body>
     <h1>Databunkerpro API Step-by-Step Demo</h1>
     
+    <div class="description" style="margin: 20px 0; padding: 20px; background-color: #f8f9fa; border-radius: 5px; border-left: 5px solid #4CAF50;">
+        <h3 style="margin-top: 0; color: #2E7D32;">Secure CRM Backend Example</h3>
+        <p>This example demonstrates how to build a secure backend for a CRM system using Databunkerpro. It showcases:</p>
+        <ul>
+            <li>Creating and managing lead users with automatic group assignment</li>
+            <li>Setting up sales team members with appropriate roles</li>
+            <li>Implementing fine-grained access control policies</li>
+            <li>Granting sales users masked/limited access to lead profiles</li>
+            <li>Managing bulk operations for group member listing</li>
+        </ul>
+        <p>The example follows security best practices and GDPR compliance by ensuring that sales team members can only access necessary lead information while maintaining data privacy.</p>
+    </div>
+    
     <div class="config">
         <h2>Configuration</h2>
         <div>
             <label for="apiUrl">API URL:</label>
-            <input type="text" id="apiUrl" value="http://localhost:3000">
+            <input type="text" id="apiUrl" placeholder="Enter Databunkerpro API URL" value="http://localhost:3000">
         </div>
         <div>
             <label for="apiToken">API Token:</label>
-            <input type="text" id="apiToken" value="your-root-token">
+            <input type="text" id="apiToken" placeholder="Enter API key">
         </div>
     </div>
 
@@ -216,6 +229,7 @@ return groupUsers;</textarea>
     <div class="step" id="step7">
         <h2>Step 9: Create sales user policy</h2>
         <div class="description">Create a policy that allows sales users to access lead information.</div>
+        <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code7">const policy = await api.createPolicy({
     policyname: 'SalesLeadAccess',
@@ -255,7 +269,7 @@ return xtoken;</textarea>
     <div class="step" id="step9">
         <h2>Step 11: Read lead user with sales token</h2>
         <div class="description">Use the sales user's token to read lead user information.</div>
-        <div class="description">✱ Access is granted only to email address.</div>
+        <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code9">// Switch to sales user token
 api.xBunkerToken = window.stateData.salesToken;
