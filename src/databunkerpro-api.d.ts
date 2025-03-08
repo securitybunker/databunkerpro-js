@@ -11,7 +11,7 @@ declare class DatabunkerproAPI {
     rolename?: string | number;
     roleid?: number;
     slidingtime?: string;
-    expirationtime?: string;
+    finaltime?: string;
   }): Promise<any>;
   getUser(mode: string, identity: string): Promise<any>;
   deleteUser(mode: string, identity: string): Promise<any>;

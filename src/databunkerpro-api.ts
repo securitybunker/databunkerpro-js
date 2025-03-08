@@ -12,7 +12,7 @@ interface UserOptions {
   rolename?: string | number;
   roleid?: number;
   slidingtime?: string;
-  expirationtime?: string;
+  finaltime?: string;
 }
 
 export class DatabunkerproAPI {
@@ -81,8 +81,8 @@ export class DatabunkerproAPI {
     if (options.slidingtime) {
       data.slidingtime = options.slidingtime;
     }
-    if (options.expirationtime) {
-      data.expirationtime = options.expirationtime;
+    if (options.finaltime) {
+      data.finaltime = options.finaltime;
     }
 
     return this.makeRequest('UserCreate', 'POST', data);

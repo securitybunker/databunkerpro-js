@@ -63,8 +63,8 @@ class DatabunkerproAPI {
     if (options.slidingtime) {
       data.slidingtime = options.slidingtime;
     }
-    if (options.expirationtime) {
-      data.expirationtime = options.expirationtime;
+    if (options.finaltime) {
+      data.finaltime = options.finaltime;
     }
 
     return this.makeRequest('UserCreate', 'POST', data);

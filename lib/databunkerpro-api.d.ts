@@ -4,7 +4,7 @@ interface UserOptions {
     rolename?: string | number;
     roleid?: number;
     slidingtime?: string;
-    expirationtime?: string;
+    finaltime?: string;
 }
 export declare class DatabunkerproAPI {
     private baseURL;
