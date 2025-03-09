@@ -279,8 +279,8 @@ const parentPolicy = await api.createPolicy({
             '${target_group_members:role/parent}.group'
         ],
         Condition: {
-            ForAnyValue:ListIntersect: {
-				"${user_group_members:role/student}": "${target_group_members:role/child}"
+            'ForAnyValue:ListIntersect': {
+                '${user_group_members:role/student}': '${target_group_members:role/child}'
 			}
         }
     }
@@ -329,27 +329,46 @@ return students;</textarea>
     </div>
 
     <div class="step" id="step10">
-        <h2>Step 10: Access Parent Information</h2>
-        <div class="description">Use the teacher's token to access parent contact information.</div>
-        <div class="description">✱ Only phone number will be accessible, other fields will be masked.</div>
+        <h2>Step 10: List family members with teacher token</h2>
+        <div class="description">Use the teacher's token to list family members.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code10">// Using teacher token from previous step
-const parentInfo = await api.getUser('login', 'parent1');
-return parentInfo;</textarea>
+            <textarea class="code-editor" id="code10">// Switch to teacher token
+api.xBunkerToken = window.stateData.teacherToken;
+
+// Get unlock UUID for bulk operations
+const bulkInit = await api.bulkListUnlock();
+const familyMembers = await api.bulkListGroupUsers(
+    bulkInit.unlockuuid,
+    'family1'
+);
+return familyMembers;</textarea>
             <button onclick="executeStep(10)">Run</button>
             <div class="result" id="result10"></div>
         </div>
     </div>
 
     <div class="step" id="step11">
-        <h2>Step 11: Reset Access Token</h2>
-        <div class="description">Reset the API token back to the original admin token.</div>
+        <h2>Step 11: Access Parent Information</h2>
+        <div class="description">Use the teacher's token to access parent contact information.</div>
+        <div class="description">✱ Only phone number will be accessible, other fields will be masked.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code11">// Reset to original token
-api.xBunkerToken = document.getElementById('apiToken').value;
-return { message: 'Token reset to original value' };</textarea>
+            <textarea class="code-editor" id="code11">// Using teacher token from previous step
+const parentInfo = await api.getUser('login', 'parent1');
+return parentInfo;</textarea>
             <button onclick="executeStep(11)">Run</button>
             <div class="result" id="result11"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step12">
+        <h2>Step 12: Reset Access Token</h2>
+        <div class="description">Reset the API token back to the original admin token.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code12">// Reset to original token
+api.xBunkerToken = document.getElementById('apiToken').value;
+return { message: 'Token reset to original value' };</textarea>
+            <button onclick="executeStep(12)">Run</button>
+            <div class="result" id="result12"></div>
         </div>
     </div>
 

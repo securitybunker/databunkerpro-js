@@ -212,38 +212,38 @@ return leadUser;</textarea>
         </div>
     </div>
 
-    <div class="step" id="step6a">
+    <div class="step" id="step7">
         <h2>Step 7: Initialize Bulk Operations</h2>
         <div class="description">Get an unlock UUID token for bulk operations.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code6a">const bulkInit = await api.bulkListUnlock();
+            <textarea class="code-editor" id="code7">const bulkInit = await api.bulkListUnlock();
 window.stateData.unlockUUID = bulkInit.unlockuuid;
 return bulkInit;</textarea>
-            <button onclick="executeStep('6a')">Run</button>
-            <div class="result" id="result6a"></div>
+            <button onclick="executeStep(7)">Run</button>
+            <div class="result" id="result7"></div>
         </div>
     </div>
 
-    <div class="step" id="step6b">
+    <div class="step" id="step8">
         <h2>Step 8: List All Users in Leads Group</h2>
         <div class="description">List all users in the leads group using the bulk operation.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code6b">const groupUsers = await api.bulkListGroupUsers(
+            <textarea class="code-editor" id="code8">const groupUsers = await api.bulkListGroupUsers(
     window.stateData.unlockUUID,
     'leads-group'  // Using group name instead of ID
 );
 return groupUsers;</textarea>
-            <button onclick="executeStep('6b')">Run</button>
-            <div class="result" id="result6b"></div>
+            <button onclick="executeStep(8)">Run</button>
+            <div class="result" id="result8"></div>
         </div>
     </div>
 
-    <div class="step" id="step7">
+    <div class="step" id="step9">
         <h2>Step 9: Create sales user policy</h2>
         <div class="description">Create a policy that allows sales users to access lead information.</div>
         <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code7">const policy = await api.createPolicy({
+            <textarea class="code-editor" id="code9">const policy = await api.createPolicy({
     policyname: 'SalesLeadAccess',
     policy: {
         Effect: 'Allow',
@@ -261,47 +261,47 @@ return groupUsers;</textarea>
 // Link policy to sales role
 const linkResult = await api.linkPolicy('sales', 'SalesLeadAccess');
 return { policy, linkResult };</textarea>
-            <button onclick="executeStep(7)">Run</button>
-            <div class="result" id="result7"></div>
-        </div>
-    </div>
-
-    <div class="step" id="step8">
-        <h2>Step 10: Create sales user access token</h2>
-        <div class="description">Create and save an access token for the sales user.</div>
-        <div class="code-container">
-            <textarea class="code-editor" id="code8">const xtoken = await api.createXToken('login', 'sales1');
-window.stateData.salesToken = xtoken.xtoken;
-return xtoken;</textarea>
-            <button onclick="executeStep(8)">Run</button>
-            <div class="result" id="result8"></div>
-        </div>
-    </div>
-
-    <div class="step" id="step9">
-        <h2>Step 11: Read lead user with sales token</h2>
-        <div class="description">Use the sales user's token to read lead user information.</div>
-        <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
-        <div class="code-container">
-            <textarea class="code-editor" id="code9">// Switch to sales user token
-api.xBunkerToken = window.stateData.salesToken;
-
-const leadInfo = await api.getUser('login', 'lead1');
-return leadInfo;</textarea>
             <button onclick="executeStep(9)">Run</button>
             <div class="result" id="result9"></div>
         </div>
     </div>
 
     <div class="step" id="step10">
+        <h2>Step 10: Create sales user access token</h2>
+        <div class="description">Create and save an access token for the sales user.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code10">const xtoken = await api.createXToken('login', 'sales1');
+window.stateData.salesToken = xtoken.xtoken;
+return xtoken;</textarea>
+            <button onclick="executeStep(10)">Run</button>
+            <div class="result" id="result10"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step11">
+        <h2>Step 11: Read lead user with sales token</h2>
+        <div class="description">Use the sales user's token to read lead user information.</div>
+        <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code11">// Switch to sales user token
+api.xBunkerToken = window.stateData.salesToken;
+
+const leadInfo = await api.getUser('login', 'lead1');
+return leadInfo;</textarea>
+            <button onclick="executeStep(11)">Run</button>
+            <div class="result" id="result11"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step12">
         <h2>Step 12: Reset access token</h2>
         <div class="description">Reset the API token back to the original admin token.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code10">// Reset to original token
+            <textarea class="code-editor" id="code12">// Reset to original token
 api.xBunkerToken = document.getElementById('apiToken').value;
 return { message: 'Token reset to original value' };</textarea>
-            <button onclick="executeStep(10)">Run</button>
-            <div class="result" id="result10"></div>
+            <button onclick="executeStep(12)">Run</button>
+            <div class="result" id="result12"></div>
         </div>
     </div>
 
