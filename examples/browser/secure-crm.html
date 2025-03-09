@@ -252,7 +252,8 @@ return groupUsers;</textarea>
         Resource: ['${target_group_members:role/lead}.profile.email'],
         Condition: {
             StringEquals: {
-                '${user_group_id}': '${target_group_id}'
+                '${user_group_id}': '${target_group_id}',
+                '${request_metadata:reason}': 'admin-approved'
             }
         }
     }
@@ -286,7 +287,9 @@ return xtoken;</textarea>
             <textarea class="code-editor" id="code11">// Switch to sales user token
 api.xBunkerToken = window.stateData.salesToken;
 
-const leadInfo = await api.getUser('login', 'lead1');
+const leadInfo = await api.getUser('login', 'lead1', {
+    reason: 'admin-approved'
+});
 return leadInfo;</textarea>
             <button onclick="executeStep(11)">Run</button>
             <div class="result" id="result11"></div>
