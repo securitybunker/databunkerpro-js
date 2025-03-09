@@ -4,7 +4,7 @@ class DatabunkerproAPI {
     this.xBunkerToken = xBunkerToken;
   }
 
-  async makeRequest(endpoint, method = 'POST', data = null) {
+  async makeRequest(endpoint, method = 'POST', data = null, request_metadata = null) {
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -17,8 +17,12 @@ class DatabunkerproAPI {
       headers,
     };
 
-    if (data) {
-      options.body = JSON.stringify(data);
+    if (data || request_metadata) {
+      const bodyData = data ? { ...data } : {};
+      if (request_metadata) {
+        bodyData.request_metadata = request_metadata;
+      }
+      options.body = JSON.stringify(bodyData);
     }
 
     const response = await fetch(`${this.baseURL}/v2/${endpoint}`, options);
@@ -67,67 +71,67 @@ class DatabunkerproAPI {
       data.finaltime = options.finaltime;
     }
 
-    return this.makeRequest('UserCreate', 'POST', data);
+    return this.makeRequest('UserCreate', 'POST', data, options.request_metadata);
   }
 
-  async getUser(mode, identity) {
-    return this.makeRequest('UserGet', 'POST', { mode, identity });
+  async getUser(mode, identity, request_metadata = null) {
+    return this.makeRequest('UserGet', 'POST', { mode, identity }, request_metadata);
   }
 
-  async deleteUser(mode, identity) {
-    return this.makeRequest('UserDelete', 'POST', { mode, identity });
+  async deleteUser(mode, identity, request_metadata = null) {
+    return this.makeRequest('UserDelete', 'POST', { mode, identity }, request_metadata);
   }
 
-  async changeUser(mode, identity, profile) {
-    return this.makeRequest('UserChange', 'POST', { mode, identity, profile });
+  async changeUser(mode, identity, profile, request_metadata = null) {
+    return this.makeRequest('UserChange', 'POST', { mode, identity, profile }, request_metadata);
   }
 
   // App Data Management
-  async createAppData(mode, identity, appname, data) {
-    return this.makeRequest('AppdataCreate', 'POST', { mode, identity, appname, data });
+  async createAppData(mode, identity, appname, data, request_metadata = null) {
+    return this.makeRequest('AppdataCreate', 'POST', { mode, identity, appname, data }, request_metadata);
   }
 
-  async getAppData(mode, identity, appname) {
-    return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname });
+  async getAppData(mode, identity, appname, request_metadata = null) {
+    return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname }, request_metadata);
   }
 
-  async listAppNames() {
-    return this.makeRequest('AppdataListAppNames', 'POST');
+  async listAppNames(request_metadata = null) {
+    return this.makeRequest('AppdataListAppNames', 'POST', null, request_metadata);
   }
 
   // Agreement Management
-  async acceptAgreement(mode, identity, brief, agreementmethod, referencecode) {
+  async acceptAgreement(mode, identity, brief, agreementmethod, referencecode, request_metadata = null) {
     return this.makeRequest('AgreementAccept', 'POST', { 
       mode, 
       identity, 
       brief, 
       agreementmethod, 
       referencecode 
-    });
+    }, request_metadata);
   }
 
-  async getAgreement(mode, identity, brief) {
-    return this.makeRequest('AgreementGet', 'POST', { mode, identity, brief });
+  async getAgreement(mode, identity, brief, request_metadata = null) {
+    return this.makeRequest('AgreementGet', 'POST', { mode, identity, brief }, request_metadata);
   }
 
-  async listUserAgreements(mode, identity) {
-    return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity });
+  async listUserAgreements(mode, identity, request_metadata = null) {
+    return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, request_metadata);
   }
 
   // Group Management
-  async createGroup(groupname, groupdesc = '') {
-    return this.makeRequest('GroupCreate', 'POST', { groupname, groupdesc });
+  async createGroup(groupname, groupdesc = '', request_metadata = null) {
+    return this.makeRequest('GroupCreate', 'POST', { groupname, groupdesc }, request_metadata);
   }
 
-  async getGroup(groupid) {
-    return this.makeRequest('GroupGet', 'POST', { groupid });
+  async getGroup(groupid, request_metadata = null) {
+    return this.makeRequest('GroupGet', 'POST', { groupid }, request_metadata);
   }
 
-  async listAllGroups() {
-    return this.makeRequest('GroupListAllGroups', 'POST');
+  async listAllGroups(request_metadata = null) {
+    return this.makeRequest('GroupListAllGroups', 'POST', null, request_metadata);
   }
 
-  async addUserToGroup(groupname, mode, identity, rolename = null) {
+  async addUserToGroup(groupname, mode, identity, rolename = null, request_metadata = null) {
     const data = { mode, identity };
  
     // Check if groupname is an integer (group ID) or string (group name)
@@ -146,83 +150,83 @@ class DatabunkerproAPI {
       }
     }
     
-    return this.makeRequest('GroupAddUser', 'POST', data);
+    return this.makeRequest('GroupAddUser', 'POST', data, request_metadata);
   }
 
   // Token Management
-  async createXToken(mode, identity) {
-    return this.makeRequest('XTokenCreate', 'POST', { mode, identity });
+  async createXToken(mode, identity, request_metadata = null) {
+    return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, request_metadata);
   }
 
   // Audit Management
-  async listUserEvents(mode, identity) {
-    return this.makeRequest('AuditListUserEvents', 'POST', { mode, identity });
+  async listUserEvents(mode, identity, request_metadata = null) {
+    return this.makeRequest('AuditListUserEvents', 'POST', { mode, identity }, request_metadata);
   }
 
-  async getAuditEvent(auditeventuuid) {
-    return this.makeRequest('AuditGetEvent', 'POST', { auditeventuuid });
+  async getAuditEvent(auditeventuuid, request_metadata = null) {
+    return this.makeRequest('AuditGetEvent', 'POST', { auditeventuuid }, request_metadata);
   }
 
   // Tenant Management
-  async createTenant(data) {
-    return this.makeRequest('TenantCreate', 'POST', data);
+  async createTenant(data, request_metadata = null) {
+    return this.makeRequest('TenantCreate', 'POST', data, request_metadata);
   }
 
-  async getTenant(tenantid) {
-    return this.makeRequest('TenantGet', 'POST', { tenantid });
+  async getTenant(tenantid, request_metadata = null) {
+    return this.makeRequest('TenantGet', 'POST', { tenantid }, request_metadata);
   }
 
-  async renameTenant(tenantid, tenantname) {
-    return this.makeRequest('TenantRename', 'POST', { tenantid, tenantname });
+  async renameTenant(tenantid, tenantname, request_metadata = null) {
+    return this.makeRequest('TenantRename', 'POST', { tenantid, tenantname }, request_metadata);
   }
 
-  async listTenants() {
-    return this.makeRequest('TenantListTenants', 'POST');
+  async listTenants(request_metadata = null) {
+    return this.makeRequest('TenantListTenants', 'POST', null, request_metadata);
   }
 
   // Role Management
-  async createRole(rolename) {
-    return this.makeRequest('RoleCreate', 'POST', { rolename });
+  async createRole(rolename, request_metadata = null) {
+    return this.makeRequest('RoleCreate', 'POST', { rolename }, request_metadata);
   }
 
-  async linkPolicy(rolename, policyname) {
-    return this.makeRequest('RoleLinkPolicy', 'POST', { rolename, policyname });
+  async linkPolicy(rolename, policyname, request_metadata = null) {
+    return this.makeRequest('RoleLinkPolicy', 'POST', { rolename, policyname }, request_metadata);
   }
 
   // Policy Management
-  async createPolicy(data) {
-    return this.makeRequest('PolicyCreate', 'POST', data);
+  async createPolicy(data, request_metadata = null) {
+    return this.makeRequest('PolicyCreate', 'POST', data, request_metadata);
   }
 
-  async listPolicies() {
-    return this.makeRequest('PolicyListAllPolicies', 'POST');
+  async listPolicies(request_metadata = null) {
+    return this.makeRequest('PolicyListAllPolicies', 'POST', null, request_metadata);
   }
 
   // Bulk Operations
-  async bulkListUnlock() {
-    return this.makeRequest('BulkListUnlock', 'POST');
+  async bulkListUnlock(request_metadata = null) {
+    return this.makeRequest('BulkListUnlock', 'POST', null, request_metadata);
   }
 
-  async bulkListUsers(unlockuuid) {
-    return this.makeRequest('BulkListUsers', 'POST', { unlockuuid });
+  async bulkListUsers(unlockuuid, request_metadata = null) {
+    return this.makeRequest('BulkListUsers', 'POST', { unlockuuid }, request_metadata);
   }
 
-  async bulkListGroupUsers(unlockuuid, groupname) {
+  async bulkListGroupUsers(unlockuuid, groupname, request_metadata = null) {
     const data = { unlockuuid };
     if (Number.isInteger(Number(groupname))) {
       data.groupid = groupname;
     } else {
       data.groupname = groupname;
-    }    
-    return this.makeRequest('BulkListGroupUsers', 'POST', data);
+    }
+    return this.makeRequest('BulkListGroupUsers', 'POST', data, request_metadata);
   }
 
-  async bulkListUserRequests(unlockuuid) {
-    return this.makeRequest('BulkListUserRequests', 'POST', { unlockuuid });
+  async bulkListUserRequests(unlockuuid, request_metadata = null) {
+    return this.makeRequest('BulkListUserRequests', 'POST', { unlockuuid }, request_metadata);
   }
 
-  async bulkListAuditEvents(unlockuuid) {
-    return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid });
+  async bulkListAuditEvents(unlockuuid, request_metadata = null) {
+    return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid }, request_metadata);
   }
 }
 
