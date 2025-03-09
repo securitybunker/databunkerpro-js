@@ -267,8 +267,7 @@ const bulkPolicy = await api.createPolicy({
     }
 });
 
-
-// Create policy for parent phone access
+// Create policy for teacher to access parent information
 const parentPolicy = await api.createPolicy({
     policyname: 'TeacherParentAccess',
     policy: {
