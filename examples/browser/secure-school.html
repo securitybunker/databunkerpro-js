@@ -243,8 +243,11 @@ const studentPolicy = await api.createPolicy({
     policy: {
         Effect: 'Allow',
         Principal: { Role: 'teacher' },
-        Action: ['UserGet', 'UserChange', 'BulkListUnlock', 'BulkListGroupUsers'],
-        Resource: ['${target_group_members:role/student}.profile.*'],
+        Action: ['UserGet', 'UserChange', 'BulkListGroupUsers'],
+        Resource: [
+            '${target_group_members:role/student}.profile.*',
+            '${target_group_members:role/student}.group'
+        ],
         Condition: {
             StringEquals: {
                 '${user_group_id}': '${target_group_id}'
@@ -252,6 +255,18 @@ const studentPolicy = await api.createPolicy({
         }
     }
 });
+
+// Create generic policy for teachers to run bulk operations
+const bulkPolicy = await api.createPolicy({
+    policyname: 'TeacherBulkAccess',
+    policy: {
+        Effect: 'Allow',
+        Principal: { Role: 'teacher' },
+        Action: ['BulkListUnlock'],
+        Resource: ['*']
+    }
+});
+
 
 // Create policy for parent phone access
 const parentPolicy = await api.createPolicy({
@@ -272,8 +287,9 @@ const parentPolicy = await api.createPolicy({
 // Link policies to teacher role
 await api.linkPolicy('teacher', 'TeacherStudentAccess');
 await api.linkPolicy('teacher', 'TeacherParentAccess');
+await api.linkPolicy('teacher', 'TeacherBulkAccess');
 
-return { studentPolicy, parentPolicy };</textarea>
+return { studentPolicy, parentPolicy, bulkPolicy };</textarea>
             <button onclick="executeStep(7)">Run</button>
             <div class="result" id="result7"></div>
         </div>
