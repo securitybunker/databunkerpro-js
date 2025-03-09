@@ -273,12 +273,15 @@ const parentPolicy = await api.createPolicy({
     policy: {
         Effect: 'Allow',
         Principal: { Role: 'teacher' },
-        Action: ['UserGet'],
-        Resource: ['${target_group_members:role/parent}.profile.phone'],
+        Action: ['UserGet', 'BulkListGroupUsers'],
+        Resource: [
+            '${target_group_members:role/parent}.profile.phone',
+            '${target_group_members:role/parent}.group'
+        ],
         Condition: {
-            StringEquals: {
-                '${user_group_id}': '${target_group_id}'
-            }
+            ForAnyValue:ListIntersect: {
+				"${user_group_members:role/student}": "${target_group_members:role/child}"
+			}
         }
     }
 });
