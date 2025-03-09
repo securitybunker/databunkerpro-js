@@ -15,7 +15,7 @@ async function basicUsageDemo() {
     const newUser = await api.createUser({
       login: 'johndoe',
       email: 'john@example.com',
-      phone: '+1234567890',
+      phone: '+1289784890',
       name: 'John Doe',
       address: {
         street: '123 Main St',

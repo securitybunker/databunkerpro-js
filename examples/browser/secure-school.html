@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Databunkerpro API Step-by-Step Demo</title>
+    <title>Databunkerpro: Secure School Demo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -98,19 +98,18 @@
     </style>
 </head>
 <body>
-    <h1>Databunkerpro: Secure CRM Backend Example</h1>
+    <h1>Databunkerpro: Secure School Demo</h1>
     
     <div class="description" style="margin: 20px 0; padding: 5px 20px; background-color: #f8f9fa; border-radius: 5px; border-left: 5px solid #4CAF50;">
-        <!-- <h3 style="margin-top: 0; color: #2E7D32;">Secure CRM Backend Example</h3>-->
-        <p>This example demonstrates how to build a secure backend for a CRM system using Databunkerpro. It showcases:</p>
+        <p>This example demonstrates how to build a secure backend for a school system using Databunkerpro. It showcases:</p>
         <ul>
-            <li>Creating and managing lead users with automatic group assignment</li>
-            <li>Setting up sales team members with appropriate roles</li>
+            <li>Creating and managing class groups and family groups</li>
+            <li>Setting up teachers, students, and parents with appropriate roles</li>
             <li>Implementing fine-grained access control policies</li>
-            <li>Granting sales users masked/limited access to lead profiles</li>
-            <li>Managing bulk operations for group member listing</li>
+            <li>Granting teachers limited access to student and parent information</li>
+            <li>Managing bulk operations for class member listing</li>
         </ul>
-        <p>The example follows security best practices and GDPR compliance by ensuring that sales team members can only access necessary lead information while maintaining data privacy.</p>
+        <p>The example follows security best practices and GDPR compliance by ensuring that teachers can only access necessary student and parent information while maintaining data privacy.</p>
     </div>
     
     <div class="config">
@@ -126,63 +125,65 @@
     </div>
 
     <div class="step" id="step1">
-        <h2>Step 1: Create a group of leads</h2>
-        <div class="description">Create a new group that will contain all lead users.</div>
+        <h2>Step 1: Create Class Group</h2>
+        <div class="description">Create a new group that will contain all students in Class 1.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code1">const group = await api.createGroup('leads-group', 'Group containing all leads');
-return group;</textarea>
+            <textarea class="code-editor" id="code1">const class1Group = await api.createGroup('class1', 'Class 1 Students');
+return class1Group;</textarea>
             <button onclick="executeStep(1)">Run</button>
             <div class="result" id="result1"></div>
         </div>
     </div>
 
     <div class="step" id="step2">
-        <h2>Step 2: Create sales role</h2>
-        <div class="description">Create a role for sales team members.</div>
+        <h2>Step 2: Create Family Group</h2>
+        <div class="description">Create a group for family members (parents).</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code2">const salesRole = await api.createRole('sales');
-return salesRole;</textarea>
+            <textarea class="code-editor" id="code2">const familyGroup = await api.createGroup('family1', 'Family Members Group');
+return familyGroup;</textarea>
             <button onclick="executeStep(2)">Run</button>
             <div class="result" id="result2"></div>
         </div>
     </div>
 
     <div class="step" id="step3">
-        <h2>Step 3: Create lead role</h2>
-        <div class="description">Create a role for lead users.</div>
+        <h2>Step 3: Create Roles</h2>
+        <div class="description">Create roles for teachers, students, and parents.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code3">const leadRole = await api.createRole('lead');
-return leadRole;</textarea>
+            <textarea class="code-editor" id="code3">const teacherRole = await api.createRole('teacher');
+const studentRole = await api.createRole('student');
+const parentRole = await api.createRole('parent');
+return { teacherRole, studentRole, parentRole };</textarea>
             <button onclick="executeStep(3)">Run</button>
             <div class="result" id="result3"></div>
         </div>
     </div>
 
     <div class="step" id="step4">
-        <h2>Step 4: Create sales user</h2>
-        <div class="description">Create a user account for a sales team member.</div>
+        <h2>Step 4: Create Teacher User</h2>
+        <div class="description">Create a user account for a teacher.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code4">const salesUser = await api.createUser({
-    login: 'sales1',
-    email: 'sales1@company.com',
-    name: 'Sales User',
-    department: 'Sales'
+            <textarea class="code-editor" id="code4">const teacherUser = await api.createUser({
+    login: 'teacher1',
+    email: 'teacher1@school.com',
+    name: 'John Smith',
+    department: 'Mathematics'
 });
-return salesUser;</textarea>
+return teacherUser;</textarea>
             <button onclick="executeStep(4)">Run</button>
             <div class="result" id="result4"></div>
         </div>
     </div>
 
     <div class="step" id="step5">
-        <h2>Step 5: Add sales user to leads group</h2>
-        <div class="description">Add the sales user to the leads group with sales role.</div>
+        <h2>Step 5: Add Teacher to Class Group</h2>
+        <div class="description">Add the teacher to the class group with teacher role.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code5">const groupMembership = await api.addUserToGroup(
-    'leads-group',  // from step 1
+    'class1',
     'login',
-    'sales1',
-    'sales'  // role name
+    'teacher1',
+    'teacher'
 );
 return groupMembership;</textarea>
             <button onclick="executeStep(5)">Run</button>
@@ -191,65 +192,50 @@ return groupMembership;</textarea>
     </div>
 
     <div class="step" id="step6">
-        <h2>Step 6: Create lead user</h2>
-        <div class="description">Create a lead user and automatically add them to the leads group with lead role.</div>
+        <h2>Step 6: Create Student and Parent Users</h2>
+        <div class="description">Create a student user and their parent, adding them to appropriate groups.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code6">// Create lead user with group and role in one command
-const leadUser = await api.createUser({
-    login: 'lead1',
-    email: 'lead1@example.com',
-    name: 'Lead User',
-    phone: '+1278917892'
+            <textarea class="code-editor" id="code6">// Create student user
+const studentUser = await api.createUser({
+    login: 'student1',
+    email: 'student1@school.com',
+    name: 'Alice Johnson',
+    grade: '5th'
 }, {
-    groupname: 'leads-group',  // from step 1
-    rolename: 'lead',
-    finaltime: '90d'  // Optional: expire after 90 days
+    groupname: 'class1',
+    rolename: 'student'
 });
 
-return leadUser;</textarea>
+// Create parent user
+const parentUser = await api.createUser({
+    login: 'parent1',
+    email: 'parent1@example.com',
+    name: 'Bob Johnson',
+    phone: '+1278567890'
+}, {
+    groupname: 'family1',
+    rolename: 'parent'
+});
+
+return { studentUser, parentUser };</textarea>
             <button onclick="executeStep(6)">Run</button>
             <div class="result" id="result6"></div>
         </div>
     </div>
 
-    <div class="step" id="step6a">
-        <h2>Step 7: Initialize Bulk Operations</h2>
-        <div class="description">Get an unlock UUID token for bulk operations.</div>
-        <div class="code-container">
-            <textarea class="code-editor" id="code6a">const bulkInit = await api.bulkListUnlock();
-window.stateData.unlockUUID = bulkInit.unlockuuid;
-return bulkInit;</textarea>
-            <button onclick="executeStep('6a')">Run</button>
-            <div class="result" id="result6a"></div>
-        </div>
-    </div>
-
-    <div class="step" id="step6b">
-        <h2>Step 8: List All Users in Leads Group</h2>
-        <div class="description">List all users in the leads group using the bulk operation.</div>
-        <div class="code-container">
-            <textarea class="code-editor" id="code6b">const groupUsers = await api.bulkListGroupUsers(
-    window.stateData.unlockUUID,
-    'leads-group'  // Using group name instead of ID
-);
-return groupUsers;</textarea>
-            <button onclick="executeStep('6b')">Run</button>
-            <div class="result" id="result6b"></div>
-        </div>
-    </div>
-
     <div class="step" id="step7">
-        <h2>Step 9: Create sales user policy</h2>
-        <div class="description">Create a policy that allows sales users to access lead information.</div>
-        <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
+        <h2>Step 7: Create Teacher Access Policy</h2>
+        <div class="description">Create policies for teacher access to student and parent information.</div>
+        <div class="description">✱ Teachers can access student information and parent phone numbers.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code7">const policy = await api.createPolicy({
-    policyname: 'SalesLeadAccess',
+            <textarea class="code-editor" id="code7">// Create policy for student access
+const studentPolicy = await api.createPolicy({
+    policyname: 'TeacherStudentAccess',
     policy: {
         Effect: 'Allow',
-        Principal: { Role: 'sales' },
+        Principal: { Role: 'teacher' },
         Action: ['UserGet', 'UserChange'],
-        Resource: ['${target_group_members:role/lead}.profile.email'],
+        Resource: ['${target_group_members:role/student}.*'],
         Condition: {
             StringEquals: {
                 '${user_group_id}': '${target_group_id}'
@@ -258,20 +244,38 @@ return groupUsers;</textarea>
     }
 });
 
-// Link policy to sales role
-const linkResult = await api.linkPolicy('sales', 'SalesLeadAccess');
-return { policy, linkResult };</textarea>
+// Create policy for parent phone access
+const parentPolicy = await api.createPolicy({
+    policyname: 'TeacherParentAccess',
+    policy: {
+        Effect: 'Allow',
+        Principal: { Role: 'teacher' },
+        Action: ['UserGet'],
+        Resource: ['${target_group_members:role/parent}.profile.phone'],
+        Condition: {
+            StringEquals: {
+                '${user_group_id}': '${target_group_id}'
+            }
+        }
+    }
+});
+
+// Link policies to teacher role
+await api.linkPolicy('teacher', 'TeacherStudentAccess');
+await api.linkPolicy('teacher', 'TeacherParentAccess');
+
+return { studentPolicy, parentPolicy };</textarea>
             <button onclick="executeStep(7)">Run</button>
             <div class="result" id="result7"></div>
         </div>
     </div>
 
     <div class="step" id="step8">
-        <h2>Step 10: Create sales user access token</h2>
-        <div class="description">Create and save an access token for the sales user.</div>
+        <h2>Step 8: Create Teacher Access Token</h2>
+        <div class="description">Create and save an access token for the teacher.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code8">const xtoken = await api.createXToken('login', 'sales1');
-window.stateData.salesToken = xtoken.xtoken;
+            <textarea class="code-editor" id="code8">const xtoken = await api.createXToken('login', 'teacher1');
+window.stateData.teacherToken = xtoken.xtoken;
 return xtoken;</textarea>
             <button onclick="executeStep(8)">Run</button>
             <div class="result" id="result8"></div>
@@ -279,29 +283,46 @@ return xtoken;</textarea>
     </div>
 
     <div class="step" id="step9">
-        <h2>Step 11: Read lead user with sales token</h2>
-        <div class="description">Use the sales user's token to read lead user information.</div>
-        <div class="description">✱ Access is granted only to email address. All other fields will be masked.</div>
+        <h2>Step 9: List Class Students with Teacher Token</h2>
+        <div class="description">Use the teacher's token to list all students in the class.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code9">// Switch to sales user token
-api.xBunkerToken = window.stateData.salesToken;
+            <textarea class="code-editor" id="code9">// Switch to teacher token
+api.xBunkerToken = window.stateData.teacherToken;
 
-const leadInfo = await api.getUser('login', 'lead1');
-return leadInfo;</textarea>
+// Get unlock UUID for bulk operations
+const bulkInit = await api.bulkListUnlock();
+const students = await api.bulkListGroupUsers(
+    bulkInit.unlockuuid,
+    'class1'
+);
+return students;</textarea>
             <button onclick="executeStep(9)">Run</button>
             <div class="result" id="result9"></div>
         </div>
     </div>
 
     <div class="step" id="step10">
-        <h2>Step 12: Reset access token</h2>
-        <div class="description">Reset the API token back to the original admin token.</div>
+        <h2>Step 10: Access Parent Information</h2>
+        <div class="description">Use the teacher's token to access parent contact information.</div>
+        <div class="description">✱ Only phone number will be accessible, other fields will be masked.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code10">// Reset to original token
-api.xBunkerToken = document.getElementById('apiToken').value;
-return { message: 'Token reset to original value' };</textarea>
+            <textarea class="code-editor" id="code10">// Using teacher token from previous step
+const parentInfo = await api.getUser('login', 'parent1');
+return parentInfo;</textarea>
             <button onclick="executeStep(10)">Run</button>
             <div class="result" id="result10"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step11">
+        <h2>Step 11: Reset Access Token</h2>
+        <div class="description">Reset the API token back to the original admin token.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code11">// Reset to original token
+api.xBunkerToken = document.getElementById('apiToken').value;
+return { message: 'Token reset to original value' };</textarea>
+            <button onclick="executeStep(11)">Run</button>
+            <div class="result" id="result11"></div>
         </div>
     </div>
 
@@ -311,14 +332,13 @@ return { message: 'Token reset to original value' };</textarea>
         let api;
         // State data to store values between steps
         window.stateData = {
-            groupId: null,
-            salesToken: null
+            teacherToken: null
         };
         
         function updateApiClient() {
             const url = document.getElementById('apiUrl').value;
             const token = document.getElementById('apiToken').value;
-            api = new DatabunkerAPI(url, token);
+            api = new DatabunkerproAPI(url, token);
         }
 
         document.getElementById('apiUrl').addEventListener('change', updateApiClient);
@@ -343,12 +363,6 @@ return { message: 'Token reset to original value' };</textarea>
             try {
                 const code = document.getElementById(`code${stepNumber}`).value;
                 const result = await eval(`(async () => { ${code} })()`);
-                
-                // Store important results in state
-                if (stepNumber === 1) {
-                    window.stateData.groupId = result.groupid;
-                }
-                
                 displayResult(stepNumber, result);
             } catch (error) {
                 displayError(stepNumber, error);
@@ -356,4 +370,4 @@ return { message: 'Token reset to original value' };</textarea>
         }
     </script>
 </body>
-</html>
+</html> 
