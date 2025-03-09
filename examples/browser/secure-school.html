@@ -148,12 +148,13 @@ return familyGroup;</textarea>
 
     <div class="step" id="step3">
         <h2>Step 3: Create Roles</h2>
-        <div class="description">Create roles for teachers, students, and parents.</div>
+        <div class="description">Create roles for teachers, students, parents, and children.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code3">const teacherRole = await api.createRole('teacher');
 const studentRole = await api.createRole('student');
 const parentRole = await api.createRole('parent');
-return { teacherRole, studentRole, parentRole };</textarea>
+const childRole = await api.createRole('child');
+return { teacherRole, studentRole, parentRole, childRole };</textarea>
             <button onclick="executeStep(3)">Run</button>
             <div class="result" id="result3"></div>
         </div>
@@ -195,7 +196,7 @@ return groupMembership;</textarea>
         <h2>Step 6: Create Student and Parent Users</h2>
         <div class="description">Create a student user and their parent, adding them to appropriate groups.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code6">// Create student user
+            <textarea class="code-editor" id="code6">// Create student user and add to class group
 const studentUser = await api.createUser({
     login: 'student1',
     email: 'student1@school.com',
@@ -206,7 +207,7 @@ const studentUser = await api.createUser({
     rolename: 'student'
 });
 
-// Create parent user
+// Create parent user and add to family group
 const parentUser = await api.createUser({
     login: 'parent1',
     email: 'parent1@example.com',
@@ -217,7 +218,15 @@ const parentUser = await api.createUser({
     rolename: 'parent'
 });
 
-return { studentUser, parentUser };</textarea>
+// Add student to family group as a child to establish parent-child relationship
+const familyMembership = await api.addUserToGroup(
+    'family1',  // family group
+    'login',
+    'student1',
+    'child'    // child role in family group
+);
+
+return { studentUser, parentUser, familyMembership };</textarea>
             <button onclick="executeStep(6)">Run</button>
             <div class="result" id="result6"></div>
         </div>
@@ -234,8 +243,8 @@ const studentPolicy = await api.createPolicy({
     policy: {
         Effect: 'Allow',
         Principal: { Role: 'teacher' },
-        Action: ['UserGet', 'UserChange'],
-        Resource: ['${target_group_members:role/student}.*'],
+        Action: ['UserGet', 'UserChange', 'BulkListUnlock', 'BulkListGroupUsers'],
+        Resource: ['${target_group_members:role/student}.profile.*'],
         Condition: {
             StringEquals: {
                 '${user_group_id}': '${target_group_id}'
