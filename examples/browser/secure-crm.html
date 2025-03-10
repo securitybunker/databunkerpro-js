@@ -6,11 +6,20 @@
     <title>Databunkerpro API Step-by-Step Demo</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system,BlinkMacSystemFont,segoe ui,Roboto,helvetica neue,Arial,noto sans,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol,noto color emoji;
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f5f5f5;
+        }
+        .intro {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            padding: 5px 20px;
+            border-radius: 5px;
+            border-left: 5px solid #4CAF50;
+            color: #666;
         }
         .step {
             background-color: white;
@@ -83,14 +92,15 @@
             margin-bottom: 10px;
         }
         .config label {
-            width: 100px;
+            width: 18%;
             display: inline-block;
             text-align: left;
             margin-right: 10px;
             flex-shrink: 0;
+            color: #666;
         }
         .config input {
-            width: 300px;
+            width: 40%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -100,23 +110,33 @@
 <body>
     <h1>Databunkerpro: Secure CRM Backend Example</h1>
     
-    <div class="description" style="margin: 20px 0; padding: 5px 20px; background-color: #f8f9fa; border-radius: 5px; border-left: 5px solid #4CAF50;">
-        <!-- <h3 style="margin-top: 0; color: #2E7D32;">Secure CRM Backend Example</h3>-->
-        <p>This example demonstrates how to build a secure backend for a CRM system using Databunkerpro. It showcases:</p>
+    <div class="intro">
+        <p>This example demonstrates how to build a secure CRM system that protects against one of the most common threats: malicious insiders. It shows how Databunkerpro prevents unauthorized bulk data extraction and enforces strict access controls, even for privileged users like sales representatives.</p>
+
+        <p><strong>Key Security Features:</strong></p>
         <ul>
-            <li>Creating and managing lead users with automatic group assignment</li>
-            <li>Setting up sales team members with appropriate roles</li>
-            <li>Implementing fine-grained access control policies</li>
-            <li>Granting sales users masked/limited access to lead profiles</li>
-            <li>Managing bulk operations for group member listing</li>
+            <li><strong>Prevention of Data Theft:</strong> Stops malicious sales users from extracting the entire client database by enforcing granular access controls and data masking</li>
+            <li><strong>Context-Aware Access Control:</strong> Uses request metadata to validate the context of each access request (e.g., client interaction context, approved reasons)</li>
+            <li><strong>Data Minimization:</strong> Ensures sales team members can only access specific fields they need (e.g., email), with all other data automatically masked</li>
+            <li><strong>Audit Trail:</strong> Tracks all access attempts with their associated context for security monitoring</li>
         </ul>
-        <p>The example follows security best practices and GDPR compliance by ensuring that sales team members can only access necessary lead information while maintaining data privacy.</p>
+
+        <p><strong>Technical Implementation:</strong></p>
+        <ul>
+            <li>Role-based access control with sales and lead roles</li>
+            <li>Fine-grained policies that check request metadata (e.g., <code>${request_metadata:reason}</code>)</li>
+            <li>Automatic group management for leads and sales teams</li>
+            <li>Secure token management for sales user authentication</li>
+        </ul>
+
+        <p><strong>Example Use Case:</strong><br>
+        When a sales representative accesses a lead's information, they must provide a valid context (e.g., "admin-approved", "active-discussion"). The policy will verify this context before granting access, preventing unauthorized bulk data extraction or access without proper business justification.</p>
     </div>
     
     <div class="config">
         <h2>Configuration</h2>
         <div class="input-group">
-            <label for="apiUrl">API URL:</label>
+            <label for="apiUrl">Databunkerpro URL:</label>
             <input type="text" id="apiUrl" value="http://localhost:3000">
         </div>
         <div class="input-group">
