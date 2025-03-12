@@ -1,64 +1,89 @@
+interface RequestMetadata {
+  [key: string]: any;
+}
+
+interface UserOptions {
+  groupname?: string | number;
+  groupid?: number;
+  rolename?: string | number;
+  roleid?: number;
+  slidingtime?: string;
+  finaltime?: string;
+  request_metadata?: RequestMetadata;
+}
+
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string);
 
-  // Core request method
-  private makeRequest(endpoint: string, method?: string, data?: any): Promise<any>;
+  // Core request methods
+  private makeRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+  rawRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
 
   // User Management
-  createUser(profile: object, options?: {
-    groupname?: string | number;
-    groupid?: number;
-    rolename?: string | number;
-    roleid?: number;
-    slidingtime?: string;
-    finaltime?: string;
-  }): Promise<any>;
-  getUser(mode: string, identity: string): Promise<any>;
-  deleteUser(mode: string, identity: string): Promise<any>;
-  changeUser(mode: string, identity: string, profile: object): Promise<any>;
+  getUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  updateUser(mode: string, identity: string, profile: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  requestUserUpdate(mode: string, identity: string, profile: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  preloginUser(mode: string, identity: string, code: string, captchacode: string, requestMetadata?: RequestMetadata): Promise<any>;
+  loginUser(mode: string, identity: string, smscode: string, requestMetadata?: RequestMetadata): Promise<any>;
+
+  // User Request Management
+  getUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserRequests(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata, reason?: string): Promise<any>;
 
   // App Data Management
-  createAppData(mode: string, identity: string, appname: string, data: object): Promise<any>;
-  getAppData(mode: string, identity: string, appname: string): Promise<any>;
-  listAppNames(): Promise<any>;
+  createAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  getUserAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Agreement Management
-  acceptAgreement(mode: string, identity: string, brief: string, agreementmethod: string, referencecode: string): Promise<any>;
-  getAgreement(mode: string, identity: string, brief: string): Promise<any>;
-  listUserAgreements(mode: string, identity: string): Promise<any>;
+  acceptAgreement(mode: string, identity: string, brief: string, agreementmethod?: string | null, referencecode?: string | null, requestMetadata?: RequestMetadata): Promise<any>;
+  cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
+  requestAgreementCancellation(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getUserAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listAgreements(requestMetadata?: RequestMetadata): Promise<any>;
+  listProcessingActivities(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Group Management
-  createGroup(groupname: string, groupdesc?: string): Promise<any>;
-  getGroup(groupid: string | number): Promise<any>;
-  listAllGroups(): Promise<any>;
-  addUserToGroup(groupname: string | number, mode: string, identity: string, rolename?: string | number): Promise<any>;
+  createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getGroup(groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  listAllGroups(requestMetadata?: RequestMetadata): Promise<any>;
+  addUserToGroup(groupname: string | number, mode: string, identity: string, rolename?: string | number | null, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Token Management
-  createXToken(mode: string, identity: string): Promise<any>;
+  createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Audit Management
-  listUserEvents(mode: string, identity: string): Promise<any>;
-  getAuditEvent(auditeventuuid: string): Promise<any>;
+  listUserAuditEvents(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Tenant Management
-  createTenant(data: object): Promise<any>;
-  getTenant(tenantid: string | number): Promise<any>;
-  renameTenant(tenantid: string | number, tenantname: string): Promise<any>;
-  listTenants(): Promise<any>;
+  createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  getTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  renameTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listTenants(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Role Management
-  createRole(rolename: string): Promise<any>;
-  linkPolicy(rolename: string, policyname: string): Promise<any>;
+  createRole(rolename: string, requestMetadata?: RequestMetadata): Promise<any>;
+  linkPolicy(rolename: string, policyname: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Policy Management
-  createPolicy(data: object): Promise<any>;
-  listPolicies(): Promise<any>;
+  createPolicy(data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  listPolicies(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Bulk Operations
+  bulkListUnlock(requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListUsers(unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListGroupUsers(unlockuuid: string, groupname: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListUserRequests(unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListAuditEvents(unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 
-  bulkListUnlock(): Promise<any>;
-  bulkListUsers(unlockuuid: string): Promise<any>;
-  bulkListGroupUsers(unlockuuid: string, groupname: string | number): Promise<any>;
-  bulkListUserRequests(unlockuuid: string): Promise<any>;
-  bulkListAuditEvents(unlockuuid: string): Promise<any>;
+  // System Configuration
+  getUIConf(): Promise<any>;
+  getTenantConf(): Promise<any>;
 } 

@@ -344,7 +344,7 @@ return { message: 'Token reset to original value' };</textarea>
         function updateApiClient() {
             const url = document.getElementById('apiUrl').value;
             const token = document.getElementById('apiToken').value;
-            api = new DatabunkerAPI(url, token);
+            api = new DatabunkerproAPI(url, token);
         }
 
         document.getElementById('apiUrl').addEventListener('change', updateApiClient);
