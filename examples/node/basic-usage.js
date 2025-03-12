@@ -34,7 +34,7 @@ async function basicUsageDemo() {
     console.log('Retrieved user by token:', userByToken);
 
     // Update user profile
-    const updatedUser = await api.changeUser('login', 'johndoe', {
+    const updatedUser = await api.updateUser('login', 'johndoe', {
       name: 'John M. Doe',
       title: 'Senior Developer'
     });
@@ -82,7 +82,7 @@ async function basicUsageDemo() {
     console.log('Stored app data:', appData);
 
     // Retrieve app data
-    const retrievedAppData = await api.getAppData('login', 'johndoe', 'myapp');
+    const retrievedAppData = await api.getUserAppData('login', 'johndoe', 'myapp');
     console.log('Retrieved app data:', retrievedAppData);
 
     // List all apps

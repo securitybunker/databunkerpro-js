@@ -105,7 +105,7 @@ class DatabunkerproAPI {
     if (options.finaltime) {
       data.finaltime = options.finaltime;
     }
-    return this.makeRequest('UserCreate', 'POST', data, request_metadata);
+    return this.makeRequest('UserCreate', 'POST', data, requestMetadata);
   }
 
   async getUser(mode, identity, requestMetadata = null) {

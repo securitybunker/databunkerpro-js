@@ -96,8 +96,8 @@
     <div class="container">
         <h2>App Data Management</h2>
         <button onclick="storeAppData()">Store App Data</button>
-        <button onclick="getAppData()">Get App Data</button>
-        <button onclick="listApps()">List Apps</button>
+        <button onclick="getUserAppData()">Get App Data</button>
+        <button onclick="listAppNames()">List Apps</button>
         <div id="appResult" class="result"></div>
     </div>
 
@@ -172,7 +172,7 @@
 
         async function updateUser() {
             try {
-                const user = await api.changeUser('login', 'johndoe', {
+                const user = await api.updateUser('login', 'johndoe', {
                     name: 'John M. Doe',
                     title: 'Senior Developer'
                 });
@@ -197,16 +197,16 @@
             }
         }
 
-        async function getAppData() {
+        async function getUserAppData() {
             try {
-                const data = await api.getAppData('login', 'johndoe', 'myapp');
+                const data = await api.getUserAppData('login', 'johndoe', 'myapp');
                 displayResult('appResult', data);
             } catch (error) {
                 displayError('appResult', error);
             }
         }
 
-        async function listApps() {
+        async function listAppNames() {
             try {
                 const apps = await api.listAppNames();
                 displayResult('appResult', apps);
