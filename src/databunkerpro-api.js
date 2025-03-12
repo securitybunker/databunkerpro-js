@@ -25,55 +25,55 @@ class DatabunkerproAPI {
       options.body = JSON.stringify(bodyData);
     }
 
-    const response = await fetch(`${this.baseURL}/v2/${endpoint}`, options);
-    const result = await response.json();
+    const url = `${this.baseURL}/v2/${endpoint}`;
+    //console.log("Loading URL: " + url);
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.message || 'API request failed');
+      if (!response.ok) {
+        if (result.status) {
+          return result;
+        } else {
+          throw new Error(result.message || 'API request failed');
+        }
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error making request:', error);
+      //throw error;
     }
+  }
+
+  async rawRequest(endpoint, method = 'POST', data = null, requestMetadata = null) {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (this.xBunkerToken) {
+      headers['X-Bunker-Token'] = this.xBunkerToken;
+    }
+
+    const options = {
+      method,
+      headers,
+    };
+
+    if (data || requestMetadata) {
+      const bodyData = data ? { ...data } : {};
+      if (requestMetadata) {
+        bodyData.request_metadata = requestMetadata;
+      }
+      options.body = JSON.stringify(bodyData);
+    }
+
+    const response = await fetch(`${this.baseURL}/v2/${endpoint}`, options);
+    const result = await response.blob();
 
     return result;
   }
 
   // User Management
-  async createUser(profile, options = {}) {
-    const data = { profile };
-
-    // Handle groupname/groupid
-    if (options.groupname) {
-      // Check if groupname is actually a numeric id
-      if (Number.isInteger(Number(options.groupname))) {
-        data.groupid = options.groupname;
-      } else {
-        data.groupname = options.groupname;
-      }
-    } else if (options.groupid) {
-      data.groupid = options.groupid;
-    }
-
-    // Handle rolename/roleid
-    if (options.rolename) {
-      // Check if rolename is actually a numeric id
-      if (Number.isInteger(Number(options.rolename))) {
-        data.roleid = options.rolename;
-      } else {
-        data.rolename = options.rolename;
-      }
-    } else if (options.roleid) {
-      data.roleid = options.roleid;
-    }
-
-    // Handle time parameters
-    if (options.slidingtime) {
-      data.slidingtime = options.slidingtime;
-    }
-    if (options.finaltime) {
-      data.finaltime = options.finaltime;
-    }
-
-    return this.makeRequest('UserCreate', 'POST', data, options.request_metadata);
-  }
-
   async getUser(mode, identity, requestMetadata = null) {
     return this.makeRequest('UserGet', 'POST', { mode, identity }, requestMetadata);
   }
@@ -82,8 +82,41 @@ class DatabunkerproAPI {
     return this.makeRequest('UserDelete', 'POST', { mode, identity }, requestMetadata);
   }
 
-  async changeUser(mode, identity, profile, requestMetadata = null) {
+  async requestUserDeletion(mode, identity, requestMetadata = null) {
+    return this.makeRequest('UserDeleteRequest', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async updateUser(mode, identity, profile, requestMetadata = null) {
     return this.makeRequest('UserChange', 'POST', { mode, identity, profile }, requestMetadata);
+  }
+
+  async requestUserUpdate(mode, identity, profile, requestMetadata = null) {
+    return this.makeRequest('UserChangeRequest', 'POST', { mode, identity, profile }, requestMetadata);
+  }
+
+  async preloginUser(mode, identity, code, captchacode, requestMetadata = null) {
+    return this.makeRequest('UserPrelogin', 'POST', { mode, identity, code, captchacode }, requestMetadata);
+  }
+
+  async loginUser(mode, identity, smscode, requestMetadata = null) {
+    return this.makeRequest('UserLogin', 'POST', { mode, identity, smscode }, requestMetadata);
+  }
+
+  // User Request Management
+  async getUserRequest(mode, identity, requestuuid, requestMetadata = null) {
+    return this.makeRequest('UserRequestGet', 'POST', { mode, identity, requestuuid }, requestMetadata);
+  }
+
+  async listUserRequests(mode, identity, requestMetadata = null) {
+    return this.makeRequest('UserRequestListUserRequests', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async cancelUserRequest(mode, identity, requestuuid, requestMetadata = null) {
+    return this.makeRequest('UserRequestCancel', 'POST', { mode, identity, requestuuid }, requestMetadata);
+  }
+
+  async approveUserRequest(mode, identity, requestuuid, requestMetadata = null, reason = null) {
+    return this.makeRequest('UserRequestApprove', 'POST', { mode, identity, requestuuid, reason }, requestMetadata);
   }
 
   // App Data Management
@@ -91,8 +124,12 @@ class DatabunkerproAPI {
     return this.makeRequest('AppdataCreate', 'POST', { mode, identity, appname, data }, requestMetadata);
   }
 
-  async getAppData(mode, identity, appname, requestMetadata = null) {
+  async getUserAppData(mode, identity, appname, requestMetadata = null) {
     return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname }, requestMetadata);
+  }
+
+  async listUserAppDataRecords(mode, identity, requestMetadata = null) {
+    return this.makeRequest('AppdataListUserAppNames', 'POST', { mode, identity }, requestMetadata);
   }
 
   async listAppNames(requestMetadata = null) {
@@ -100,7 +137,7 @@ class DatabunkerproAPI {
   }
 
   // Agreement Management
-  async acceptAgreement(mode, identity, brief, agreementmethod, referencecode, requestMetadata = null) {
+  async acceptAgreement(mode, identity, brief, agreementmethod = null, referencecode = null, requestMetadata = null) {
     return this.makeRequest('AgreementAccept', 'POST', { 
       mode, 
       identity, 
@@ -110,12 +147,28 @@ class DatabunkerproAPI {
     }, requestMetadata);
   }
 
-  async getAgreement(mode, identity, brief, requestMetadata = null) {
+  async cancelAgreement(mode, identity, brief, requestMetadata = null) {
+    return this.makeRequest('AgreementCancel', 'POST', {mode, identity, brief}, requestMetadata);
+  }
+
+  async requestAgreementCancellation(mode, identity, brief, requestMetadata = null) {
+    return this.makeRequest('AgreementCancelRequest', 'POST', {mode, identity, brief}, requestMetadata);
+  }
+
+  async getUserAgreement(mode, identity, brief, requestMetadata = null) {
     return this.makeRequest('AgreementGet', 'POST', { mode, identity, brief }, requestMetadata);
   }
 
   async listUserAgreements(mode, identity, requestMetadata = null) {
     return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async listAgreements(requestMetadata = null) {
+    return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
+  }
+
+  async listProcessingActivities(requestMetadata = null) {
+    return this.makeRequest('ProcessingActivityListActivities', 'POST', null, requestMetadata);
   }
 
   // Group Management
@@ -159,7 +212,7 @@ class DatabunkerproAPI {
   }
 
   // Audit Management
-  async listUserEvents(mode, identity, requestMetadata = null) {
+  async listUserAuditEvents(mode, identity, requestMetadata = null) {
     return this.makeRequest('AuditListUserEvents', 'POST', { mode, identity }, requestMetadata);
   }
 
@@ -228,6 +281,16 @@ class DatabunkerproAPI {
   async bulkListAuditEvents(unlockuuid, requestMetadata = null) {
     return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid }, requestMetadata);
   }
+
+  // System Configuration
+  async getUIConf() {
+    return this.makeRequest('TenantGetUIConf', 'POST');
+  }
+
+  async getTenantConf() {
+    return this.makeRequest('TenantGetConf', 'POST');
+  }
+
 }
 
 // Export for Node.js and browser environments
