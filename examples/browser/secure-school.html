@@ -256,7 +256,7 @@ const studentPolicy = await api.createPolicy({
     policy: {
         Effect: 'Allow',
         Principal: { Role: 'teacher' },
-        Action: ['UserGet', 'UserChange', 'BulkListGroupUsers'],
+        Action: ['UserGet', 'UserUpdate', 'BulkListGroupUsers'],
         Resource: [
             '${target_group_members:role/student}.profile.*',
             '${target_group_members:role/student}.group'

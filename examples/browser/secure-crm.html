@@ -271,7 +271,7 @@ return groupUsers;</textarea>
     policy: {
         Effect: 'Allow',
         Principal: { Role: 'sales' },
-        Action: ['UserGet', 'UserChange'],
+        Action: ['UserGet', 'UserUpdate'],
         Resource: ['${target_group_members:role/lead}.profile.email'],
         Condition: {
             StringEquals: {
