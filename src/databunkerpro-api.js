@@ -121,11 +121,11 @@ class DatabunkerproAPI {
   }
 
   async updateUser(mode, identity, profile, requestMetadata = null) {
-    return this.makeRequest('UserChange', 'POST', { mode, identity, profile }, requestMetadata);
+    return this.makeRequest('UserUpdate', 'POST', { mode, identity, profile }, requestMetadata);
   }
 
   async requestUserUpdate(mode, identity, profile, requestMetadata = null) {
-    return this.makeRequest('UserChangeRequest', 'POST', { mode, identity, profile }, requestMetadata);
+    return this.makeRequest('UserUpdateRequest', 'POST', { mode, identity, profile }, requestMetadata);
   }
 
   async preloginUser(mode, identity, code, captchacode, requestMetadata = null) {
@@ -160,6 +160,14 @@ class DatabunkerproAPI {
 
   async getUserAppData(mode, identity, appname, requestMetadata = null) {
     return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname }, requestMetadata);
+  }
+
+  async updateAppData(mode, identity, appname, data, requestMetadata = null) {
+    return this.makeRequest('AppdataUpdate', 'POST', { mode, identity, appname, data }, requestMetadata);
+  }
+
+  async requestAppDataUpdate(mode, identity, appname, data, requestMetadata = null) {
+    return this.makeRequest('AppdataUpdateRequest', 'POST', { mode, identity, appname, data }, requestMetadata);
   }
 
   async listUserAppDataRecords(mode, identity, requestMetadata = null) {
