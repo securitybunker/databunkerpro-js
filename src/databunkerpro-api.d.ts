@@ -29,7 +29,7 @@ declare class DatabunkerproAPI {
   loginUser(mode: string, identity: string, smscode: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // User Request Management
-  getUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
   listUserRequests(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
   approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata, reason?: string): Promise<any>;
@@ -88,4 +88,12 @@ declare class DatabunkerproAPI {
   // System Configuration
   getUIConf(): Promise<any>;
   getTenantConf(): Promise<any>;
-} 
+}
+
+declare global {
+  interface Window {
+    DatabunkerproAPI: typeof DatabunkerproAPI;
+  }
+}
+
+export default DatabunkerproAPI; 

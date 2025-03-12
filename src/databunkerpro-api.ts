@@ -337,7 +337,17 @@ export class DatabunkerproAPI {
   async getTenantConf(): Promise<any> {
     return this.makeRequest('TenantGetConf', 'POST');
   }
+
+  // User Request Management
+  async getUserRequest(requestuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('UserRequestGet', 'POST', { requestuuid }, requestMetadata);
+  }
 }
 
 // Export for Node.js and browser environments
-export default DatabunkerproAPI; 
+export default DatabunkerproAPI;
+declare global {
+  interface Window {
+    DatabunkerproAPI: typeof DatabunkerproAPI;
+  }
+} 

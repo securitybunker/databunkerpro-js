@@ -137,7 +137,7 @@ class DatabunkerproAPI {
   }
 
   // User Request Management
-  async getUserRequest(mode, identity, requestuuid, requestMetadata = null) {
+  async getUserRequest(requestuuid, requestMetadata = null) {
     return this.makeRequest('UserRequestGet', 'POST', { mode, identity, requestuuid }, requestMetadata);
   }
 

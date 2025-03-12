@@ -58,5 +58,11 @@ export declare class DatabunkerproAPI {
     bulkListAuditEvents(unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUIConf(): Promise<any>;
     getTenantConf(): Promise<any>;
+    getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
 }
 export default DatabunkerproAPI;
+declare global {
+    interface Window {
+        DatabunkerproAPI: typeof DatabunkerproAPI;
+    }
+}
