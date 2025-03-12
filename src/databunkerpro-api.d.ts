@@ -9,7 +9,6 @@ interface UserOptions {
   roleid?: number;
   slidingtime?: string;
   finaltime?: string;
-  request_metadata?: RequestMetadata;
 }
 
 declare class DatabunkerproAPI {
@@ -20,6 +19,7 @@ declare class DatabunkerproAPI {
   rawRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
 
   // User Management
+  createUser(profile: Record<string, any>, options?: UserOptions, requestMetadata?: RequestMetadata): Promise<any>;
   getUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -37,6 +37,8 @@ declare class DatabunkerproAPI {
   // App Data Management
   createAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   getUserAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  updateAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  requestAppDataUpdate(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   listUserAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
