@@ -307,12 +307,13 @@ export class DatabunkerproAPI {
     return this.makeRequest('BulkListUnlock', 'POST', null, requestMetadata);
   }
 
-  async bulkListUsers(unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('BulkListUsers', 'POST', { unlockuuid }, requestMetadata);
+  async bulkListUsers(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListUsers', 'POST', data, requestMetadata);
   }
 
-  async bulkListGroupUsers(unlockuuid: string, groupname: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = { unlockuuid };
+  async bulkListGroupUsers(unlockuuid: string, groupname: string | number, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { unlockuuid, offset, limit };
     if (Number.isInteger(Number(groupname))) {
       data.groupid = groupname;
     } else {
@@ -321,12 +322,14 @@ export class DatabunkerproAPI {
     return this.makeRequest('BulkListGroupUsers', 'POST', data, requestMetadata);
   }
 
-  async bulkListUserRequests(unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('BulkListUserRequests', 'POST', { unlockuuid }, requestMetadata);
+  async bulkListUserRequests(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListUserRequests', 'POST', data, requestMetadata);
   }
 
-  async bulkListAuditEvents(unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid }, requestMetadata);
+  async bulkListAuditEvents(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListAuditEvents', 'POST', data, requestMetadata);
   }
 
   // System Configuration

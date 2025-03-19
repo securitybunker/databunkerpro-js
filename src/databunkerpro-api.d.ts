@@ -80,10 +80,10 @@ declare class DatabunkerproAPI {
 
   // Bulk Operations
   bulkListUnlock(requestMetadata?: RequestMetadata): Promise<any>;
-  bulkListUsers(unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
-  bulkListGroupUsers(unlockuuid: string, groupname: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  bulkListUserRequests(unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
-  bulkListAuditEvents(unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListUsers(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListGroupUsers(unlockuuid: string, groupname: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListUserRequests(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
 
   // System Configuration
   getUIConf(): Promise<any>;

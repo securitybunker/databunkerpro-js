@@ -52,10 +52,10 @@ export declare class DatabunkerproAPI {
     createPolicy(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     listPolicies(requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListUnlock(requestMetadata?: RequestMetadata | null): Promise<any>;
-    bulkListUsers(unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    bulkListGroupUsers(unlockuuid: string, groupname: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    bulkListUserRequests(unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    bulkListAuditEvents(unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    bulkListUsers(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    bulkListGroupUsers(unlockuuid: string, groupname: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    bulkListUserRequests(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUIConf(): Promise<any>;
     getTenantConf(): Promise<any>;
     getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;

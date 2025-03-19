@@ -302,12 +302,13 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListUnlock', 'POST', null, requestMetadata);
   }
 
-  async bulkListUsers(unlockuuid, requestMetadata = null) {
-    return this.makeRequest('BulkListUsers', 'POST', { unlockuuid }, requestMetadata);
+  async bulkListUsers(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { unlockuuid, offset, limit }
+    return this.makeRequest('BulkListUsers', 'POST', data, requestMetadata);
   }
 
-  async bulkListGroupUsers(unlockuuid, groupname, requestMetadata = null) {
-    const data = { unlockuuid };
+  async bulkListGroupUsers(unlockuuid, groupname, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { unlockuuid, offset, limit };
     if (Number.isInteger(Number(groupname))) {
       data.groupid = groupname;
     } else {
@@ -316,12 +317,14 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListGroupUsers', 'POST', data, requestMetadata);
   }
 
-  async bulkListUserRequests(unlockuuid, requestMetadata = null) {
-    return this.makeRequest('BulkListUserRequests', 'POST', { unlockuuid }, requestMetadata);
+  async bulkListUserRequests(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListUserRequests', 'POST', data, requestMetadata);
   }
 
-  async bulkListAuditEvents(unlockuuid, requestMetadata = null) {
-    return this.makeRequest('BulkListAuditEvents', 'POST', { unlockuuid }, requestMetadata);
+  async bulkListAuditEvents(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListAuditEvents', 'POST', data, requestMetadata);
   }
 
   // System Configuration
