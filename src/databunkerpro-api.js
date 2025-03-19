@@ -141,8 +141,9 @@ class DatabunkerproAPI {
     return this.makeRequest('UserRequestGet', 'POST', { mode, identity, requestuuid }, requestMetadata);
   }
 
-  async listUserRequests(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserRequestListUserRequests', 'POST', { mode, identity }, requestMetadata);
+  async listUserRequests(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { mode, identity, offset, limit }
+    return this.makeRequest('UserRequestListUserRequests', 'POST', data, requestMetadata);
   }
 
   async cancelUserRequest(mode, identity, requestuuid, requestMetadata = null) {
@@ -254,8 +255,9 @@ class DatabunkerproAPI {
   }
 
   // Audit Management
-  async listUserAuditEvents(mode, identity, requestMetadata = null) {
-    return this.makeRequest('AuditListUserEvents', 'POST', { mode, identity }, requestMetadata);
+  async listUserAuditEvents(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { mode, identity, offset, limit }
+    return this.makeRequest('AuditListUserEvents', 'POST', data, requestMetadata);
   }
 
   async getAuditEvent(auditeventuuid, requestMetadata = null) {
