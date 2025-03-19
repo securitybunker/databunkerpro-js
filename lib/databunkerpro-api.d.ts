@@ -41,7 +41,7 @@ export declare class DatabunkerproAPI {
     listAllGroups(requestMetadata?: RequestMetadata | null): Promise<any>;
     addUserToGroup(groupname: string | number, mode: string, identity: string, rolename?: string | number | null, requestMetadata?: RequestMetadata | null): Promise<any>;
     createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    listUserAuditEvents(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -59,6 +59,9 @@ export declare class DatabunkerproAPI {
     getUIConf(): Promise<any>;
     getTenantConf(): Promise<any>;
     getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata | null, reason?: string | null): Promise<any>;
 }
 export default DatabunkerproAPI;
 declare global {

@@ -30,9 +30,9 @@ declare class DatabunkerproAPI {
 
   // User Request Management
   getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-  listUserRequests(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
-  approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata, reason?: string): Promise<any>;
+  approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata, reason?: string | null): Promise<any>;
 
   // App Data Management
   createAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
@@ -61,7 +61,7 @@ declare class DatabunkerproAPI {
   createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Audit Management
-  listUserAuditEvents(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Tenant Management

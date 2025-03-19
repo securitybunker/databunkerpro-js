@@ -259,8 +259,9 @@ export class DatabunkerproAPI {
   }
 
   // Audit Management
-  async listUserAuditEvents(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('AuditListUserEvents', 'POST', { mode, identity }, requestMetadata);
+  async listUserAuditEvents(mode: string, identity: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { mode, identity, offset, limit };
+    return this.makeRequest('AuditListUserEvents', 'POST', data, requestMetadata);
   }
 
   async getAuditEvent(auditeventuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -344,6 +345,19 @@ export class DatabunkerproAPI {
   // User Request Management
   async getUserRequest(requestuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('UserRequestGet', 'POST', { requestuuid }, requestMetadata);
+  }
+
+  async listUserRequests(mode: string, identity: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { mode, identity, offset, limit };
+    return this.makeRequest('UserRequestListUserRequests', 'POST', data, requestMetadata);
+  }
+
+  async cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('UserRequestCancel', 'POST', { mode, identity, requestuuid }, requestMetadata);
+  }
+
+  async approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata: RequestMetadata | null = null, reason: string | null = null): Promise<any> {
+    return this.makeRequest('UserRequestApprove', 'POST', { mode, identity, requestuuid, reason }, requestMetadata);
   }
 }
 
