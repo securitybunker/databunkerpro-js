@@ -56,7 +56,7 @@ async function basicUsageDemo() {
     console.log('Retrieved tenant:', tenantInfo);
 
     // Rename tenant
-    const renamedTenant = await api.renameTenant(newTenant.tenantid, 'acme-corp-new');
+    const renamedTenant = await api.updateTenant(newTenant.tenantid, 'acme-corp-new');
     console.log('Renamed tenant:', renamedTenant);
 
     // List all tenants

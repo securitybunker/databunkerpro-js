@@ -45,7 +45,7 @@ export declare class DatabunkerproAPI {
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    renameTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listTenants(requestMetadata?: RequestMetadata | null): Promise<any>;
     createRole(rolename: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     linkPolicy(rolename: string, policyname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -60,8 +60,8 @@ export declare class DatabunkerproAPI {
     getTenantConf(): Promise<any>;
     getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata | null, reason?: string | null): Promise<any>;
+    cancelUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
+    approveUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
 }
 export default DatabunkerproAPI;
 declare global {

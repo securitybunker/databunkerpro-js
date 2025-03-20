@@ -277,8 +277,8 @@ export class DatabunkerproAPI {
     return this.makeRequest('TenantGet', 'POST', { tenantid }, requestMetadata);
   }
 
-  async renameTenant(tenantid: string | number, tenantname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('TenantRename', 'POST', { tenantid, tenantname }, requestMetadata);
+  async updateTenant(tenantid: string | number, tenantname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TenantUpdate', 'POST', { tenantid, tenantname }, requestMetadata);
   }
 
   async listTenants(requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -352,12 +352,12 @@ export class DatabunkerproAPI {
     return this.makeRequest('UserRequestListUserRequests', 'POST', data, requestMetadata);
   }
 
-  async cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('UserRequestCancel', 'POST', { mode, identity, requestuuid }, requestMetadata);
+  async cancelUserRequest(requestuuid: string, reason: string | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('UserRequestCancel', 'POST', { requestuuid, reason }, requestMetadata);
   }
 
-  async approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata: RequestMetadata | null = null, reason: string | null = null): Promise<any> {
-    return this.makeRequest('UserRequestApprove', 'POST', { mode, identity, requestuuid, reason }, requestMetadata);
+  async approveUserRequest(requestuuid: string, reason: string | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('UserRequestApprove', 'POST', { requestuuid, reason }, requestMetadata);
   }
 }
 

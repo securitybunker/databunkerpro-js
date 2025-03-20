@@ -31,8 +31,8 @@ declare class DatabunkerproAPI {
   // User Request Management
   getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
   listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
-  cancelUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
-  approveUserRequest(mode: string, identity: string, requestuuid: string, requestMetadata?: RequestMetadata, reason?: string | null): Promise<any>;
+  cancelUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata): Promise<any>;
+  approveUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata): Promise<any>;
 
   // App Data Management
   createAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
@@ -67,7 +67,7 @@ declare class DatabunkerproAPI {
   // Tenant Management
   createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   getTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  renameTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  updateTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata): Promise<any>;
   listTenants(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Role Management
