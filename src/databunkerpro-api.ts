@@ -277,8 +277,13 @@ export class DatabunkerproAPI {
     return this.makeRequest('TenantGet', 'POST', { tenantid }, requestMetadata);
   }
 
-  async updateTenant(tenantid: string | number, tenantname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('TenantUpdate', 'POST', { tenantid, tenantname }, requestMetadata);
+  async updateTenant(tenantid: string | number, tenantname: string, tenantorg: string, email: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { tenantid, tenantname, tenantorg, email };
+    return this.makeRequest('TenantUpdate', 'POST', data, requestMetadata);
+  }
+
+  async deleteTenant(tenantid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TenantDelete', 'POST', { tenantid }, requestMetadata);
   }
 
   async listTenants(requestMetadata: RequestMetadata | null = null): Promise<any> {

@@ -45,7 +45,8 @@ export declare class DatabunkerproAPI {
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateTenant(tenantid: string | number, tenantname: string, tenantorg: string, email: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listTenants(requestMetadata?: RequestMetadata | null): Promise<any>;
     createRole(rolename: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     linkPolicy(rolename: string, policyname: string, requestMetadata?: RequestMetadata | null): Promise<any>;

@@ -67,7 +67,8 @@ declare class DatabunkerproAPI {
   // Tenant Management
   createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   getTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  updateTenant(tenantid: string | number, tenantname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  updateTenant(tenantid: string | number, tenantname: string, tenantorg: string, email: string, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listTenants(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Role Management

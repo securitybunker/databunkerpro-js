@@ -249,7 +249,7 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupAddUser', 'POST', data, requestMetadata);
   }
 
-  // Token Management
+  // Access Management
   async createXToken(mode, identity, requestMetadata = null) {
     return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
   }
@@ -273,8 +273,9 @@ class DatabunkerproAPI {
     return this.makeRequest('TenantGet', 'POST', { tenantid }, requestMetadata);
   }
 
-  async updateTenant(tenantid, tenantname, tenantorg, requestMetadata = null) {
-    return this.makeRequest('TenantUpdate', 'POST', { tenantid, tenantname, tenantorg }, requestMetadata);
+  async updateTenant(tenantid, tenantname, tenantorg, email, requestMetadata = null) {
+    const data = { tenantid, tenantname, tenantorg, email }
+    return this.makeRequest('TenantUpdate', 'POST', data, requestMetadata);
   }
 
   async deleteTenant(tenantid, requestMetadata = null) {
