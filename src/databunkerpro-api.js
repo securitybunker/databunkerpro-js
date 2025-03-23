@@ -219,13 +219,14 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorsListSupportedConnectors', 'POST', null, requestMetadata);
   }
 
-  async listConnectors(requestMetadata = null) {
-    return this.makeRequest('ConnectorsListConnectors', 'POST', null, requestMetadata);
+  async listConnectors(offset = 0, limit = 10, requestMetadata = null) {
+    const data = { offset, limit };
+    return this.makeRequest('ConnectorsListConnectors', 'POST', data, requestMetadata);
   }
 
-  async createConnector(connectortitle, connectortype, apikey, options = {}, requestMetadata = null) {
+  async createConnector(connectorname, connectortype, apikey, options = {}, requestMetadata = null) {
     const data = {
-      connectortitle,
+      connectorname,
       connectortype,
       apikey,
       ...options
@@ -233,15 +234,22 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorsCreateConnector', 'POST', data, requestMetadata);
   }
 
-  async updateConnector(connectorid, connectortitle, connectortype, apikey, options = {}, requestMetadata = null) {
+  async updateConnector(connectorid, connectorname, connectortype, apikey, options = {}, requestMetadata = null) {
     const data = {
       connectorid,
-      connectortitle,
+      connectorname,
       connectortype,
       apikey,
       ...options
     };
     return this.makeRequest('ConnectorsUpdateConnector', 'POST', data, requestMetadata);
+  }
+
+  async validateConnectorConnectivity(options = {}, requestMetadata = null) {
+    const data = {
+      ...options
+    };
+    return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
   }
 
   async connectorsGetUserData(mode, identity, connectorid, requestMetadata = null) {
@@ -256,29 +264,19 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async connectorGetTableMetadata(connectorid, apikey, username, connectortype, dbhost, dbname, tablename, requestMetadata = null) {
+  async connectorsGetTableMetadata(connectorid, apikey, username, connectortype, dbhost, dbname, tablename, requestMetadata = null) {
     const data = {
       connectorid,
       apikey,
       username,
       connectortype,
       dbhost,
+      dbport,
       dbname,
       tablename
     };
     return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }
-
-  async connectorsValidateConnectivity(connectorid, apikey, connectortype, options = {}, requestMetadata = null) {
-    const data = {
-      connectorid,
-      apikey,
-      connectortype,
-      ...options
-    };
-    return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
-  }
-
   // Group Management
   async createGroup(groupname, groupdesc = '', requestMetadata = null) {
     return this.makeRequest('GroupCreate', 'POST', { groupname, groupdesc }, requestMetadata);
