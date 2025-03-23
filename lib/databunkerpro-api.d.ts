@@ -6,6 +6,19 @@ interface UserOptions {
     slidingtime?: string;
     finaltime?: string;
 }
+interface ConnectorOptions {
+    connectorid?: string | number;
+    connectorname?: string;
+    connectortype?: string;
+    apikey?: string;
+    username?: string;
+    connectordesc?: string;
+    dbhost?: string;
+    dbport?: number;
+    dbname?: string;
+    tablename?: string;
+    status?: string;
+}
 interface RequestMetadata {
     [key: string]: any;
 }
@@ -63,6 +76,15 @@ export declare class DatabunkerproAPI {
     listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     cancelUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
     approveUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listSupportedConnectors(requestMetadata?: RequestMetadata | null): Promise<any>;
+    listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createConnector(connectorname: string, connectortype: string, apikey: string, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateConnector(connectorid: string | number, connectorname: string, connectortype: string, apikey: string, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorsGetTableMetadata(connectorid: string | number, apikey: string, username: string, connectortype: string, dbhost: string, dbname: string, tablename: string, requestMetadata?: RequestMetadata | null): Promise<any>;
 }
 export default DatabunkerproAPI;
 declare global {

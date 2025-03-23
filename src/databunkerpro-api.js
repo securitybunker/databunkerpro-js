@@ -252,6 +252,13 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
   }
 
+  async getTableMetadata(options = {}, requestMetadata = null) {
+    const data = {
+      ...options
+    };
+    return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
+  }
+  
   async connectorsGetUserData(mode, identity, connectorid, requestMetadata = null) {
     return this.makeRequest('ConnectorsGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
@@ -264,19 +271,6 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async connectorsGetTableMetadata(connectorid, apikey, username, connectortype, dbhost, dbname, tablename, requestMetadata = null) {
-    const data = {
-      connectorid,
-      apikey,
-      username,
-      connectortype,
-      dbhost,
-      dbport,
-      dbname,
-      tablename
-    };
-    return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
-  }
   // Group Management
   async createGroup(groupname, groupdesc = '', requestMetadata = null) {
     return this.makeRequest('GroupCreate', 'POST', { groupname, groupdesc }, requestMetadata);

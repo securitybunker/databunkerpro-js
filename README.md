@@ -87,6 +87,75 @@ const updateResult = await client.updateUser(
 );
 ```
 
+### Managing Database Connectors
+```javascript
+// List supported connector types
+const supportedConnectors = await client.listSupportedConnectors();
+
+// Create a new connector
+const createResult = await client.createConnector(
+  "MySQL Production",
+  "mysql",
+  "api-key-123",
+  {
+    dbhost: "prod-db.example.com",
+    dbport: 3306,
+    dbname: "users",
+    username: "admin",
+    connectordesc: "Production user database"
+  }
+);
+
+// Update connector configuration
+await client.updateConnector(
+  "connector-123",
+  "MySQL Production",
+  "mysql",
+  "new-api-key",
+  {
+    dbhost: "new-prod-db.example.com",
+    status: "active"
+  }
+);
+
+// Validate connector connectivity
+await client.validateConnectorConnectivity({
+  connectorid: 1,
+});
+
+// Get user data from connector
+const userData = await client.connectorsGetUserData(
+  "email",
+  "user@example.com",
+  "connector-123"
+);
+
+// Get additional user data from connector
+const extraData = await client.connectorsGetUserExtraData(
+  "email",
+  "user@example.com",
+  "connector-123"
+);
+
+// Delete user data from connector
+await client.connectorsDeleteUser(
+  "email",
+  "user@example.com",
+  "connector-123"
+);
+
+// Get connector table metadata
+await client.connectorsGetTableMetadata(
+  "connector-123",
+  "api-key-123",
+  "admin",
+  "mysql",
+  "prod-db.example.com",
+  "users",
+  "user_data"
+);
+```
+
 ## API Reference
 
 The library provides methods for interacting with all Databunkerpro endpoints:
@@ -94,6 +163,7 @@ The library provides methods for interacting with all Databunkerpro endpoints:
 - User Management
 - App Data Management
 - Agreement Management
+- Connector Management
 - Group Management
 - Token Management
 - Audit Management

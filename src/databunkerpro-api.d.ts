@@ -11,6 +11,20 @@ interface UserOptions {
   finaltime?: string;
 }
 
+interface ConnectorOptions {
+  connectorid?: string | number;
+  connectorname?: string;
+  connectortype?: string;
+  apikey?: string;
+  username?: string;
+  connectordesc?: string;
+  dbhost?: string;
+  dbport?: number;
+  dbname?: string;
+  tablename?: string;
+  status?: string;
+}
+
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string);
 
@@ -50,6 +64,17 @@ declare class DatabunkerproAPI {
   listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAgreements(requestMetadata?: RequestMetadata): Promise<any>;
   listProcessingActivities(requestMetadata?: RequestMetadata): Promise<any>;
+
+  // Connector Management
+  listSupportedConnectors(requestMetadata?: RequestMetadata): Promise<any>;
+  listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
+  createConnector(connectorname: string, connectortype: string, apikey: string, options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  updateConnector(connectorid: string | number, connectorname: string, connectortype: string, apikey: string, options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorsGetTableMetadata(connectorid: string | number, apikey: string, username: string, connectortype: string, dbhost: string, dbname: string, tablename: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Group Management
   createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;
