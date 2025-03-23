@@ -138,7 +138,7 @@ class DatabunkerproAPI {
 
   // User Request Management
   async getUserRequest(requestuuid, requestMetadata = null) {
-    return this.makeRequest('UserRequestGet', 'POST', { mode, identity, requestuuid }, requestMetadata);
+    return this.makeRequest('UserRequestGet', 'POST', { requestuuid }, requestMetadata);
   }
 
   async listUserRequests(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
@@ -214,6 +214,71 @@ class DatabunkerproAPI {
     return this.makeRequest('ProcessingActivityListActivities', 'POST', null, requestMetadata);
   }
 
+  // Connector Management
+  async listSupportedConnectors(requestMetadata = null) {
+    return this.makeRequest('ConnectorsListSupportedConnectors', 'POST', null, requestMetadata);
+  }
+
+  async listConnectors(requestMetadata = null) {
+    return this.makeRequest('ConnectorsListConnectors', 'POST', null, requestMetadata);
+  }
+
+  async createConnector(connectortitle, connectortype, apikey, options = {}, requestMetadata = null) {
+    const data = {
+      connectortitle,
+      connectortype,
+      apikey,
+      ...options
+    };
+    return this.makeRequest('ConnectorsCreateConnector', 'POST', data, requestMetadata);
+  }
+
+  async updateConnector(connectorid, connectortitle, connectortype, apikey, options = {}, requestMetadata = null) {
+    const data = {
+      connectorid,
+      connectortitle,
+      connectortype,
+      apikey,
+      ...options
+    };
+    return this.makeRequest('ConnectorsUpdateConnector', 'POST', data, requestMetadata);
+  }
+
+  async connectorsGetUserData(mode, identity, connectorid, requestMetadata = null) {
+    return this.makeRequest('ConnectorsGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
+  }
+
+  async connectorsGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
+    return this.makeRequest('ConnectorsGetUserExtraData', 'POST', { mode, identity, connectorid }, requestMetadata);
+  }
+
+  async connectorsDeleteUser(mode, identity, connectorid, requestMetadata = null) {
+    return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
+  }
+
+  async connectorGetTableMetadata(connectorid, apikey, username, connectortype, dbhost, dbname, tablename, requestMetadata = null) {
+    const data = {
+      connectorid,
+      apikey,
+      username,
+      connectortype,
+      dbhost,
+      dbname,
+      tablename
+    };
+    return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
+  }
+
+  async connectorsValidateConnectivity(connectorid, apikey, connectortype, options = {}, requestMetadata = null) {
+    const data = {
+      connectorid,
+      apikey,
+      connectortype,
+      ...options
+    };
+    return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
+  }
+
   // Group Management
   async createGroup(groupname, groupdesc = '', requestMetadata = null) {
     return this.makeRequest('GroupCreate', 'POST', { groupname, groupdesc }, requestMetadata);
@@ -249,7 +314,7 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupAddUser', 'POST', data, requestMetadata);
   }
 
-  // Access Management
+  // Access Token Management
   async createXToken(mode, identity, requestMetadata = null) {
     return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
   }
@@ -274,7 +339,7 @@ class DatabunkerproAPI {
   }
 
   async updateTenant(tenantid, tenantname, tenantorg, email, requestMetadata = null) {
-    const data = { tenantid, tenantname, tenantorg, email }
+    const data = { tenantid, tenantname, tenantorg, email };
     return this.makeRequest('TenantUpdate', 'POST', data, requestMetadata);
   }
 
@@ -282,8 +347,9 @@ class DatabunkerproAPI {
     return this.makeRequest('TenantDelete', 'POST', { tenantid }, requestMetadata);
   }
 
-  async listTenants(requestMetadata = null) {
-    return this.makeRequest('TenantListTenants', 'POST', null, requestMetadata);
+  async listTenants(offset = 0, limit = 10, requestMetadata = null) {
+    const data = { offset, limit };
+    return this.makeRequest('TenantListTenants', 'POST', data, requestMetadata);
   }
 
   // Role Management
