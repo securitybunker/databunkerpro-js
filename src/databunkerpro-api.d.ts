@@ -23,10 +23,10 @@ interface UserOptions {
 }
 
 interface ConnectorOptions {
+  connectorname: string;
+  connectortype: string;
+  apikey: string;
   connectorid?: string | number;
-  connectorname?: string;
-  connectortype?: string;
-  apikey?: string;
   username?: string;
   connectordesc?: string;
   dbhost?: string;
@@ -80,8 +80,8 @@ declare class DatabunkerproAPI {
   // Connector Management
   listSupportedConnectors(requestMetadata?: RequestMetadata): Promise<any>;
   listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
-  createConnector(connectorname: string, connectortype: string, apikey: string, options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  updateConnector(connectorid: string | number, connectorname: string, connectortype: string, apikey: string, options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  updateConnector(options: ConnectorOptions & { connectorid: string | number }, requestMetadata?: RequestMetadata): Promise<any>;
   validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
   connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;

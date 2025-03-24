@@ -144,18 +144,16 @@ const updateResult = await client.updateUser(
 const supportedConnectors = await client.listSupportedConnectors();
 
 // Create a new connector
-const createResult = await client.createConnector(
-  "MySQL Production",
-  "mysql",
-  "api-key-123",
-  {
-    dbhost: "prod-db.example.com",
-    dbport: 3306,
-    dbname: "users",
-    username: "admin",
-    connectordesc: "Production user database"
-  }
-);
+const createResult = await client.createConnector({
+  connectorname: "MySQL Production",
+  connectortype: "mysql",
+  apikey: "api-key-123",
+  dbhost: "prod-db.example.com",
+  dbport: 3306,
+  dbname: "users",
+  username: "admin",
+  connectordesc: "Production user database"
+});
 
 // Update connector configuration
 await client.updateConnector(

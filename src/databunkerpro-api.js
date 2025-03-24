@@ -263,7 +263,7 @@ class DatabunkerproAPI {
    * );
    */
   async acceptAgreement(mode, identity, options, requestMetadata = null) {
-    const data = { 
+    const data = {
       mode, 
       identity, 
       brief: options.brief,
@@ -308,37 +308,112 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorsListConnectors', 'POST', data, requestMetadata);
   }
 
-  async createConnector(connectorname, connectortype, apikey, options = {}, requestMetadata = null) {
+  /**
+   * Creates a new database connector with the specified configuration
+   * @param {Object} options - The connector configuration options
+   * @param {string} options.connectorname - Name of the connector (e.g., "MySQL Production")
+   * @param {string} options.connectortype - Type of the connector (e.g., 'mysql', 'postgresql', 'mongodb')
+   * @param {string} options.apikey - API key for authentication with the database
+   * @param {string} [options.username] - Username for database connection
+   * @param {string} [options.connectordesc] - Description of the connector's purpose
+   * @param {string} [options.dbhost] - Database host address (e.g., "db.example.com")
+   * @param {number} [options.dbport] - Database port number (e.g., 3306 for MySQL)
+   * @param {string} [options.dbname] - Name of the database to connect to
+   * @param {string} [options.tablename] - Specific table name if applicable
+   * @param {string} [options.status] - Status of the connector (e.g., 'active', 'inactive')
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The created connector details
+   * @example
+   * // Create a MySQL database connector
+   * const connector = await api.createConnector({
+   *   connectorname: "MySQL Production",
+   *   connectortype: "mysql",
+   *   connectordesc: "Production user database",
+   *   username: "admin",
+   *   apikey: "api-key-123",
+   *   dbhost: "prod-db.example.com",
+   *   dbport: 3306,
+   *   dbname: "users",
+   *   status: "active"
+   * });
+   * 
+   * // Create a PostgreSQL database connector
+   * const pgConnector = await api.createConnector({
+   *   connectorname: "PostgreSQL Analytics",
+   *   connectortype: "postgresql",
+   *   connectordesc: "Analytics database for user behavior",
+   *   username: "analyst",
+   *   apikey: "pg-api-key",
+   *   dbhost: "analytics.example.com",
+   *   dbport: 5432,
+   *   dbname: "analytics",
+   *   status: "active"
+   * });
+   */
+  async createConnector(options, requestMetadata = null) {
     const data = {
-      connectorname,
-      connectortype,
-      apikey,
-      ...options
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      connectorid: options.connectorid, 
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
     };
     return this.makeRequest('ConnectorsCreateConnector', 'POST', data, requestMetadata);
   }
 
-  async updateConnector(connectorid, connectorname, connectortype, apikey, options = {}, requestMetadata = null) {
+  async updateConnector(options, requestMetadata = null) {
     const data = {
-      connectorid,
-      connectorname,
-      connectortype,
-      apikey,
-      ...options
+      connectorid: options.connectorid,
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
     };
     return this.makeRequest('ConnectorsUpdateConnector', 'POST', data, requestMetadata);
   }
 
-  async validateConnectorConnectivity(options = {}, requestMetadata = null) {
+  async validateConnectorConnectivity(options, requestMetadata = null) {
     const data = {
-      ...options
+      connectorid: options.connectorid,
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
     };
     return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
   }
 
-  async getTableMetadata(options = {}, requestMetadata = null) {
+  async getTableMetadata(options, requestMetadata = null) {
     const data = {
-      ...options
+      connectorid: options.connectorid,
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
     };
     return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }

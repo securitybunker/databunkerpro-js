@@ -457,29 +457,104 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorsListConnectors', 'POST', data, requestMetadata);
   }
 
-  async createConnector(connectorname: string, connectortype: string, apikey: string, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  /**
+   * Creates a new database connector with the specified configuration
+   * @param {ConnectorOptions} options - The connector configuration options
+   * @param {string} [options.connectorname] - Name of the connector (e.g., "MySQL Production")
+   * @param {string} [options.connectortype] - Type of the connector (e.g., 'mysql', 'postgresql', 'mongodb')
+   * @param {string} [options.connectordesc] - Description of the connector's purpose
+   * @param {string} [options.username] - Username for database connection
+   * @param {string} [options.apikey] - API key for authentication with the database
+   * @param {string} [options.dbhost] - Database host address (e.g., "db.example.com")
+   * @param {number} [options.dbport] - Database port number (e.g., 3306 for MySQL)
+   * @param {string} [options.dbname] - Name of the database to connect to
+   * @param {string} [options.tablename] - Specific table name if applicable
+   * @param {string} [options.status] - Status of the connector (e.g., 'active', 'inactive')
+   * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<any>} The created connector details
+   */
+  async createConnector(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
-      connectorname,
-      connectortype,
-      apikey,
-      ...options
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      connectorid: options.connectorid,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
     };
     return this.makeRequest('ConnectorsCreateConnector', 'POST', data, requestMetadata);
   }
 
-  async updateConnector(connectorid: string | number, connectorname: string, connectortype: string, apikey: string, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  /**
+   * Updates an existing connector configuration
+   * @param {ConnectorOptions} options - The connector configuration options
+   * @param {string|number} [options.connectorid] - ID of the connector to update
+   * @param {string} [options.connectorname] - Updated name of the connector
+   * @param {string} [options.connectortype] - Updated type of the connector
+   * @param {string} [options.connectordesc] - Updated description of the connector
+   * @param {string} [options.username] - Updated username for database connection
+   * @param {string} [options.apikey] - Updated API key for authentication
+   * @param {string} [options.dbhost] - Updated database host address
+   * @param {number} [options.dbport] - Updated database port number
+   * @param {string} [options.dbname] - Updated database name
+   * @param {string} [options.status] - Updated connector status
+   * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<any>} The updated connector details
+   */
+  async updateConnector(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
-      connectorid,
-      connectorname,
-      connectortype,
-      apikey,
-      ...options
+      connectorid: options.connectorid,
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
     };
     return this.makeRequest('ConnectorsUpdateConnector', 'POST', data, requestMetadata);
   }
 
   async validateConnectorConnectivity(options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('ConnectorsValidateConnectivity', 'POST', options, requestMetadata);
+    const data = {
+      connectorid: options.connectorid,
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
+    };
+    return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
+  }
+
+  async getTableMetadata(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = {
+      connectorid: options.connectorid,
+      connectorname: options.connectorname,
+      connectortype: options.connectortype,
+      connectordesc: options.connectordesc,
+      username: options.username,
+      apikey: options.apikey,
+      dbhost: options.dbhost,
+      dbport: options.dbport,
+      dbname: options.dbname,
+      tablename: options.tablename,
+      status: options.status
+    };
+    return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }
 
   async connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -492,19 +567,6 @@ export class DatabunkerproAPI {
 
   async connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
-  }
-
-  async connectorsGetTableMetadata(connectorid: string | number, apikey: string, username: string, connectortype: string, dbhost: string, dbname: string, tablename: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = {
-      connectorid,
-      apikey,
-      username,
-      connectortype,
-      dbhost,
-      dbname,
-      tablename
-    };
-    return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }
 }
 
