@@ -355,7 +355,6 @@ class DatabunkerproAPI {
       connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
-      connectorid: options.connectorid, 
       username: options.username,
       apikey: options.apikey,
       dbhost: options.dbhost,
@@ -399,6 +398,10 @@ class DatabunkerproAPI {
       status: options.status
     };
     return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
+  }
+
+  async deleteConnector(connectorid, requestMetadata = null) {
+    return this.makeRequest('ConnectorsDeleteConnector', 'POST', { connectorid }, requestMetadata);
   }
 
   async getTableMetadata(options, requestMetadata = null) {

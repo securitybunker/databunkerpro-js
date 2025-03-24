@@ -478,7 +478,6 @@ export class DatabunkerproAPI {
       connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
-      connectorid: options.connectorid,
       username: options.username,
       apikey: options.apikey,
       dbhost: options.dbhost,

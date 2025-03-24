@@ -154,9 +154,9 @@ async function basicUsageDemo() {
     const mysqlConnector = await api.createConnector({
       connectorname: "MySQL Production",
       connectortype: "mysql",
-      apikey: "api-key-123",
-      username: "admin",
       connectordesc: "Production user database",
+      username: "admin",
+      apikey: "api-key-123",
       dbhost: "prod-db.example.com",
       dbport: 3306,
       dbname: "users",
