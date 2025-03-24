@@ -26,6 +26,7 @@ interface UserOptions {
     finaltime?: string;
 }
 interface ConnectorOptions {
+    connectorid?: string | number;
     connectorname?: string;
     connectortype?: string;
     apikey?: string;
@@ -36,7 +37,6 @@ interface ConnectorOptions {
     dbname?: string;
     tablename?: string;
     status?: string;
-    connectorid?: string | number;
 }
 interface RequestMetadata {
     [key: string]: any;
@@ -136,7 +136,39 @@ export declare class DatabunkerproAPI {
     approveUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
     listSupportedConnectors(requestMetadata?: RequestMetadata | null): Promise<any>;
     listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Creates a new database connector with the specified configuration
+     * @param {ConnectorOptions} options - The connector configuration options
+     * @param {string} [options.connectorname] - Name of the connector (e.g., "MySQL Production")
+     * @param {string} [options.connectortype] - Type of the connector (e.g., 'mysql', 'postgresql', 'mongodb')
+     * @param {string} [options.connectordesc] - Description of the connector's purpose
+     * @param {string} [options.username] - Username for database connection
+     * @param {string} [options.apikey] - API key for authentication with the database
+     * @param {string} [options.dbhost] - Database host address (e.g., "db.example.com")
+     * @param {number} [options.dbport] - Database port number (e.g., 3306 for MySQL)
+     * @param {string} [options.dbname] - Name of the database to connect to
+     * @param {string} [options.tablename] - Specific table name if applicable
+     * @param {string} [options.status] - Status of the connector (e.g., 'active', 'inactive')
+     * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+     * @returns {Promise<any>} The created connector details
+     */
     createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Updates an existing connector configuration
+     * @param {ConnectorOptions} options - The connector configuration options
+     * @param {string|number} [options.connectorid] - ID of the connector to update
+     * @param {string} [options.connectorname] - Updated name of the connector
+     * @param {string} [options.connectortype] - Updated type of the connector
+     * @param {string} [options.connectordesc] - Updated description of the connector
+     * @param {string} [options.username] - Updated username for database connection
+     * @param {string} [options.apikey] - Updated API key for authentication
+     * @param {string} [options.dbhost] - Updated database host address
+     * @param {number} [options.dbport] - Updated database port number
+     * @param {string} [options.dbname] - Updated database name
+     * @param {string} [options.status] - Updated connector status
+     * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+     * @returns {Promise<any>} The updated connector details
+     */
     updateConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;

@@ -23,12 +23,12 @@ interface UserOptions {
 }
 
 interface ConnectorOptions {
-  connectorname: string;
-  connectortype: string;
-  apikey: string;
+  connectorname?: string;
+  connectortype?: string;
+  connectordesc?: string;
   connectorid?: string | number;
   username?: string;
-  connectordesc?: string;
+  apikey?: string;
   dbhost?: string;
   dbport?: number;
   dbname?: string;

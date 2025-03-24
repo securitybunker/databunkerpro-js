@@ -143,7 +143,52 @@ async function basicUsageDemo() {
       console.log('Audit event details:', eventDetails);
     }
 
-    // 7. Cleanup (Optional - uncomment if needed)
+    // 7. Connector Management
+    console.log('\n=== Connector Management ===');
+
+    // List supported connector types
+    const supportedConnectors = await api.listSupportedConnectors();
+    console.log('Supported connectors:', supportedConnectors);
+
+    // Create a MySQL connector
+    const mysqlConnector = await api.createConnector({
+      connectorname: "MySQL Production",
+      connectortype: "mysql",
+      apikey: "api-key-123",
+      username: "admin",
+      connectordesc: "Production user database",
+      dbhost: "prod-db.example.com",
+      dbport: 3306,
+      dbname: "users",
+      status: "active"
+    });
+    console.log('Created MySQL connector:', mysqlConnector);
+
+    // Update connector configuration
+    const updatedConnector = await api.updateConnector({
+      connectorid: mysqlConnector.connectorid,
+      connectorname: "MySQL Production Updated",
+      connectortype: "mysql",
+      apikey: "new-api-key",
+      dbhost: "new-prod-db.example.com",
+      status: "active"
+    });
+    console.log('Updated connector:', updatedConnector);
+
+    // Validate connector connectivity
+    const connectivityStatus = await api.validateConnectorConnectivity({
+      connectorid: mysqlConnector.connectorid,
+      apikey: "api-key-123",
+      dbhost: "prod-db.example.com",
+      dbport: 3306
+    });
+    console.log('Connectivity status:', connectivityStatus);
+
+    // List all connectors
+    const connectors = await api.listConnectors();
+    console.log('All connectors:', connectors);
+
+    // 8. Cleanup (Optional - uncomment if needed)
     // console.log('\n=== Cleanup ===');
     // const deleteResult = await api.deleteUser('login', 'johndoe');
     // console.log('User deleted:', deleteResult);

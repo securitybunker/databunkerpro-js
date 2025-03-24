@@ -59,21 +59,21 @@ const requestMetadata = {
   reason: "Role promotion"
 };
 
-// Using group name
+// Using group name and role name
 await client.addUserToGroup(
-  "email",
-  "user@example.com",
-  "admins",
-  "editor",
+  "email",                // mode
+  "user@example.com",     // identity
+  "admins",              // groupname (string)
+  "editor",              // rolename (optional)
   requestMetadata
 );
 
-// Using group ID
+// Using group ID and role ID
 await client.addUserToGroup(
-  "email",
-  "user@example.com",
-  123,
-  456,
+  "email",                // mode
+  "user@example.com",     // identity
+  123,                    // groupname (numeric ID)
+  456,                    // rolename (numeric ID, optional)
   requestMetadata
 );
 ```
@@ -143,33 +143,53 @@ const updateResult = await client.updateUser(
 // List supported connector types
 const supportedConnectors = await client.listSupportedConnectors();
 
-// Create a new connector
-const createResult = await client.createConnector({
+// Create a MySQL database connector
+const mysqlConnector = await client.createConnector({
   connectorname: "MySQL Production",
   connectortype: "mysql",
+  connectordesc: "Production user database",
+  username: "admin",
   apikey: "api-key-123",
   dbhost: "prod-db.example.com",
   dbport: 3306,
   dbname: "users",
-  username: "admin",
-  connectordesc: "Production user database"
+  status: "active"
+});
+
+// Create a PostgreSQL database connector
+const pgConnector = await client.createConnector({
+  connectorname: "PostgreSQL Analytics",
+  connectortype: "postgresql",
+  connectordesc: "Analytics database for user behavior",
+  username: "analyst",
+  apikey: "pg-api-key",
+  dbhost: "analytics.example.com",
+  dbport: 5432,
+  dbname: "analytics",
+  status: "active"
 });
 
 // Update connector configuration
-await client.updateConnector(
-  "connector-123",
-  "MySQL Production",
-  "mysql",
-  "new-api-key",
-  {
-    dbhost: "new-prod-db.example.com",
-    status: "active"
-  }
-);
+await client.updateConnector({
+  connectorid: "connector-123",
+  connectorname: "MySQL Production Updated",
+  connectortype: "mysql",
+  apikey: "new-api-key",
+  dbhost: "new-prod-db.example.com",
+  status: "active"
+});
 
 // Validate connector connectivity
 await client.validateConnectorConnectivity({
-  connectorid: 1,
+  connectorid: "connector-123",
+  apikey: "new-api-key"
+});
+
+// Get table metadata
+await client.getTableMetadata({
+  connectorid: "connector-123",
+  dbname: "users",
+  tablename: "user_data"
 });
 
 // Get user data from connector
@@ -191,17 +211,6 @@ await client.connectorsDeleteUser(
   "email",
   "user@example.com",
   "connector-123"
-);
-
-// Get connector table metadata
-await client.connectorsGetTableMetadata(
-  "connector-123",
-  "api-key-123",
-  "admin",
-  "mysql",
-  "prod-db.example.com",
-  "users",
-  "user_data"
 );
 ```
 
