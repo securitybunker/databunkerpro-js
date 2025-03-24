@@ -60,10 +60,61 @@ const requestMetadata = {
 };
 
 // Using group name
-await client.addUserToGroup("admins", "email", "user@example.com", "editor", requestMetadata);
+await client.addUserToGroup(
+  "email",
+  "user@example.com",
+  "admins",
+  "editor",
+  requestMetadata
+);
 
 // Using group ID
-await client.addUserToGroup(123, "email", "user@example.com", 456, requestMetadata);
+await client.addUserToGroup(
+  "email",
+  "user@example.com",
+  123,
+  456,
+  requestMetadata
+);
+```
+
+### Managing Legal Basis and Agreements
+```javascript
+// Create a legal basis for data processing
+const marketingConsent = await client.createLegalBasis({
+  brief: 'marketing-consent',
+  status: 'active',
+  module: 'marketing',
+  fulldesc: 'Consent for marketing communications',
+  shortdesc: 'Marketing Consent',
+  basistype: 'consent',
+  requiredmsg: 'Required for receiving promotional content',
+  requiredflag: false
+});
+
+// Record user's acceptance of an agreement
+const acceptance = await client.acceptAgreement(
+  'email',
+  'user@example.com',
+  {
+    brief: 'marketing-consent',
+    agreementmethod: 'web-form',
+    referencecode: 'REF123',
+    starttime: '2024-01-01T00:00:00Z',
+    finaltime: '2025-01-01T00:00:00Z',
+    status: 'active',
+    lastmodifiedby: 'admin@company.com'
+  }
+);
+
+// Cancel an agreement
+await client.cancelAgreement('email', 'user@example.com', 'marketing-consent');
+
+// Get user's agreement status
+const agreement = await client.getUserAgreement('email', 'user@example.com', 'marketing-consent');
+
+// List all user's agreements
+const agreements = await client.listUserAgreements('email', 'user@example.com');
 ```
 
 ### Using Request Metadata for Context-Aware Access Control
@@ -162,7 +213,7 @@ The library provides methods for interacting with all Databunkerpro endpoints:
 
 - User Management
 - App Data Management
-- Agreement Management
+- Agreement Management (Legal Basis & Consent)
 - Connector Management
 - Group Management
 - Token Management

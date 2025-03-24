@@ -179,15 +179,102 @@ class DatabunkerproAPI {
     return this.makeRequest('AppdataListAppNames', 'POST', null, requestMetadata);
   }
 
+  // Legal Basis Management
+
+  /**
+   * Creates a new legal basis for data processing
+   * @param {Object} options - The legal basis options
+   * @param {string} options.brief - Unique identifier for the legal basis
+   * @param {string} [options.status='active'] - Status of the legal basis ('active' or 'inactive')
+   * @param {string} [options.module] - Module or category this legal basis belongs to
+   * @param {string} [options.fulldesc] - Detailed description of the legal basis
+   * @param {string} [options.shortdesc] - Brief description or label
+   * @param {string} [options.basistype] - Type of legal basis (e.g., 'consent', 'contract', 
+   *        'legal-requirement', 'vital-interest', 'public-interest', 'legitimate-interest' )
+   * @param {string} [options.requiredmsg] - Message explaining why this legal basis is required
+   * @param {boolean} [options.requiredflag=false] - Whether this legal basis is mandatory
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The created legal basis object
+   * @example
+   * // Create a marketing consent legal basis
+   * const marketingConsent = await api.createLegalBasis({
+   *   brief: 'marketing-consent',
+   *   status: 'active',
+   *   module: 'marketing',
+   *   fulldesc: 'Consent for marketing communications',
+   *   shortdesc: 'Marketing Consent',
+   *   basistype: 'consent',
+   *   requiredmsg: 'Required for receiving promotional content',
+   *   requiredflag: false
+   * });
+   */
+  async createLegalBasis(options, requestMetadata = null) {
+    const data = {
+      brief: options.brief,
+      status: options.status,
+      module: options.module,
+      fulldesc: options.fulldesc,
+      shortdesc: options.shortdesc,
+      basistype: options.basistype,
+      requiredmsg: options.requiredmsg,
+      requiredflag: options.requiredflag
+    };
+    return this.makeRequest('LegalBasisCreate', 'POST', data, requestMetadata);
+  }
+
+  async updateLegalBasis(options, requestMetadata = null) {
+    const data = { ...options };
+    return this.makeRequest('LegalBasisUpdate', 'POST', data, requestMetadata);
+  }
+
+  async listAgreements(requestMetadata = null) {
+    return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
+  }
+
   // Agreement Management
-  async acceptAgreement(mode, identity, brief, agreementmethod = null, referencecode = null, requestMetadata = null) {
-    return this.makeRequest('AgreementAccept', 'POST', { 
+  /**
+   * Records user's acceptance of a legal basis/agreement
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode (e.g., email address, phone number)
+   * @param {Object} options - Agreement acceptance options
+   * @param {string} options.brief - Unique identifier of the legal basis/agreement being accepted
+   * @param {string} [options.agreementmethod] - Method of agreement (e.g., 'web-form', 'checkbox', 'signature')
+   * @param {string} [options.lastmodifiedby] - Identifier of the person/system that last modified this agreement
+   * @param {string} [options.referencecode] - External reference code or identifier for this acceptance
+   * @param {string} [options.starttime] - Start time of the agreement validity (ISO 8601 format)
+   * @param {string} [options.finaltime] - End time of the agreement validity (ISO 8601 format)
+   * @param {string} [options.status] - Status of the agreement (e.g., 'pending', 'active', 'expired')
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The recorded agreement acceptance
+   * @example
+   * // Record user's acceptance of marketing consent with additional details
+   * const acceptance = await api.acceptAgreement(
+   *   'email',
+   *   'user@example.com',
+   *   {
+   *     brief: 'marketing-consent',
+   *     agreementmethod: 'web-form',
+   *     referencecode: 'REF123',
+   *     starttime: '10d',
+   *     finaltime: '100d',
+   *     status: 'active',
+   *     lastmodifiedby: 'admin@company.com'
+   *   }
+   * );
+   */
+  async acceptAgreement(mode, identity, options, requestMetadata = null) {
+    const data = { 
       mode, 
       identity, 
-      brief, 
-      agreementmethod, 
-      referencecode 
-    }, requestMetadata);
+      brief: options.brief,
+      agreementmethod: options.agreementmethod,
+      lastmodifiedby: options.lastmodifiedby,
+      referencecode: options.referencecode,
+      starttime: options.starttime,
+      finaltime: options.finaltime,
+      status: options.status
+    };
+    return this.makeRequest('AgreementAccept', 'POST', data, requestMetadata);
   }
 
   async cancelAgreement(mode, identity, brief, requestMetadata = null) {
@@ -206,10 +293,7 @@ class DatabunkerproAPI {
     return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, requestMetadata);
   }
 
-  async listAgreements(requestMetadata = null) {
-    return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
-  }
-
+  // Processing Activity Management
   async listProcessingActivities(requestMetadata = null) {
     return this.makeRequest('ProcessingActivityListActivities', 'POST', null, requestMetadata);
   }
@@ -284,7 +368,16 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupListAllGroups', 'POST', null, requestMetadata);
   }
 
-  async addUserToGroup(groupname, mode, identity, rolename = null, requestMetadata = null) {
+  /**
+   * Adds a user to a group with an optional role
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {string|number} groupname - Group name or ID to add the user to
+   * @param {string|number|null} [rolename=null] - Optional role name or ID to assign to the user in the group
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<any>} The result of adding the user to the group
+   */
+  async addUserToGroup(mode, identity, groupname, rolename = null, requestMetadata = null) {
     const data = { mode, identity };
  
     // Check if groupname is an integer (group ID) or string (group name)

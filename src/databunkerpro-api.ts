@@ -6,6 +6,27 @@ interface RequestOptions {
   body?: string;
 }
 
+interface LegalBasisOptions {
+  brief: string;
+  status?: string;
+  module?: string;
+  fulldesc?: string;
+  shortdesc?: string;
+  basistype?: string;
+  requiredmsg?: string;
+  requiredflag?: boolean;
+}
+
+interface AgreementAcceptOptions {
+  brief: string;
+  agreementmethod?: string;
+  referencecode?: string;
+  starttime?: string;
+  finaltime?: string;
+  status?: string;
+  lastmodifiedby?: string;
+}
+
 interface UserOptions {
   groupname?: string | number;
   groupid?: number;
@@ -198,14 +219,53 @@ export class DatabunkerproAPI {
   }
 
   // Agreement Management
-  async acceptAgreement(mode: string, identity: string, brief: string, agreementmethod: string | null = null, referencecode: string | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('AgreementAccept', 'POST', { 
+  async createLegalBasis(options: LegalBasisOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('LegalBasisCreate', 'POST', options, requestMetadata);
+  }
+
+  /**
+   * Records user's acceptance of a legal basis/agreement
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode (e.g., email address, phone number)
+   * @param {AgreementAcceptOptions} options - Agreement acceptance options
+   * @param {string} options.brief - Unique identifier of the legal basis/agreement being accepted
+   * @param {string} [options.agreementmethod] - Method of agreement (e.g., 'web-form', 'checkbox', 'signature')
+   * @param {string} [options.referencecode] - External reference code or identifier for this acceptance
+   * @param {string} [options.starttime] - Start time of the agreement validity (ISO 8601 format)
+   * @param {string} [options.finaltime] - End time of the agreement validity (ISO 8601 format)
+   * @param {string} [options.status] - Status of the agreement (e.g., 'pending', 'active', 'expired')
+   * @param {string} [options.lastmodifiedby] - Identifier of the person/system that last modified this agreement
+   * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<any>} The recorded agreement acceptance
+   * @example
+   * // Record user's acceptance of marketing consent with additional details
+   * const acceptance = await api.acceptAgreement(
+   *   'email',
+   *   'user@example.com',
+   *   {
+   *     brief: 'marketing-consent',
+   *     agreementmethod: 'web-form',
+   *     referencecode: 'REF123',
+   *     starttime: '2024-01-01T00:00:00Z',
+   *     finaltime: '2025-01-01T00:00:00Z',
+   *     status: 'active',
+   *     lastmodifiedby: 'admin@company.com'
+   *   }
+   * );
+   */
+  async acceptAgreement(mode: string, identity: string, options: AgreementAcceptOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { 
       mode, 
       identity, 
-      brief, 
-      agreementmethod, 
-      referencecode 
-    }, requestMetadata);
+      brief: options.brief,
+      agreementmethod: options.agreementmethod,
+      referencecode: options.referencecode,
+      starttime: options.starttime,
+      finaltime: options.finaltime,
+      status: options.status,
+      lastmodifiedby: options.lastmodifiedby
+    };
+    return this.makeRequest('AgreementAccept', 'POST', data, requestMetadata);
   }
 
   async cancelAgreement(mode: string, identity: string, brief: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -245,7 +305,15 @@ export class DatabunkerproAPI {
     return this.makeRequest('GroupListAllGroups', 'POST', null, requestMetadata);
   }
 
-  async addUserToGroup(groupname: string | number, mode: string, identity: string, rolename: string | number | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  /**
+   * Adds a user to a group with an optional role
+   * @param mode User identification mode (e.g., 'email', 'phone', 'token')
+   * @param identity User's identifier corresponding to the mode
+   * @param groupname Group name or ID to add the user to
+   * @param rolename Optional role name or ID to assign to the user in the group
+   * @param requestMetadata Additional metadata to include with the request
+   */
+  async addUserToGroup(mode: string, identity: string, groupname: string | number, rolename: string | number | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { mode, identity };
  
     // Check if groupname is an integer (group ID) or string (group name)

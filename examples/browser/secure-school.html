@@ -194,9 +194,9 @@ return teacherUser;</textarea>
         <div class="description">Add the teacher to the class group with teacher role.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code5">const groupMembership = await api.addUserToGroup(
-    'class1',
     'login',
     'teacher1',
+    'class1',
     'teacher'
 );
 return groupMembership;</textarea>
@@ -233,9 +233,9 @@ const parentUser = await api.createUser({
 
 // Add student to family group as a child to establish parent-child relationship
 const familyMembership = await api.addUserToGroup(
-    'family1',  // family group
     'login',
     'student1',
+    'family1',
     'child'    // child role in family group
 );
 

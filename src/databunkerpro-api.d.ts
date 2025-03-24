@@ -2,6 +2,17 @@ interface RequestMetadata {
   [key: string]: any;
 }
 
+interface LegalBasisOptions {
+  brief: string;
+  status?: string;
+  module?: string;
+  fulldesc?: string;
+  shortdesc?: string;
+  basistype?: string;
+  requiredmsg?: string;
+  requiredflag?: boolean;
+}
+
 interface UserOptions {
   groupname?: string | number;
   groupid?: number;
@@ -57,6 +68,7 @@ declare class DatabunkerproAPI {
   listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Agreement Management
+  createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata): Promise<any>;
   acceptAgreement(mode: string, identity: string, brief: string, agreementmethod?: string | null, referencecode?: string | null, requestMetadata?: RequestMetadata): Promise<any>;
   cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestAgreementCancellation(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -80,7 +92,7 @@ declare class DatabunkerproAPI {
   createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;
   getGroup(groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listAllGroups(requestMetadata?: RequestMetadata): Promise<any>;
-  addUserToGroup(groupname: string | number, mode: string, identity: string, rolename?: string | number | null, requestMetadata?: RequestMetadata): Promise<any>;
+  addUserToGroup(mode: string, identity: string, groupname: string | number, rolename?: string | number | null, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Token Management
   createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;

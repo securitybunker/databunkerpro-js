@@ -98,9 +98,9 @@ async function basicUsageDemo() {
 
     // Add user to group with role
     const groupMembership = await api.addUserToGroup(
-      group.groupid,
       'login',
       'johndoe',
+      group.groupid,
       'team-lead'
     );
     console.log('Added user to group:', groupMembership);
