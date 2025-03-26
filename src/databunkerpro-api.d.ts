@@ -36,6 +36,16 @@ interface ConnectorOptions {
   status?: string;
 }
 
+interface AgreementOptions {
+  brief: string;
+  agreementmethod?: string;
+  lastmodifiedby?: string;
+  referencecode?: string;
+  starttime?: string;
+  finaltime?: string;
+  status?: string;
+}
+
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string);
 
@@ -69,7 +79,7 @@ declare class DatabunkerproAPI {
 
   // Agreement Management
   createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  acceptAgreement(mode: string, identity: string, brief: string, agreementmethod?: string | null, referencecode?: string | null, requestMetadata?: RequestMetadata): Promise<any>;
+  acceptAgreement(mode: string, identity: string, options: AgreementOptions, requestMetadata?: RequestMetadata): Promise<any>;
   cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestAgreementCancellation(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   getUserAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -82,11 +92,12 @@ declare class DatabunkerproAPI {
   listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
   updateConnector(options: ConnectorOptions & { connectorid: string | number }, requestMetadata?: RequestMetadata): Promise<any>;
-  validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  validateConnectorConnectivity(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
   connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  connectorsGetTableMetadata(connectorid: string | number, apikey: string, username: string, connectortype: string, dbhost: string, dbname: string, tablename: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Group Management
   createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;

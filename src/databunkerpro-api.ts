@@ -539,6 +539,10 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
   }
 
+  async deleteConnector(connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('ConnectorsDeleteConnector', 'POST', { connectorid }, requestMetadata);
+  }
+
   async getTableMetadata(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       connectorid: options.connectorid,

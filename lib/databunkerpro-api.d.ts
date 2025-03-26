@@ -171,6 +171,7 @@ export declare class DatabunkerproAPI {
      */
     updateConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
