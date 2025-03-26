@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databunkerpro: Consent Management Demo</title>
+    <style>
+        body {
+            font-family: Roboto,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            letter-spacing: 0.04rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .intro {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            padding: 5px 20px;
+            border-radius: 5px;
+            border-left: 5px solid #4CAF50;
+            color: #72777a;
+        }
+        .step {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .description {
+            color: #72777a;
+            margin-bottom: 15px;
+        }
+        .code-container {
+            position: relative;
+        }
+        .code-editor {
+            width: 100%;
+            height: 150px;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            margin-bottom: 10px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .result {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            min-height: 50px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .config {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .config .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .config label {
+            width: 18%;
+            display: inline-block;
+            text-align: left;
+            margin-right: 10px;
+            flex-shrink: 0;
+            color: #666;
+        }
+        .config input {
+            width: 40%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Databunkerpro: Consent Management Demo</h1>
+    
+    <div class="intro">
+        <p>This example demonstrates how to implement a comprehensive consent management system using Databunkerpro. It shows how to:</p>
+        <ul>
+            <li><strong>Create Legal Basis:</strong> Define different types of consent with their requirements and descriptions</li>
+            <li><strong>Record Consent:</strong> Capture and store user consent with verification details</li>
+            <li><strong>Track Consent:</strong> Monitor and audit consent status over time</li>
+            <li><strong>Manage Withdrawal:</strong> Handle consent withdrawal requests properly</li>
+            <li><strong>Audit Trail:</strong> Maintain comprehensive records of all consent-related activities</li>
+        </ul>
+    </div>
+
+    <div class="config">
+        <h2>Configuration</h2>
+        <div class="input-group">
+            <label for="apiUrl">Databunkerpro URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:3000">
+        </div>
+        <div class="input-group">
+            <label for="apiToken">API Token:</label>
+            <input type="text" id="apiToken" placeholder="Enter API key">
+        </div>
+    </div>
+
+    <div class="step" id="step1">
+        <h2>Step 1: Create Legal Basis for Different Consent Types</h2>
+        <div class="description">Define the legal basis for different types of consent (e.g., marketing, analytics)</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code1">// Create marketing consent legal basis
+const marketingConsent = await api.createLegalBasis({
+    brief: 'marketing-consent',
+    status: 'active',
+    module: 'marketing',
+    fulldesc: 'Legal basis for processing personal data for marketing communications',
+    shortdesc: 'Marketing consent',
+    basistype: 'consent',
+    requiredmsg: 'Marketing consent is required for receiving promotional communications',
+    requiredflag: false
+});
+
+// Create analytics consent legal basis
+const analyticsConsent = await api.createLegalBasis({
+    brief: 'analytics-consent',
+    status: 'active',
+    module: 'analytics',
+    fulldesc: 'Legal basis for processing personal data for analytics purposes',
+    shortdesc: 'Analytics consent',
+    basistype: 'legitimate_interest',
+    requiredmsg: 'Analytics consent helps us improve our services',
+    requiredflag: false
+});
+
+return { marketingConsent, analyticsConsent };</textarea>
+            <button onclick="executeStep(1)">Run Step 1</button>
+            <div class="result" id="result1"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <h2>Step 2: Create User Record</h2>
+        <div class="description">Create a new user who will provide consent</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code2">// Create user with basic profile
+const user = await api.createUser({
+    login: 'user1',
+    email: 'user1@example.com',
+    name: 'John Doe',
+    phone: '+1234567890'
+});
+
+return { user };</textarea>
+            <button onclick="executeStep(2)">Run Step 2</button>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h2>Step 3: Record User Consent</h2>
+        <div class="description">Record explicit consent with verification details for different purposes</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code3">// Record marketing consent with verification
+const marketingAgreement = await api.acceptAgreement(
+    'login',
+    'user1',
+    {
+        brief: 'marketing-consent',
+        agreementmethod: 'web-form',
+        referencecode: 'MKTG-2024',
+        finaltime: '100d',
+        status: 'active'
+    }
+);
+
+// Record analytics consent
+const analyticsAgreement = await api.acceptAgreement(
+    'login',
+    'user1',
+    {
+        brief: 'analytics-consent',
+        agreementmethod: 'in-app',
+        referencecode: 'ANLX-2024',
+        status: 'active'
+    }
+);
+
+return { marketingAgreement, analyticsAgreement };</textarea>
+            <button onclick="executeStep(3)">Run Step 3</button>
+            <div class="result" id="result3"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h2>Step 4: List Active Consents</h2>
+        <div class="description">Retrieve all active consents for the user</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code4">// List all user agreements
+const userAgreements = await api.listUserAgreements(
+    'login',
+    'user1'
+);
+
+return { userAgreements };</textarea>
+            <button onclick="executeStep(4)">Run Step 4</button>
+            <div class="result" id="result4"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step5">
+        <h2>Step 5: Withdraw Specific Consent</h2>
+        <div class="description">Demonstrate the consent withdrawal process</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code5">// Withdraw marketing consent
+const withdrawalResult = await api.cancelAgreement(
+    'login',
+    'user1',
+    'marketing-consent'
+);
+
+// Verify updated consent status
+const updatedAgreements = await api.listUserAgreements(
+    'login',
+    'user1'
+);
+
+return { 
+    withdrawalResult, 
+    updatedAgreements,
+    note: "Consent withdrawal is tracked in audit logs"
+};</textarea>
+            <button onclick="executeStep(5)">Run Step 5</button>
+            <div class="result" id="result5"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step6">
+        <h2>Step 6: View Consent Audit Trail</h2>
+        <div class="description">Review the complete history of consent-related activities</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code6">// Get user's audit events related to consent
+const auditEvents = await api.listUserAuditEvents(
+    'login',
+    'user1',
+    0,  // offset
+    100  // limit
+);
+
+// Filter consent-related events
+const consentEvents = auditEvents.rows.filter(event => 
+    event.title.includes('agreement') || 
+    event.title.includes('consent')
+);
+
+return { 
+    consentEvents,
+    note: "Shows all consent-related activities including acceptance and withdrawal"
+};</textarea>
+            <button onclick="executeStep(6)">Run Step 6</button>
+            <div class="result" id="result6"></div>
+        </div>
+    </div>
+
+    <script src="../../src/databunkerpro-api.js"></script>
+    <script>
+        // Initialize API client
+        let api;
+        
+        function updateApiClient() {
+            const url = document.getElementById('apiUrl').value;
+            const token = document.getElementById('apiToken').value;
+            api = new DatabunkerproAPI(url, token);
+        }
+
+        document.getElementById('apiUrl').addEventListener('change', updateApiClient);
+        document.getElementById('apiToken').addEventListener('change', updateApiClient);
+        
+        // Initial setup
+        updateApiClient();
+
+        function displayResult(stepNumber, data) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.style.color = 'black';
+        }
+
+        function displayError(stepNumber, error) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = `Error: ${error.message}`;
+            element.style.color = 'red';
+        }
+
+        async function executeStep(stepNumber) {
+            try {
+                const code = document.getElementById(`code${stepNumber}`).value;
+                const result = await eval(`(async () => { ${code} })()`);
+                displayResult(stepNumber, result);
+            } catch (error) {
+                displayError(stepNumber, error);
+            }
+        }
+    </script>
+</body>
+</html> 
