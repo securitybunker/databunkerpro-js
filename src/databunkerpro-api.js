@@ -1,7 +1,8 @@
 class DatabunkerproAPI {
-  constructor(baseURL, xBunkerToken = '') {
+  constructor(baseURL, xBunkerToken = '', xBunkerTenant = '') {
     this.baseURL = baseURL;
     this.xBunkerToken = xBunkerToken;
+    this.xBunkerTenant = xBunkerTenant;
   }
 
   async makeRequest(endpoint, method = 'POST', data = null, requestMetadata = null) {
@@ -10,6 +11,9 @@ class DatabunkerproAPI {
     };
     if (this.xBunkerToken) {
       headers['X-Bunker-Token'] = this.xBunkerToken;
+    }
+    if (this.xBunkerTenant) {
+      headers['X-Bunker-Tenant'] = this.xBunkerTenant;
     }
 
     const options = {
