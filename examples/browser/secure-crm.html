@@ -265,10 +265,6 @@ return { message: 'Token reset to original value' };</textarea>
             try {
                 const code = document.getElementById(`code${stepNumber}`).value;
                 const result = await eval(`(async () => { ${code} })()`);
-                // Store important results in state
-                if (stepNumber === 1) {
-                    window.stateData.groupId = result.groupid;
-                }
                 displayResult(stepNumber, result);
             } catch (error) {
                 displayError(stepNumber, error);

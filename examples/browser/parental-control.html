@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databunkerpro: Parental Control Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Databunkerpro: Parental Control Demo</h1>
+    
+    <div class="intro">
+        <p>This example demonstrates how to implement a comprehensive parental control system using Databunkerpro. It shows how to:</p>
+        <ul>
+            <li><strong>Family Structure:</strong> Set up family groups and parent-child relationships</li>
+            <li><strong>Parental Consent:</strong> Implement verifiable parental consent for child data processing</li>
+            <li><strong>Access Control:</strong> Manage parent access to child data</li>
+            <li><strong>Child Protection:</strong> Enforce special safeguards for child data</li>
+            <li><strong>Audit Trail:</strong> Track all activities related to child data access</li>
+        </ul>
+    </div>
+
+    <div class="config">
+        <h2>Configuration</h2>
+        <div class="input-group">
+            <label for="apiUrl">Databunkerpro URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:3000">
+        </div>
+        <div class="input-group">
+            <label for="apiToken">API Token:</label>
+            <input type="text" id="apiToken" placeholder="Enter API key">
+        </div>
+    </div>
+
+    <div class="step" id="step1">
+        <h2>Step 1: Create Family Group and Roles</h2>
+        <div class="description">Set up the family group structure and define parent/child roles</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code1">// Create family group
+const familyGroup = await api.createGroup('family1', 'Family Members Group');
+
+// Create parent and child roles
+const parentRole = await api.createRole('parent');
+const childRole = await api.createRole('child');
+
+return { 
+    familyGroup,
+    parentRole,
+    childRole,
+    note: "Family group and roles created successfully"
+};</textarea>
+            <button onclick="executeStep(1)">Run Step 1</button>
+            <div class="result" id="result1"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <h2>Step 2: Create Parent and Child Users</h2>
+        <div class="description">Create user accounts for both parent and child</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code2">// Create child user account
+const childUser = await api.createUser({
+    login: 'child_user1',
+    email: 'child@example.com',
+    name: 'Child User',
+    age: 13,
+    is_child: true
+});
+
+// Create parent user account and add to family group
+const parentUser = await api.createUser({
+    login: 'parent_user1',
+    email: 'parent@example.com',
+    name: 'Parent Name',
+    phone: '+1234567890',
+    id_verification: 'verified'
+}, {
+    groupname: 'family1',
+    rolename: 'parent'
+});
+
+return { 
+    childUser,
+    parentUser,
+    note: "Parent and child users created successfully"
+};</textarea>
+            <button onclick="executeStep(2)">Run Step 2</button>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h2>Step 3: Establish Family Relationship</h2>
+        <div class="description">Link child to family group and establish parent-child relationship with legal basis</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code3">// Add child to family group
+const familyMembership = await api.addUserToGroup(
+    'login',
+    'child_user1',
+    'family1',
+    'child'
+);
+
+// Create legal basis for parental consent
+const parentalConsentBasis = await api.createLegalBasis({
+    brief: 'parental-consent',
+    status: 'active',
+    module: 'child-protection',
+    fulldesc: 'Legal basis for processing child data with parental consent',
+    shortdesc: 'Parental Consent',
+    basistype: 'consent',
+    requiredmsg: 'Parental consent is required for processing child data',
+    requiredflag: true
+});
+
+// Record parental consent with verification
+const parentalConsent = await api.acceptAgreement(
+    'login',
+    'child_user1',
+    {
+        brief: 'parental-consent',
+        agreementmethod: 'verified-parent',
+        referencecode: 'PRNT-2024'
+    }
+);
+
+return { 
+    familyMembership,
+    parentalConsentBasis,
+    parentalConsent,
+    note: "Family relationship established with verified parental consent"
+};</textarea>
+            <button onclick="executeStep(3)">Run Step 3</button>
+            <div class="result" id="result3"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h2>Step 4: Set Up Access Policies</h2>
+        <div class="description">Create and configure access policies for parental control and child data protection</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code4">// Create policy for parental access
+const parentalAccessPolicy = await api.createPolicy({
+    policyname: 'ParentalAccess',
+    policy: {
+        Effect: 'Allow',
+        Principal: { Role: 'parent' },
+        Action: ['UserGet', 'UserUpdate'],
+        Resource: ['${target_group_members:role/child}.*'],
+        Condition: {
+            'ForAnyValue:ListIntersect': {
+                '${user_group_members:role/child}': '${target_group_members:role/child}'
+            }
+        }
+    }
+});
+
+// Create policy for third-party access to child data
+const childDataPolicy = await api.createPolicy({
+    policyname: 'ChildDataProtection',
+    policy: {
+        Effect: 'Allow',
+        Principal: { Role: 'child-data-processor' },
+        Action: ['UserGet'],
+        Resource: ['${target_group_members:role/child}.*'],
+        Condition: {
+            StringEquals: {
+                '${request_metadata:purpose}': ['education', 'child-welfare'],
+                '${user:is_child}': 'true'
+            },
+            Bool: {
+                '${agreement:parental-consent}': true
+            },
+            'ForAnyValue:ListIntersect': {
+                '${target_group_members:role/parent}.profile.id_verification': ['verified']
+            }
+        }
+    }
+});
+
+// Link policies
+await api.linkPolicy('parent', 'ParentalAccess');
+
+return { 
+    parentalAccessPolicy,
+    childDataPolicy,
+    note: "Access policies created and linked successfully"
+};</textarea>
+            <button onclick="executeStep(4)">Run Step 4</button>
+            <div class="result" id="result4"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step5">
+        <h2>Step 5: Test Parental Access</h2>
+        <div class="description">Verify parent's ability to access and manage child's data</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code5">// Create parent access token
+const parentToken = await api.createXToken('login', 'parent_user1');
+
+// Store current token
+const currentToken = api.xBunkerToken;
+
+// Switch to parent token and get child data
+api.xBunkerToken = parentToken.xtoken;
+const childData = await api.getUser('login', 'child_user1');
+
+// Reset token to original
+api.xBunkerToken = currentToken;
+
+return { 
+    parentToken,
+    childData,
+    note: "Successfully accessed child's data using parent's credentials"
+};</textarea>
+            <button onclick="executeStep(5)">Run Step 5</button>
+            <div class="result" id="result5"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step6">
+        <h2>Step 6: View Parental Control Audit Trail</h2>
+        <div class="description">Monitor all activities related to child data access</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code6">// Get audit events for child's data access
+const auditEvents = await api.listUserAuditEvents(
+    'login',
+    'child_user1',
+    0,  // offset
+    100  // limit
+);
+
+// Filter parental access events
+const parentalAccessEvents = auditEvents.rows.filter(event => 
+    event.title.includes('parent') || 
+    event.action === 'UserGet' ||
+    event.action === 'UserUpdate'
+);
+
+return { 
+    parentalAccessEvents,
+    note: "Shows all parental access and control activities"
+};</textarea>
+            <button onclick="executeStep(6)">Run Step 6</button>
+            <div class="result" id="result6"></div>
+        </div>
+    </div>
+
+    <script src="../../src/databunkerpro-api.js"></script>
+    <script>
+        // Initialize API client
+        let api;
+        
+        function updateApiClient() {
+            const url = document.getElementById('apiUrl').value;
+            const token = document.getElementById('apiToken').value;
+            api = new DatabunkerproAPI(url, token);
+        }
+
+        document.getElementById('apiUrl').addEventListener('change', updateApiClient);
+        document.getElementById('apiToken').addEventListener('change', updateApiClient);
+        
+        // Initial setup
+        updateApiClient();
+
+        function displayResult(stepNumber, data) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.style.color = 'black';
+        }
+
+        function displayError(stepNumber, error) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = `Error: ${error.message}`;
+            element.style.color = 'red';
+        }
+
+        async function executeStep(stepNumber) {
+            try {
+                const code = document.getElementById(`code${stepNumber}`).value;
+                const result = await eval(`(async () => { ${code} })()`);
+                displayResult(stepNumber, result);
+            } catch (error) {
+                displayError(stepNumber, error);
+            }
+        }
+    </script>
+</body>
+</html> 

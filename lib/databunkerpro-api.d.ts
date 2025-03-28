@@ -44,7 +44,9 @@ interface RequestMetadata {
 export declare class DatabunkerproAPI {
     private baseURL;
     private xBunkerToken;
+    private tenantName?;
     constructor(baseURL: string, xBunkerToken?: string);
+    setTenant(tenantName: string): void;
     private makeRequest;
     rawRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
     createUser(profile: Record<string, any>, options?: UserOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
