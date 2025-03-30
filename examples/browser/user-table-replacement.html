@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databunkerpro: User Table Replacement Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Databunkerpro: User Table Replacement Demo</h1>
+    
+    <div class="intro">
+        <p>This example demonstrates how to implement secure team management using Databunkerpro. It shows how to:</p>
+        <ul>
+            <li><strong>Team Management:</strong> Create and manage team groups with role-based access</li>
+            <li><strong>Data Masking:</strong> Automatically mask sensitive data while allowing access to necessary fields</li>
+            <li><strong>Bulk Operations:</strong> Efficiently manage and list team members</li>
+            <li><strong>Access Control:</strong> Implement manager-level access with field-level security</li>
+        </ul>
+
+        <p><strong>Key Security Features:</strong></p>
+        <ul>
+            <li><strong>Automatic Data Masking:</strong> Managers can only see specific fields (name, phone) while other data remains masked</li>
+            <li><strong>Granular Access Control:</strong> Field-level permissions ensure managers see only what they need</li>
+            <li><strong>Efficient Bulk Operations:</strong> Secure listing of team members with automatic data protection</li>
+            <li><strong>Audit Trail:</strong> Track all access to team member data</li>
+        </ul>
+    </div>
+    
+    <div class="config">
+        <h2>Configuration</h2>
+        <div class="input-group">
+            <label for="apiUrl">Databunkerpro URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:3000">
+        </div>
+        <div class="input-group">
+            <label for="apiToken">API Token:</label>
+            <input type="text" id="apiToken" placeholder="Enter API key">
+        </div>
+    </div>
+
+    <div class="step" id="step1">
+        <h2>Step 1: Create Team Group and Roles</h2>
+        <div class="description">Set up the team structure with manager and member roles.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code1">// Create team group
+const teamGroup = await api.createGroup('sales-team', 'Sales Team Group');
+// Create roles for managers and members
+const managerRole = await api.createRole('manager');
+const memberRole = await api.createRole('team-member');
+return { 
+    teamGroup,
+    managerRole,
+    memberRole,
+    note: "Team group and roles created successfully"
+};</textarea>
+            <button onclick="executeStep(1)">Run</button>
+            <div class="result" id="result1"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <h2>Step 2: Create Team Members</h2>
+        <div class="description">Create multiple team members with various data fields.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code2">// Create team members with different data
+const member1 = await api.createUser({
+    login: 'member1',
+    email: 'member1@company.com',
+    name: 'Alice Johnson',
+    phone: '+1234567890',
+    salary: '75000',
+    department: 'Sales',
+    performance_rating: '4.5'
+}, {
+    groupname: 'sales-team',
+    rolename: 'team-member'
+});
+const member2 = await api.createUser({
+    login: 'member2',
+    email: 'member2@company.com',
+    name: 'Bob Smith',
+    phone: '+1234567891',
+    salary: '82000',
+    department: 'Sales',
+    performance_rating: '4.2'
+}, {
+    groupname: 'sales-team',
+    rolename: 'team-member'
+});
+const member3 = await api.createUser({
+    login: 'member3',
+    email: 'member3@company.com',
+    name: 'Carol White',
+    phone: '+1234567892',
+    salary: '78000',
+    department: 'Sales',
+    performance_rating: '4.8'
+}, {
+    groupname: 'sales-team',
+    rolename: 'team-member'
+});
+return { 
+    member1,
+    member2,
+    member3,
+    note: "Team members created with various data fields"
+};</textarea>
+            <button onclick="executeStep(2)">Run</button>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h2>Step 3: Create Manager and Add to Team</h2>
+        <div class="description">Create a manager user and add them to the team with manager role.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code3">// Create manager user
+const manager = await api.createUser({
+    login: 'manager1',
+    email: 'manager@company.com',
+    name: 'David Lee',
+    title: 'Sales Manager',
+    department: 'Sales'
+});
+// Add manager to team group with manager role
+const managerMembership = await api.addUserToGroup(
+    'login',
+    'manager1',
+    'sales-team',
+    'manager'
+);
+return { 
+    manager,
+    managerMembership,
+    note: "Manager created and added to team with manager role"
+};</textarea>
+            <button onclick="executeStep(3)">Run</button>
+            <div class="result" id="result3"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h2>Step 4: Create Manager Access Policy</h2>
+        <div class="description">Create policy that allows managers to see team members' names and phones while masking other data.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code4">// Create policy for manager access
+const managerPolicy = await api.createPolicy({
+    policyname: 'ManagerAccess',
+    policy: {
+        Effect: 'Allow',
+        Principal: { Role: 'manager' },
+        Action: ['UserGet', 'BulkListGroupUsers', 'BulkListUnlock'],
+        Resource: [
+            '${target_group_members:role/team-member}.profile.name',
+            '${target_group_members:role/team-member}.profile.phone'
+        ],
+        Condition: {
+            StringEquals: {
+                '${user_group_id}': '${target_group_id}'
+            }
+        }
+    }
+});
+// Link policy to manager role
+await api.linkPolicy('manager', 'ManagerAccess');
+return { 
+    managerPolicy,
+    note: "Manager policy created with access to names and phones only"
+};</textarea>
+            <button onclick="executeStep(4)">Run</button>
+            <div class="result" id="result4"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step5">
+        <h2>Step 5: Initialize Bulk Operations</h2>
+        <div class="description">Get an unlock UUID token for bulk operations.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code5">// Get unlock UUID for bulk operations
+const bulkInit = await api.bulkListUnlock();
+// Store unlock UUID for later use
+window.stateData = {
+    unlockUUID: bulkInit.unlockuuid
+};
+return { 
+    bulkInit,
+    note: "Bulk operations initialized with unlock UUID"
+};</textarea>
+            <button onclick="executeStep(5)">Run</button>
+            <div class="result" id="result5"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step6">
+        <h2>Step 6: Create Manager Access Token</h2>
+        <div class="description">Create an access token for the manager to use in subsequent operations.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code6">// Create manager access token
+const managerToken = await api.createXToken('login', 'manager1');
+// Add token to state data (preserving unlock UUID)
+window.stateData.managerToken = managerToken.xtoken;
+return { 
+    managerToken,
+    note: "Manager access token created successfully"
+};</textarea>
+            <button onclick="executeStep(6)">Run</button>
+            <div class="result" id="result6"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step7">
+        <h2>Step 7: List Team Members with Manager Token</h2>
+        <div class="description">Use manager's token to list team members, demonstrating data masking.</div>
+        <div class="description">✱ Access is granted only to name and phone number. All other fields will be masked.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code7">// Switch to manager token
+api.xBunkerToken = window.stateData.managerToken;
+// List all team members using stored unlock UUID
+const teamMembers = await api.bulkListGroupUsers(
+    window.stateData.unlockUUID,
+    'sales-team'
+);
+// Filter to show only team members (excluding manager)
+const teamMemberRecords = teamMembers.rows.filter(user => user.rolename === 'team-member');
+return { 
+    teamMemberRecords,
+    note: "Filtered list showing only team members with their accessible fields"
+};</textarea>
+            <button onclick="executeStep(7)">Run</button>
+            <div class="result" id="result7"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step8">
+        <h2>Step 8: Reset Access Token</h2>
+        <div class="description">Reset the API token back to the original admin token.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code8">// Reset to original admin token
+api.xBunkerToken = document.getElementById('apiToken').value;
+return { 
+    message: 'Token reset to original admin token',
+    note: "API client restored to admin context"
+};</textarea>
+            <button onclick="executeStep(8)">Run</button>
+            <div class="result" id="result8"></div>
+        </div>
+    </div>
+
+    <script src="../../src/databunkerpro-api.js"></script>
+    <script>
+        // Initialize API client
+        let api;
+        // State data to store values between steps
+        window.stateData = {};
+        
+        function updateApiClient() {
+            const url = document.getElementById('apiUrl').value;
+            const token = document.getElementById('apiToken').value;
+            api = new DatabunkerproAPI(url, token);
+        }
+
+        document.getElementById('apiUrl').addEventListener('change', updateApiClient);
+        document.getElementById('apiToken').addEventListener('change', updateApiClient);
+        
+        // Initial setup
+        updateApiClient();
+
+        function displayResult(stepNumber, data) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.style.color = 'black';
+        }
+
+        function displayError(stepNumber, error) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = `Error: ${error.message}`;
+            element.style.color = 'red';
+        }
+
+        async function executeStep(stepNumber) {
+            try {
+                const code = document.getElementById(`code${stepNumber}`).value;
+                const result = await eval(`(async () => { ${code} })()`);
+                displayResult(stepNumber, result);
+            } catch (error) {
+                displayError(stepNumber, error);
+            }
+        }
+    </script>
+</body>
+</html> 
