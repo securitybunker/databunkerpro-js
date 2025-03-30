@@ -533,6 +533,23 @@ class DatabunkerproAPI {
     return this.makeRequest('PolicyCreate', 'POST', data, requestMetadata);
   }
 
+  async updatePolicy(policyid, data, requestMetadata = null) {
+    return this.makeRequest('PolicyUpdate', 'POST', { policyid, ...data }, requestMetadata);
+  }
+
+  async getPolicy(policyname, requestMetadata = null) {
+    const data = {};
+    if (policyname) {
+      // Check if policyname is an integer (policy ID) or string (policy name)
+      if (Number.isInteger(Number(policyname))) {
+        data.policyid = policyname;
+      } else {
+        data.policyname = policyname;
+      }
+    }
+    return this.makeRequest('PolicyGet', 'POST', data, requestMetadata);
+  }
+
   async listPolicies(requestMetadata = null) {
     return this.makeRequest('PolicyListAllPolicies', 'POST', null, requestMetadata);
   }
