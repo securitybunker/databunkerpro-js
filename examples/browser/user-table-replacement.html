@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Databunkerpro: User Table Replacement Demo</title>
+    <title>Databunker Pro: User Table Replacement Demo</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Databunkerpro: User Table Replacement Demo</h1>
+    <h1>Databunker Pro: User Table Replacement Demo</h1>
     
     <div class="intro">
-        <p>This example demonstrates how to implement secure team management using Databunkerpro. It shows how to:</p>
+        <p>This example demonstrates how to implement secure team management using Databunker Pro. It shows how to:</p>
         <ul>
             <li><strong>Team Management:</strong> Create and manage team groups with role-based access</li>
             <li><strong>Data Masking:</strong> Automatically mask sensitive data while allowing access to necessary fields</li>
@@ -30,7 +30,7 @@
     <div class="config">
         <h2>Configuration</h2>
         <div class="input-group">
-            <label for="apiUrl">Databunkerpro URL:</label>
+            <label for="apiUrl">Databunker Pro URL:</label>
             <input type="text" id="apiUrl" value="http://localhost:3000">
         </div>
         <div class="input-group">
@@ -150,10 +150,11 @@ const managerPolicy = await api.createPolicy({
     policy: {
         Effect: 'Allow',
         Principal: { Role: 'manager' },
-        Action: ['UserGet', 'BulkListGroupUsers', 'BulkListUnlock'],
+        Action: ['UserGet', 'BulkListGroupUsers'],
         Resource: [
             '${target_group_members:role/team-member}.profile.name',
-            '${target_group_members:role/team-member}.profile.phone'
+            '${target_group_members:role/team-member}.profile.phone',
+            '${target_group_members:role/team-member}.group'
         ],
         Condition: {
             StringEquals: {

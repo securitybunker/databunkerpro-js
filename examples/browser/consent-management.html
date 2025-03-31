@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Databunkerpro: Consent Management Demo</title>
+    <title>Databunker Pro: Consent Management Demo</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Databunkerpro: Consent Management Demo</h1>
+    <h1>Databunker Pro: Consent Management Demo</h1>
     
     <div class="intro">
-        <p>This example demonstrates how to implement a comprehensive consent management system using Databunkerpro. It shows how to:</p>
+        <p>This example demonstrates how to implement a comprehensive consent management system using Databunker Pro. It shows how to:</p>
         <ul>
             <li><strong>Create Legal Basis:</strong> Define different types of consent with their requirements and descriptions</li>
             <li><strong>Record Consent:</strong> Capture and store user consent with verification details</li>
@@ -23,7 +23,7 @@
     <div class="config">
         <h2>Configuration</h2>
         <div class="input-group">
-            <label for="apiUrl">Databunkerpro URL:</label>
+            <label for="apiUrl">Databunker Pro URL:</label>
             <input type="text" id="apiUrl" value="http://localhost:3000">
         </div>
         <div class="input-group">
@@ -61,7 +61,7 @@ const analyticsConsent = await api.createLegalBasis({
 });
 
 return { marketingConsent, analyticsConsent };</textarea>
-            <button onclick="executeStep(1)">Run Step 1</button>
+            <button onclick="executeStep(1)">Run</button>
             <div class="result" id="result1"></div>
         </div>
     </div>
@@ -79,7 +79,7 @@ const user = await api.createUser({
 });
 
 return { user };</textarea>
-            <button onclick="executeStep(2)">Run Step 2</button>
+            <button onclick="executeStep(2)">Run</button>
             <div class="result" id="result2"></div>
         </div>
     </div>
@@ -114,7 +114,7 @@ const analyticsAgreement = await api.acceptAgreement(
 );
 
 return { marketingAgreement, analyticsAgreement };</textarea>
-            <button onclick="executeStep(3)">Run Step 3</button>
+            <button onclick="executeStep(3)">Run</button>
             <div class="result" id="result3"></div>
         </div>
     </div>
@@ -130,7 +130,7 @@ const userAgreements = await api.listUserAgreements(
 );
 
 return { userAgreements };</textarea>
-            <button onclick="executeStep(4)">Run Step 4</button>
+            <button onclick="executeStep(4)">Run</button>
             <div class="result" id="result4"></div>
         </div>
     </div>
@@ -157,7 +157,7 @@ return {
     updatedAgreements,
     note: "Consent withdrawal is tracked in audit logs"
 };</textarea>
-            <button onclick="executeStep(5)">Run Step 5</button>
+            <button onclick="executeStep(5)">Run</button>
             <div class="result" id="result5"></div>
         </div>
     </div>
@@ -184,7 +184,7 @@ return {
     consentEvents,
     note: "Shows all consent-related activities including acceptance and withdrawal"
 };</textarea>
-            <button onclick="executeStep(6)">Run Step 6</button>
+            <button onclick="executeStep(6)">Run</button>
             <div class="result" id="result6"></div>
         </div>
     </div>
