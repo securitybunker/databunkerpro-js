@@ -44,9 +44,8 @@ interface RequestMetadata {
 export declare class DatabunkerproAPI {
     private baseURL;
     private xBunkerToken;
-    private tenantName?;
-    constructor(baseURL: string, xBunkerToken?: string);
-    setTenant(tenantName: string): void;
+    private xBunkerTenant;
+    constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
     private makeRequest;
     rawRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
     createUser(profile: Record<string, any>, options?: UserOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -120,10 +119,12 @@ export declare class DatabunkerproAPI {
     getTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateTenant(tenantid: string | number, tenantname: string, tenantorg: string, email: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    listTenants(requestMetadata?: RequestMetadata | null): Promise<any>;
+    listTenants(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     createRole(rolename: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     linkPolicy(rolename: string, policyname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createPolicy(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updatePolicy(policyid: string | number, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getPolicy(policyname: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listPolicies(requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListUnlock(requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListUsers(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;

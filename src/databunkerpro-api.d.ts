@@ -47,7 +47,7 @@ interface AgreementOptions {
 }
 
 declare class DatabunkerproAPI {
-  constructor(baseURL: string, xBunkerToken?: string);
+  constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
 
   // Core request methods
   private makeRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -117,7 +117,7 @@ declare class DatabunkerproAPI {
   getTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   updateTenant(tenantid: string | number, tenantname: string, tenantorg: string, email: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  listTenants(requestMetadata?: RequestMetadata): Promise<any>;
+  listTenants(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Role Management
   createRole(rolename: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -125,6 +125,8 @@ declare class DatabunkerproAPI {
 
   // Policy Management
   createPolicy(data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  updatePolicy(policyid: string | number, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  getPolicy(policyname: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listPolicies(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Bulk Operations

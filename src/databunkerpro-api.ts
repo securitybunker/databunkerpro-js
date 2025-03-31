@@ -57,15 +57,12 @@ interface RequestMetadata {
 export class DatabunkerproAPI {
   private baseURL: string;
   private xBunkerToken: string;
-  private tenantName?: string;
+  private xBunkerTenant: string;
 
-  constructor(baseURL: string, xBunkerToken: string = '') {
+  constructor(baseURL: string, xBunkerToken: string = '', xBunkerTenant: string = '') {
     this.baseURL = baseURL;
     this.xBunkerToken = xBunkerToken;
-  }
-
-  setTenant(tenantName: string): void {
-    this.tenantName = tenantName;
+    this.xBunkerTenant = xBunkerTenant;
   }
 
   private async makeRequest(endpoint: string, method: string = 'POST', data: any = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -75,8 +72,8 @@ export class DatabunkerproAPI {
     if (this.xBunkerToken) {
       headers['X-Bunker-Token'] = this.xBunkerToken;
     }
-    if (this.tenantName) {
-      headers['X-Tenant'] = this.tenantName;
+    if (this.xBunkerTenant) {
+      headers['X-Bunker-Tenant'] = this.xBunkerTenant;
     }
 
     const options: RequestOptions = {
@@ -376,8 +373,9 @@ export class DatabunkerproAPI {
     return this.makeRequest('TenantDelete', 'POST', { tenantid }, requestMetadata);
   }
 
-  async listTenants(requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('TenantListTenants', 'POST', null, requestMetadata);
+  async listTenants(offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { offset, limit };
+    return this.makeRequest('TenantListTenants', 'POST', data, requestMetadata);
   }
 
   // Role Management
@@ -392,6 +390,22 @@ export class DatabunkerproAPI {
   // Policy Management
   async createPolicy(data: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('PolicyCreate', 'POST', data, requestMetadata);
+  }
+
+  async updatePolicy(policyid: string | number, data: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('PolicyUpdate', 'POST', { policyid, ...data }, requestMetadata);
+  }
+
+  async getPolicy(policyname: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = {};
+    if (policyname) {
+      if (Number.isInteger(Number(policyname))) {
+        data.policyid = policyname;
+      } else {
+        data.policyname = policyname;
+      }
+    }
+    return this.makeRequest('PolicyGet', 'POST', data, requestMetadata);
   }
 
   async listPolicies(requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -587,4 +601,4 @@ declare global {
   interface Window {
     DatabunkerproAPI: typeof DatabunkerproAPI;
   }
-} 
+}
