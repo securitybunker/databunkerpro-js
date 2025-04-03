@@ -367,7 +367,7 @@ class DatabunkerproAPI {
       tablename: options.tablename,
       status: options.status
     };
-    return this.makeRequest('ConnectorsCreateConnector', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorCreate', 'POST', data, requestMetadata);
   }
 
   async updateConnector(options, requestMetadata = null) {
@@ -384,7 +384,7 @@ class DatabunkerproAPI {
       tablename: options.tablename,
       status: options.status
     };
-    return this.makeRequest('ConnectorsUpdateConnector', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorUpdate', 'POST', data, requestMetadata);
   }
 
   async validateConnectorConnectivity(options, requestMetadata = null) {
@@ -401,11 +401,11 @@ class DatabunkerproAPI {
       tablename: options.tablename,
       status: options.status
     };
-    return this.makeRequest('ConnectorsValidateConnectivity', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorValidateConnectivity', 'POST', data, requestMetadata);
   }
 
   async deleteConnector(connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorsDeleteConnector', 'POST', { connectorid }, requestMetadata);
+    return this.makeRequest('ConnectorDelete', 'POST', { connectorid }, requestMetadata);
   }
 
   async getTableMetadata(options, requestMetadata = null) {
@@ -426,15 +426,15 @@ class DatabunkerproAPI {
   }
   
   async connectorGetUserData(mode, identity, connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorsGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
+    return this.makeRequest('ConnectorGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
   async connectorGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorsGetUserExtraData', 'POST', { mode, identity, connectorid }, requestMetadata);
+    return this.makeRequest('ConnectorGetUserExtraData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
   async connectorDeleteUser(mode, identity, connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
+    return this.makeRequest('ConnectorDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
   // Group Management
