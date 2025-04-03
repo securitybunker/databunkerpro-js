@@ -133,6 +133,8 @@ export declare class DatabunkerproAPI {
     bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUIConf(): Promise<any>;
     getTenantConf(): Promise<any>;
+    getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     cancelUserRequest(requestuuid: string, reason?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -156,29 +158,13 @@ export declare class DatabunkerproAPI {
      * @returns {Promise<any>} The created connector details
      */
     createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    /**
-     * Updates an existing connector configuration
-     * @param {ConnectorOptions} options - The connector configuration options
-     * @param {string|number} [options.connectorid] - ID of the connector to update
-     * @param {string} [options.connectorname] - Updated name of the connector
-     * @param {string} [options.connectortype] - Updated type of the connector
-     * @param {string} [options.connectordesc] - Updated description of the connector
-     * @param {string} [options.username] - Updated username for database connection
-     * @param {string} [options.apikey] - Updated API key for authentication
-     * @param {string} [options.dbhost] - Updated database host address
-     * @param {number} [options.dbport] - Updated database port number
-     * @param {string} [options.dbname] - Updated database name
-     * @param {string} [options.status] - Updated connector status
-     * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
-     * @returns {Promise<any>} The updated connector details
-     */
     updateConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
 }
 export default DatabunkerproAPI;
 declare global {

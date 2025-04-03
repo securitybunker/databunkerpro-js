@@ -451,6 +451,14 @@ export class DatabunkerproAPI {
     return this.makeRequest('TenantGetConf', 'POST');
   }
 
+  async getUserHTMLReport(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SystemGetUserHTMLReport', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async getUserReport(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SystemGetUserReport', 'POST', { mode, identity }, requestMetadata);
+  }
+
   // User Request Management
   async getUserRequest(requestuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('UserRequestGet', 'POST', { requestuuid }, requestMetadata);
@@ -511,22 +519,6 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorsCreateConnector', 'POST', data, requestMetadata);
   }
 
-  /**
-   * Updates an existing connector configuration
-   * @param {ConnectorOptions} options - The connector configuration options
-   * @param {string|number} [options.connectorid] - ID of the connector to update
-   * @param {string} [options.connectorname] - Updated name of the connector
-   * @param {string} [options.connectortype] - Updated type of the connector
-   * @param {string} [options.connectordesc] - Updated description of the connector
-   * @param {string} [options.username] - Updated username for database connection
-   * @param {string} [options.apikey] - Updated API key for authentication
-   * @param {string} [options.dbhost] - Updated database host address
-   * @param {number} [options.dbport] - Updated database port number
-   * @param {string} [options.dbname] - Updated database name
-   * @param {string} [options.status] - Updated connector status
-   * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
-   * @returns {Promise<any>} The updated connector details
-   */
   async updateConnector(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       connectorid: options.connectorid,
@@ -582,15 +574,15 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }
 
-  async connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('ConnectorsGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('ConnectorsGetUserExtraData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 }

@@ -95,9 +95,9 @@ declare class DatabunkerproAPI {
   validateConnectorConnectivity(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
   deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  connectorsGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  connectorsGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  connectorsDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Group Management
   createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -139,6 +139,8 @@ declare class DatabunkerproAPI {
   // System Configuration
   getUIConf(): Promise<any>;
   getTenantConf(): Promise<any>;
+  getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 }
 
 declare global {
@@ -146,5 +148,4 @@ declare global {
     DatabunkerproAPI: typeof DatabunkerproAPI;
   }
 }
-
 export default DatabunkerproAPI; 
