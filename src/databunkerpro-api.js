@@ -425,15 +425,15 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }
   
-  async connectorsGetUserData(mode, identity, connectorid, requestMetadata = null) {
+  async connectorGetUserData(mode, identity, connectorid, requestMetadata = null) {
     return this.makeRequest('ConnectorsGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async connectorsGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
+  async connectorGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
     return this.makeRequest('ConnectorsGetUserExtraData', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async connectorsDeleteUser(mode, identity, connectorid, requestMetadata = null) {
+  async connectorDeleteUser(mode, identity, connectorid, requestMetadata = null) {
     return this.makeRequest('ConnectorsDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
@@ -593,6 +593,13 @@ class DatabunkerproAPI {
     return this.makeRequest('TenantGetConf', 'POST');
   }
 
+  async getUserHTMLReport(mode, identity, requestMetadata = null) {
+    return this.makeRequest('SystemGetUserHTMLReport', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async getUserReport(mode, identity, requestMetadata = null) {
+    return this.makeRequest('SystemGetUserReport', 'POST', { mode, identity }, requestMetadata);
+  }
 }
 
 // Export for Node.js and browser environments
