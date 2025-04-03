@@ -304,12 +304,12 @@ class DatabunkerproAPI {
 
   // Connector Management
   async listSupportedConnectors(requestMetadata = null) {
-    return this.makeRequest('ConnectorsListSupportedConnectors', 'POST', null, requestMetadata);
+    return this.makeRequest('ConnectorListSupportedConnectors', 'POST', null, requestMetadata);
   }
 
   async listConnectors(offset = 0, limit = 10, requestMetadata = null) {
     const data = { offset, limit };
-    return this.makeRequest('ConnectorsListConnectors', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorListConnectors', 'POST', data, requestMetadata);
   }
 
   /**
