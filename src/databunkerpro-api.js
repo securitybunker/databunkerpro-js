@@ -601,15 +601,15 @@ class DatabunkerproAPI {
     return this.makeRequest('SystemGetUserReport', 'POST', { mode, identity }, requestMetadata);
   }
 
-  async sessionUpsert(sessionuuid, data, requestMetadata = null) {
+  async upsertSession(sessionuuid, data, requestMetadata = null) {
     return this.makeRequest('SessionUpsert', 'POST', { sessionuuid, ...data }, requestMetadata);
   }
 
-  async sessionDelete(sessionuuid, requestMetadata = null) {
+  async deleteSession(sessionuuid, requestMetadata = null) {
     return this.makeRequest('SessionDelete', 'POST', { sessionuuid }, requestMetadata);
   }
 
-  async sessionGet(sessionuuid, requestMetadata = null) {
+  async getSession(sessionuuid, requestMetadata = null) {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
   }
 }

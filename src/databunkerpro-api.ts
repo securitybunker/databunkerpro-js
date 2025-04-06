@@ -586,15 +586,15 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async sessionUpsert(sessionuuid: string, data: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async upsertSession(sessionuuid: string, data: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('SessionUpsert', 'POST', { sessionuuid, ...data }, requestMetadata);
   }
 
-  async sessionDelete(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async deleteSession(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('SessionDelete', 'POST', { sessionuuid }, requestMetadata);
   }
 
-  async sessionGet(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async getSession(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
   }
 }

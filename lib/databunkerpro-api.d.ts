@@ -167,9 +167,9 @@ export declare class DatabunkerproAPI {
     connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    sessionUpsert(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
-    sessionDelete(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    sessionGet(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    upsertSession(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
 }
 export default DatabunkerproAPI;
 declare global {
