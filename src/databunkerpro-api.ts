@@ -585,6 +585,18 @@ export class DatabunkerproAPI {
   async connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('ConnectorDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
+
+  async sessionUpsert(sessionuuid: string, data: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SessionUpsert', 'POST', { sessionuuid, ...data }, requestMetadata);
+  }
+
+  async sessionDelete(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SessionDelete', 'POST', { sessionuuid }, requestMetadata);
+  }
+
+  async sessionGet(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
+  }
 }
 
 // Export for Node.js and browser environments

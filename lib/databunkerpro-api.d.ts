@@ -158,13 +158,18 @@ export declare class DatabunkerproAPI {
      * @returns {Promise<any>} The created connector details
      */
     createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    validateConnectorConnectivity(options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateConnector(options: ConnectorOptions & {
+        connectorid: string | number;
+    }, requestMetadata?: RequestMetadata | null): Promise<any>;
+    validateConnectorConnectivity(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    sessionUpsert(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    sessionDelete(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    sessionGet(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
 }
 export default DatabunkerproAPI;
 declare global {

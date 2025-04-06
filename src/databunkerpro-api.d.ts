@@ -141,6 +141,11 @@ declare class DatabunkerproAPI {
   getTenantConf(): Promise<any>;
   getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+
+  // Session Management
+  sessionUpsert(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  sessionDelete(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  sessionGet(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 }
 
 declare global {
