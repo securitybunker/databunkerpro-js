@@ -612,6 +612,52 @@ class DatabunkerproAPI {
   async getSession(sessionuuid, requestMetadata = null) {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
   }
+
+  /**
+   * Gets system statistics
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} System statistics
+   * 
+   * Response format:
+   * {
+   *   "status": "ok",
+   *   "stats": {
+   *     "numusers": 123,      // Total number of users in the system
+   *     "numtenants": 123,    // Total number of tenants
+   *     "numtokens": 123,     // Total number of tokens
+   *     "numsessions": 123    // Total number of active sessions
+   *   }
+   * }
+   */
+  async getSystemStats(requestMetadata = null) {
+    return this.makeRequest('SystemGetSystemStats', 'POST', null, requestMetadata);
+  }
+
+  async parsePrometheusMetrics(metricsText) {
+    const lines = metricsText.split('\n');
+    const metrics = {};
+    
+    for (const line of lines) {
+      // Skip comments and empty lines
+      if (line.startsWith('#') || !line.trim()) continue;
+      
+      // Parse metric line
+      const match = line.match(/^([a-zA-Z0-9_]+)(?:{([^}]+)})?\s+([0-9.]+)$/);
+      if (match) {
+        const [, name, labels, value] = match;
+        const metricKey = labels ? `${name}{${labels}}` : name;
+        metrics[metricKey] = parseFloat(value);
+      }
+    }
+    return metrics;
+  }
+  
+  async getSystemMetrics(requestMetadata = null) {
+    // call /metrics
+    const response = await fetch(this.baseURL + '/metrics');
+    const metricsText = await response.text();
+    return this.parsePrometheusMetrics(metricsText);
+  }
 }
 
 // Export for Node.js and browser environments

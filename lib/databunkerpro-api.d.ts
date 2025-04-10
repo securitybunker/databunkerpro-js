@@ -170,6 +170,26 @@ export declare class DatabunkerproAPI {
     upsertSession(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    sessionGet(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Gets system statistics
+     * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+     * @returns {Promise<Object>} System statistics
+     *
+     * Response format:
+     * {
+     *   "status": "ok",
+     *   "stats": {
+     *     "numusers": 123,      // Total number of users in the system
+     *     "numtenants": 123,    // Total number of tenants
+     *     "numtokens": 123,     // Total number of tokens
+     *     "numsessions": 123    // Total number of active sessions
+     *   }
+     * }
+     */
+    getSystemStats(requestMetadata?: RequestMetadata | null): Promise<any>;
+    parsePrometheusMetrics(metricsText: string): Promise<Record<string, number>>;
+    getSystemMetrics(requestMetadata?: RequestMetadata | null): Promise<Record<string, number>>;
 }
 export default DatabunkerproAPI;
 declare global {

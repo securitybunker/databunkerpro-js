@@ -597,9 +597,58 @@ export class DatabunkerproAPI {
   async getSession(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
   }
+
+  async sessionGet(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
+  }
+
+  /**
+   * Gets system statistics
+   * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} System statistics
+   * 
+   * Response format:
+   * {
+   *   "status": "ok",
+   *   "stats": {
+   *     "numusers": 123,      // Total number of users in the system
+   *     "numtenants": 123,    // Total number of tenants
+   *     "numtokens": 123,     // Total number of tokens
+   *     "numsessions": 123    // Total number of active sessions
+   *   }
+   * }
+   */
+  async getSystemStats(requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SystemGetSystemStats', 'POST', null, requestMetadata);
+  }
+
+  async parsePrometheusMetrics(metricsText: string): Promise<Record<string, number>> {
+    const lines = metricsText.split('\n');
+    const metrics: Record<string, number> = {};
+    
+    for (const line of lines) {
+      // Skip comments and empty lines
+      if (line.startsWith('#') || !line.trim()) continue;
+      
+      // Parse metric line
+      const match = line.match(/^([a-zA-Z0-9_]+)(?:{([^}]+)})?\s+([0-9.]+)$/);
+      if (match) {
+        const [, name, labels, value] = match;
+        const metricKey = labels ? `${name}{${labels}}` : name;
+        metrics[metricKey] = parseFloat(value);
+      }
+    }
+    return metrics;
+  }
+  
+  async getSystemMetrics(requestMetadata: RequestMetadata | null = null): Promise<Record<string, number>> {
+    // call /metrics
+    const response = await fetch(this.baseURL + '/metrics');
+    const metricsText = await response.text();
+    return this.parsePrometheusMetrics(metricsText);
+  }
 }
 
-// Export for Node.js and browser environments
 export default DatabunkerproAPI;
 declare global {
   interface Window {
