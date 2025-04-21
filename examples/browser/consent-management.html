@@ -176,8 +176,8 @@ const auditEvents = await api.listUserAuditEvents(
 
 // Filter consent-related events
 const consentEvents = auditEvents.rows.filter(event => 
-    event.title.includes('agreement') || 
-    event.title.includes('consent')
+    event.title.includes('Agreement') ||
+    event.title.includes('Consent')
 );
 
 return { 

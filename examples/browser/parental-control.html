@@ -231,10 +231,9 @@ const auditEvents = await api.listUserAuditEvents(
 );
 
 // Filter parental access events
-const parentalAccessEvents = auditEvents.rows.filter(event => 
-    event.title.includes('parent') || 
-    event.action === 'UserGet' ||
-    event.action === 'UserUpdate'
+const parentalAccessEvents = auditEvents.rows.filter(event =>
+    event.title === 'UserGet' ||
+    event.title === 'UserUpdate'
 );
 
 return { 
