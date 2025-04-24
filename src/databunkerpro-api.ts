@@ -598,10 +598,6 @@ export class DatabunkerproAPI {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
   }
 
-  async sessionGet(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
-  }
-
   /**
    * Gets system statistics
    * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request

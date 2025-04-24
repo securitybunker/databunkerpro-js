@@ -143,9 +143,9 @@ declare class DatabunkerproAPI {
   getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Session Management
-  sessionUpsert(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
-  sessionDelete(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
-  sessionGet(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  upsertSession(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getSession(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // System Metrics
   getSystemStats(requestMetadata?: RequestMetadata): Promise<any>;

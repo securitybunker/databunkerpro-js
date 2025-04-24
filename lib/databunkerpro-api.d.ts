@@ -170,7 +170,6 @@ export declare class DatabunkerproAPI {
     upsertSession(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    sessionGet(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Gets system statistics
      * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request
