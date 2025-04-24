@@ -113,6 +113,12 @@ export declare class DatabunkerproAPI {
      */
     addUserToGroup(mode: string, identity: string, groupname: string | number, rolename?: string | number | null, requestMetadata?: RequestMetadata | null): Promise<any>;
     createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createToken(tokentype: string, record: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createTokensBulk(records: Record<string, any>[], requestMetadata?: RequestMetadata | null): Promise<any>;
+    getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listTokensBulk(options: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteTokensBulk(tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;

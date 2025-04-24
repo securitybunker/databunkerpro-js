@@ -345,6 +345,32 @@ export class DatabunkerproAPI {
     return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
   }
 
+  // Sensitive Records Tokenization API (i.e. credit card)
+  async createToken(tokentype: string, record: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = {tokentype, record};
+    return this.makeRequest('TokenCreate', 'POST', data, requestMetadata);
+  }
+
+  async createTokensBulk(records: Record<string, any>[], requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TokenCreateBulk', 'POST', { data: records }, requestMetadata);
+  }
+
+  async getToken(token: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TokenGet', 'POST', { token }, requestMetadata);
+  }
+
+  async deleteToken(token: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TokenDelete', 'POST', { token }, requestMetadata);
+  }
+
+  async listTokensBulk(options: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TokenListBulk', 'POST', options, requestMetadata);
+  }
+
+  async deleteTokensBulk(tokens: string[], requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('TokenDeleteBulk', 'POST', { data: tokens }, requestMetadata);
+  }
+
   // Audit Management
   async listUserAuditEvents(mode: string, identity: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { mode, identity, offset, limit };

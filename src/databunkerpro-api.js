@@ -486,6 +486,32 @@ class DatabunkerproAPI {
     return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
   }
 
+  // Sensitive Records Tokenization API (i.e. credit card)
+  async createToken(tokentype, record, requestMetadata = null) {
+    const data = {tokentype, record};
+    return this.makeRequest('TokenCreate', 'POST', data, requestMetadata);
+  }
+
+  async createTokensBulk(records, requestMetadata = null) {
+    return this.makeRequest('TokenCreateBulk', 'POST', { data: records }, requestMetadata);
+  }
+
+  async getToken(token, requestMetadata = null) {
+    return this.makeRequest('TokenGet', 'POST', { token }, requestMetadata);
+  }
+
+  async deleteToken(token, requestMetadata = null) {
+    return this.makeRequest('TokenDelete', 'POST', { token }, requestMetadata);
+  }
+
+  async listTokensBulk(options, requestMetadata = null) {
+    return this.makeRequest('TokenListBulk', 'POST', options, requestMetadata);
+  }
+
+  async deleteTokensBulk(tokens, requestMetadata = null) {
+    return this.makeRequest('TokenDeleteBulk', 'POST', { data: tokens }, requestMetadata);
+  }
+
   // Audit Management
   async listUserAuditEvents(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
     const data = { mode, identity, offset, limit }
