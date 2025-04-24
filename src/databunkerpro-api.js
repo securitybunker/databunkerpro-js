@@ -493,7 +493,7 @@ class DatabunkerproAPI {
   }
 
   async createTokensBulk(records, requestMetadata = null) {
-    return this.makeRequest('TokenCreateBulk', 'POST', { data: records }, requestMetadata);
+    return this.makeRequest('TokenCreateBulk', 'POST', { records }, requestMetadata);
   }
 
   async getToken(token, requestMetadata = null) {
@@ -504,12 +504,12 @@ class DatabunkerproAPI {
     return this.makeRequest('TokenDelete', 'POST', { token }, requestMetadata);
   }
 
-  async listTokensBulk(options, requestMetadata = null) {
-    return this.makeRequest('TokenListBulk', 'POST', options, requestMetadata);
+  async listTokensBulk(tokens, requestMetadata = null) {
+    return this.makeRequest('TokenListBulk', 'POST', { tokens }, requestMetadata);
   }
 
   async deleteTokensBulk(tokens, requestMetadata = null) {
-    return this.makeRequest('TokenDeleteBulk', 'POST', { data: tokens }, requestMetadata);
+    return this.makeRequest('TokenDeleteBulk', 'POST', { tokens }, requestMetadata);
   }
 
   // Audit Management

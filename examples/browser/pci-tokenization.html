@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databunker Pro: PCI Tokenization Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Databunker Pro: PCI Tokenization Demo</h1>
+    
+    <div class="intro">
+        <p>This example demonstrates how to implement PCI tokenization using Databunker Pro. It shows how to:</p>
+        <ul>
+            <li><strong>Tokenize Single Values:</strong> Securely tokenize sensitive data like credit card numbers</li>
+            <li><strong>Retrieve Tokenized Data:</strong> Safely retrieve the original data using tokens</li>
+            <li><strong>Delete Tokens:</strong> Remove tokenized data when no longer needed</li>
+            <li><strong>Bulk Operations:</strong> Handle multiple tokenization operations efficiently</li>
+        </ul>
+    </div>
+
+    <div class="config">
+        <h2>Configuration</h2>
+        <div class="input-group">
+            <label for="apiUrl">Databunker Pro URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:3000">
+        </div>
+        <div class="input-group">
+            <label for="apiToken">API Token:</label>
+            <input type="text" id="apiToken" placeholder="Enter API key">
+        </div>
+    </div>
+
+    <div class="step" id="step1">
+        <h2>Step 1: Tokenize a Credit Card Number</h2>
+        <div class="description">Create a token for a credit card number</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code1">// Tokenize a credit card number
+const tokenResult = await api.createToken(
+    'creditcard',  // tokentype
+    '5467047429390590'  // record
+);
+
+// Store the token for use in subsequent steps
+window.tokenResult = tokenResult;
+
+return { 
+    tokenResult,
+    note: "The token can be used to retrieve the original credit card number"
+};</textarea>
+            <button onclick="executeStep(1)">Run</button>
+            <div class="result" id="result1"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <h2>Step 2: Retrieve Tokenized Data</h2>
+        <div class="description">Retrieve the original credit card number using both token types</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code2">// Get the original credit card number using both token types
+if (!window.tokenResult) {
+    throw new Error('Please run Step 1 first to create a token');
+}
+
+// Retrieve using tokenuuid
+const tokenDataByUUID = await api.getToken(
+    window.tokenResult.tokenuuid
+);
+
+// Retrieve using tokenbase
+const tokenDataByBase = await api.getToken(
+    window.tokenResult.tokenbase
+);
+
+return { 
+    tokenDataByUUID,
+    tokenDataByBase,
+    note: "Both token types return the same original credit card number"
+};</textarea>
+            <button onclick="executeStep(2)">Run</button>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h2>Step 3: Delete Token</h2>
+        <div class="description">Delete the tokenized data and verify deletion for both token types</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code3">// Delete the tokenized data
+if (!window.tokenResult) {
+    throw new Error('Please run Step 1 first to create a token');
+}
+
+// Delete using tokenuuid
+const deleteResult = await api.deleteToken(
+    window.tokenResult.tokenuuid
+);
+
+// Verify both token types are deleted
+let uuidDeleted = false;
+let baseDeleted = false;
+
+try {
+    const result = await api.getToken(window.tokenResult.tokenuuid);
+    if (result.status === 'error') {
+        uuidDeleted = true;
+    }
+} catch (error) {
+    uuidDeleted = true;
+}
+
+try {
+    const result = await api.getToken(window.tokenResult.tokenbase);
+    if (result.status === 'error') {
+        baseDeleted = true;
+    }
+} catch (error) {
+    baseDeleted = true;
+}
+
+return { 
+    deleteResult,
+    verification: {
+        tokenuuid: uuidDeleted ? "Deleted" : "Still exists",
+        tokenbase: baseDeleted ? "Deleted" : "Still exists"
+    },
+    note: "Both token types should be deleted after deletion"
+};</textarea>
+            <button onclick="executeStep(3)">Run</button>
+            <div class="result" id="result3"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h2>Step 4: Bulk Tokenization</h2>
+        <div class="description">Tokenize multiple credit card numbers in a single operation</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code4">// Create multiple tokens in bulk
+const bulkTokens = await api.createTokensBulk([
+    {
+        tokentype: 'creditcard',
+        record: '5467047429390590'
+    },
+    {
+        tokentype: 'creditcard',
+        record: '4532015112830366'
+    },
+    {
+        tokentype: 'creditcard',
+        record: '4716182333661234'
+    }
+]);
+
+// Store the bulk tokens for use in subsequent steps
+window.bulkTokens = bulkTokens;
+
+return { 
+    bulkTokens,
+    note: "Each record in the created array contains a token"
+};</textarea>
+            <button onclick="executeStep(4)">Run</button>
+            <div class="result" id="result4"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step5">
+        <h2>Step 5: Bulk Token Retrieval</h2>
+        <div class="description">Retrieve multiple tokenized records in bulk</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code5">// Get multiple tokenized records
+if (!window.bulkTokens) {
+    throw new Error('Please run Step 4 first to create bulk tokens');
+}
+
+// Extract all tokenuuids from the created records
+const tokenList = window.bulkTokens.created.map(item => item.tokenbase);
+const bulkData = await api.listTokensBulk(tokenList);
+
+// Store the token list for use in the next step
+window.tokenList = tokenList;
+
+return { 
+    bulkData,
+    note: "Each record in the rows array contains the original data"
+};</textarea>
+            <button onclick="executeStep(5)">Run</button>
+            <div class="result" id="result5"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step6">
+        <h2>Step 6: Bulk Token Deletion</h2>
+        <div class="description">Delete multiple tokens in bulk</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code6">// Delete multiple tokens in bulk
+if (!window.tokenList) {
+    throw new Error('Please run Step 5 first to get the token list');
+}
+
+const deleteBulkResult = await api.deleteTokensBulk(
+    window.tokenList  // array of tokens to delete
+);
+
+// Verify the tokens are deleted
+const remainingTokens = await api.listTokensBulk(window.tokenList);
+
+return { 
+    deleteBulkResult,
+    remainingTokens,
+    note: "If remainingTokens.total is 0, all tokens were successfully deleted"
+};</textarea>
+            <button onclick="executeStep(6)">Run</button>
+            <div class="result" id="result6"></div>
+        </div>
+    </div>
+
+    <script src="../../src/databunkerpro-api.js"></script>
+    <script>
+        // Initialize API client
+        let api;
+        
+        function updateApiClient() {
+            const url = document.getElementById('apiUrl').value;
+            const token = document.getElementById('apiToken').value;
+            api = new DatabunkerproAPI(url, token);
+        }
+
+        document.getElementById('apiUrl').addEventListener('change', updateApiClient);
+        document.getElementById('apiToken').addEventListener('change', updateApiClient);
+        
+        // Initial setup
+        updateApiClient();
+
+        function displayResult(stepNumber, data) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.style.color = 'black';
+        }
+
+        function displayError(stepNumber, error) {
+            const element = document.getElementById(`result${stepNumber}`);
+            element.textContent = `Error: ${error.message}`;
+            element.style.color = 'red';
+        }
+
+        async function executeStep(stepNumber) {
+            try {
+                const code = document.getElementById(`code${stepNumber}`).value;
+                const result = await eval(`(async () => { ${code} })()`);
+                displayResult(stepNumber, result);
+            } catch (error) {
+                displayError(stepNumber, error);
+            }
+        }
+    </script>
+</body>
+</html> 
