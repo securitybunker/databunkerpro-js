@@ -108,12 +108,12 @@ declare class DatabunkerproAPI {
   // Token Management
   createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
-    // Sensitive Records Tokenization API (i.e. credit card)
+  // Sensitive Records Tokenization API (i.e. credit card)
   createToken(tokentype: string, record: string, requestMetadata?: RequestMetadata): Promise<any>;
   createTokensBulk(records: Record<string, any>[], requestMetadata?: RequestMetadata): Promise<any>;
   getToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
-  listTokensBulk(options: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+  listTokensBulk(tokens: string[], requestMetadata?: RequestMetadata): Promise<any>;
   deleteTokensBulk(tokens: string[], requestMetadata?: RequestMetadata): Promise<any>;
 
   // Audit Management

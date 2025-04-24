@@ -117,7 +117,7 @@ export declare class DatabunkerproAPI {
     createTokensBulk(records: Record<string, any>[], requestMetadata?: RequestMetadata | null): Promise<any>;
     getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    listTokensBulk(options: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listTokensBulk(tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteTokensBulk(tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
