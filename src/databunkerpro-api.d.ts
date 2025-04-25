@@ -108,9 +108,30 @@ declare class DatabunkerproAPI {
   // Token Management
   createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
-  // Sensitive Records Tokenization API (i.e. credit card)
-  createToken(tokentype: string, record: string, requestMetadata?: RequestMetadata): Promise<any>;
-  createTokensBulk(records: Record<string, any>[], requestMetadata?: RequestMetadata): Promise<any>;
+  // Token Management (for example for credit cards)
+  /**
+   * Creates a token for sensitive data like credit card numbers
+   * @param tokentype - Type of token (e.g., 'creditcard')
+   * @param record - The sensitive data to tokenize
+   * @param options - Optional parameters for token creation
+   * @param options.slidingtime - Time period for token validity (e.g., '1d', '1h')
+   * @param options.finaltime - Absolute expiration time for the token
+   * @param options.unique - Whether to create a unique token for each request
+   * @param requestMetadata - Optional request metadata
+   */
+  createToken(tokentype: string, record: string, options?: { slidingtime?: string, finaltime?: string, unique?: boolean }, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Creates multiple tokens in bulk for sensitive data
+   * @param records - Array of records to tokenize, each containing tokentype and record
+   * @param options - Optional parameters for token creation
+   * @param options.slidingtime - Time period for token validity (e.g., '1d', '1h')
+   * @param options.finaltime - Absolute expiration time for the token
+   * @param options.unique - Whether to create unique tokens for each request
+   * @param requestMetadata - Optional request metadata
+   */
+  createTokensBulk(records: Record<string, any>[], options?: { slidingtime?: string, finaltime?: string, unique?: boolean }, requestMetadata?: RequestMetadata): Promise<any>;
+
   getToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
   listTokensBulk(tokens: string[], requestMetadata?: RequestMetadata): Promise<any>;

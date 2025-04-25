@@ -345,14 +345,34 @@ export class DatabunkerproAPI {
     return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
   }
 
-  // Sensitive Records Tokenization API (i.e. credit card)
-  async createToken(tokentype: string, record: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = {tokentype, record};
+  // Token Management (for example for credit cards)
+  /**
+   * Creates a token for sensitive data like credit card numbers
+   * @param tokentype - Type of token (e.g., 'creditcard')
+   * @param record - The sensitive data to tokenize
+   * @param options - Optional parameters for token creation
+   * @param options.slidingtime - Time period for token validity (e.g., '1d', '1h')
+   * @param options.finaltime - Absolute expiration time for the token
+   * @param options.unique - Whether to create a unique token for each request
+   * @param requestMetadata - Optional request metadata
+   */
+  async createToken(tokentype: string, record: string, options: { slidingtime?: string, finaltime?: string, unique?: boolean } = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = {tokentype, record, ...options};
     return this.makeRequest('TokenCreate', 'POST', data, requestMetadata);
   }
 
-  async createTokensBulk(records: Record<string, any>[], requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('TokenCreateBulk', 'POST', { records }, requestMetadata);
+  /**
+   * Creates multiple tokens in bulk for sensitive data
+   * @param records - Array of records to tokenize, each containing tokentype and record
+   * @param options - Optional parameters for token creation
+   * @param options.slidingtime - Time period for token validity (e.g., '1d', '1h')
+   * @param options.finaltime - Absolute expiration time for the token
+   * @param options.unique - Whether to create unique tokens for each request
+   * @param requestMetadata - Optional request metadata
+   */
+  async createTokensBulk(records: Record<string, any>[], options: { slidingtime?: string, finaltime?: string, unique?: boolean } = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = {records, ...options};
+    return this.makeRequest('TokenCreateBulk', 'POST', data, requestMetadata);
   }
 
   async getToken(token: string, requestMetadata: RequestMetadata | null = null): Promise<any> {

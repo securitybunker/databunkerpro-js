@@ -486,14 +486,53 @@ class DatabunkerproAPI {
     return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
   }
 
-  // Sensitive Records Tokenization API (i.e. credit card)
-  async createToken(tokentype, record, requestMetadata = null) {
-    const data = {tokentype, record};
+  // Token Management (for example for credit cards)
+  /**
+   * Creates a token for sensitive data like credit card numbers
+   * @param {string} tokentype - Type of token (e.g., 'creditcard')
+   * @param {string} record - The sensitive data to tokenize
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.slidingtime] - Time period for token validity (e.g., '1d', '1h')
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {boolean} [options.unique] - Whether to create a unique token for each request
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created token information
+   * @example
+   * // Create a token with expiration
+   * const token = await api.createToken('creditcard', '1234567890', {
+   *   slidingtime: '1d',
+   *   finaltime: '2024-12-31',
+   *   unique: true
+   * });
+   */
+  async createToken(tokentype, record, options = {}, requestMetadata = null) {
+    const data = {tokentype, record, ...options};
     return this.makeRequest('TokenCreate', 'POST', data, requestMetadata);
   }
 
-  async createTokensBulk(records, requestMetadata = null) {
-    return this.makeRequest('TokenCreateBulk', 'POST', { records }, requestMetadata);
+  /**
+   * Creates multiple tokens in bulk for sensitive data
+   * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.slidingtime] - Time period for token validity (e.g., '1d', '1h')
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {boolean} [options.unique] - Whether to create unique tokens for each request
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created tokens information
+   * @example
+   * // Create multiple tokens with expiration
+   * const tokens = await api.createTokensBulk([
+   *   { tokentype: 'creditcard', record: '1234567890' },
+   *   { tokentype: 'creditcard', record: '0987654321' }
+   * ], {
+   *   slidingtime: '1d',
+   *   finaltime: '2024-12-31',
+   *   unique: true
+   * });
+   */
+  async createTokensBulk(records, options = {}, requestMetadata = null) {
+    const data = {records, ...options};
+    return this.makeRequest('TokenCreateBulk', 'POST', data, requestMetadata);
   }
 
   async getToken(token, requestMetadata = null) {

@@ -113,8 +113,35 @@ export declare class DatabunkerproAPI {
      */
     addUserToGroup(mode: string, identity: string, groupname: string | number, rolename?: string | number | null, requestMetadata?: RequestMetadata | null): Promise<any>;
     createXToken(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createToken(tokentype: string, record: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createTokensBulk(records: Record<string, any>[], requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Creates a token for sensitive data like credit card numbers
+     * @param tokentype - Type of token (e.g., 'creditcard')
+     * @param record - The sensitive data to tokenize
+     * @param options - Optional parameters for token creation
+     * @param options.slidingtime - Time period for token validity (e.g., '1d', '1h')
+     * @param options.finaltime - Absolute expiration time for the token
+     * @param options.unique - Whether to create a unique token for each request
+     * @param requestMetadata - Optional request metadata
+     */
+    createToken(tokentype: string, record: string, options?: {
+        slidingtime?: string;
+        finaltime?: string;
+        unique?: boolean;
+    }, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Creates multiple tokens in bulk for sensitive data
+     * @param records - Array of records to tokenize, each containing tokentype and record
+     * @param options - Optional parameters for token creation
+     * @param options.slidingtime - Time period for token validity (e.g., '1d', '1h')
+     * @param options.finaltime - Absolute expiration time for the token
+     * @param options.unique - Whether to create unique tokens for each request
+     * @param requestMetadata - Optional request metadata
+     */
+    createTokensBulk(records: Record<string, any>[], options?: {
+        slidingtime?: string;
+        finaltime?: string;
+        unique?: boolean;
+    }, requestMetadata?: RequestMetadata | null): Promise<any>;
     getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listTokensBulk(tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
