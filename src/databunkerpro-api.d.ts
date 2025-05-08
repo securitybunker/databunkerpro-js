@@ -46,6 +46,13 @@ interface AgreementOptions {
   status?: string;
 }
 
+interface SharedRecordOptions {
+  fields?: string;  // A string containing names of fields to share separated by commas
+  partner?: string; // It is used as a reference to partner name. It is not enforced.
+  appname?: string; // If defined, shows fields from the user app record instead of user profile
+  finaltime?: string; // Expiration time for the shared record
+}
+
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
 
@@ -180,6 +187,23 @@ declare class DatabunkerproAPI {
   getSystemStats(requestMetadata?: RequestMetadata): Promise<any>;
   parsePrometheusMetrics(metricsText: string): Promise<Record<string, number>>;
   getSystemMetrics(requestMetadata?: RequestMetadata): Promise<Record<string, number>>;
+
+  // Shared Record Management
+  /**
+   * Creates a shared record for a user
+   * @param mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param identity - User's identifier corresponding to the mode
+   * @param options - Optional parameters for shared record creation
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  createSharedRecord(mode: string, identity: string, options?: SharedRecordOptions, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Gets a shared record by its UUID
+   * @param recorduuid - UUID of the shared record to retrieve
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  getSharedRecord(recorduuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 }
 
 declare global {

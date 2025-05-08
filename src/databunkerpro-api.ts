@@ -54,6 +54,13 @@ interface RequestMetadata {
   [key: string]: any;
 }
 
+interface SharedRecordOptions {
+  fields?: string;  // A string containing names of fields to share separated by commas
+  partner?: string; // It is used as a reference to partner name. It is not enforced.
+  appname?: string; // If defined, shows fields from the user app record instead of user profile
+  finaltime?: string; // Expiration time for the shared record
+}
+
 export class DatabunkerproAPI {
   private baseURL: string;
   private xBunkerToken: string;
@@ -688,6 +695,47 @@ export class DatabunkerproAPI {
     const response = await fetch(this.baseURL + '/metrics');
     const metricsText = await response.text();
     return this.parsePrometheusMetrics(metricsText);
+  }
+
+  /**
+   * Creates a shared record for a user
+   * @param mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param identity - User's identifier corresponding to the mode
+   * @param options - Optional parameters for shared record creation
+   * @param requestMetadata - Additional metadata to include with the request
+   * @returns {Promise<any>} The created shared record information
+   * @example
+   * // Create a shared record with specific fields
+   * const sharedRecord = await api.createSharedRecord('email', 'user@example.com', {
+   *   fields: 'name,email',
+   *   partner: 'partner-org',
+   *   appname: 'myapp',
+   *   finaltime: '1d'
+   * });
+   */
+  async createSharedRecord(mode: string, identity: string, options: SharedRecordOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = {
+      mode,
+      identity,
+      fields: options.fields,
+      partner: options.partner,
+      appname: options.appname,
+      finaltime: options.finaltime
+    };
+    return this.makeRequest('SharedRecordCreate', 'POST', data, requestMetadata);
+  }
+
+  /**
+   * Gets a shared record by its UUID
+   * @param recorduuid - UUID of the shared record to retrieve
+   * @param requestMetadata - Additional metadata to include with the request
+   * @returns {Promise<any>} The shared record information
+   * @example
+   * // Get a shared record by UUID
+   * const sharedRecord = await api.getSharedRecord('123e4567-e89b-12d3-a456-426614174000');
+   */
+  async getSharedRecord(recorduuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SharedRecordGet', 'POST', { recorduuid }, requestMetadata);
   }
 }
 
