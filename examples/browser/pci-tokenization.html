@@ -164,17 +164,44 @@ return {
     </div>
 
     <div class="step" id="step5">
-        <h2>Step 5: Bulk Token Retrieval</h2>
-        <div class="description">Retrieve multiple tokenized records in bulk</div>
+        <h2>Step 5: Initialize Bulk Operations</h2>
+        <div class="description">Get an unlock UUID token for bulk operations. This is required for listing and deleting tokens in bulk.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code5">// Get multiple tokenized records
+            <textarea class="code-editor" id="code5">// Get unlock UUID for bulk operations
+const bulkInit = await api.bulkListUnlock();
+// Store unlock UUID for later use
+window.stateData = {
+    unlockUUID: bulkInit.unlockuuid
+};
+
+return {
+    bulkInit,
+    note: "Bulk operations initialized with unlock UUID. This is required for listing and deleting tokens in bulk."
+};</textarea>
+            <button onclick="executeStep(5)">Run</button>
+            <div class="result" id="result5"></div>
+        </div>
+    </div>
+
+    <div class="step" id="step6">
+        <h2>Step 6: Bulk Token Retrieval</h2>
+        <div class="description">Retrieve multiple tokenized records in bulk. Requires unlock UUID from Step 5.</div>
+        <div class="code-container">
+            <textarea class="code-editor" id="code6">// Get multiple tokenized records
 if (!window.bulkTokens) {
     throw new Error('Please run Step 4 first to create bulk tokens');
 }
 
+if (!window.stateData || !window.stateData.unlockUUID) {
+    throw new Error('Please run Step 5 first to initialize bulk operations');
+}
+
 // Extract all tokenuuids from the created records
 const tokenList = window.bulkTokens.created.map(item => item.tokenbase);
-const bulkData = await api.listTokensBulk(tokenList);
+const bulkData = await api.bulkListTokens(
+    window.stateData.unlockUUID,
+    tokenList
+);
 
 // Store the token list for use in the next step
 window.tokenList = tokenList;
@@ -183,34 +210,42 @@ return {
     bulkData,
     note: "Each record in the rows array contains the original data"
 };</textarea>
-            <button onclick="executeStep(5)">Run</button>
-            <div class="result" id="result5"></div>
+            <button onclick="executeStep(6)">Run</button>
+            <div class="result" id="result6"></div>
         </div>
     </div>
 
-    <div class="step" id="step6">
-        <h2>Step 6: Bulk Token Deletion</h2>
-        <div class="description">Delete multiple tokens in bulk</div>
+    <div class="step" id="step7">
+        <h2>Step 7: Bulk Token Deletion</h2>
+        <div class="description">Delete multiple tokens in bulk. Requires unlock UUID from Step 5.</div>
         <div class="code-container">
-            <textarea class="code-editor" id="code6">// Delete multiple tokens in bulk
+            <textarea class="code-editor" id="code7">// Delete multiple tokens in bulk
 if (!window.tokenList) {
-    throw new Error('Please run Step 5 first to get the token list');
+    throw new Error('Please run Step 6 first to get the token list');
 }
 
-const deleteBulkResult = await api.deleteTokensBulk(
+if (!window.stateData || !window.stateData.unlockUUID) {
+    throw new Error('Please run Step 5 first to initialize bulk operations');
+}
+
+const deleteBulkResult = await api.bulkDeleteTokens(
+    window.stateData.unlockUUID,
     window.tokenList  // array of tokens to delete
 );
 
 // Verify the tokens are deleted
-const remainingTokens = await api.listTokensBulk(window.tokenList);
+const remainingTokens = await api.bulkListTokens(
+    window.stateData.unlockUUID,
+    window.tokenList
+);
 
 return { 
     deleteBulkResult,
     remainingTokens,
     note: "If remainingTokens.total is 0, all tokens were successfully deleted"
 };</textarea>
-            <button onclick="executeStep(6)">Run</button>
-            <div class="result" id="result6"></div>
+            <button onclick="executeStep(7)">Run</button>
+            <div class="result" id="result7"></div>
         </div>
     </div>
 
@@ -254,4 +289,4 @@ return {
         }
     </script>
 </body>
-</html> 
+</html>
