@@ -731,7 +731,7 @@ class DatabunkerproAPI {
    * @param {Object} [options={}] - Optional parameters for shared record creation
    * @param {Array<string>} [options.fields] - A string containing names of fields to share separated by commas
    * @param {string} [options.partner] - It is used as a refference to partner name. It is not enforced.
-   * @param {string} [options.appname] - If defined, shows fields from the user app record instead of user profile.
+   * @param {string} [options.appname] - If defined, shows fields from the user app record instead of userwith this name
    * @param {string} [options.finaltime] - Expiration time for the shared record
    * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
    * @returns {Promise<Object>} The created shared record information
@@ -741,7 +741,7 @@ class DatabunkerproAPI {
    *   fields: 'name,email',
    *   partner: 'partner-org',
    *   appname: 'myapp',
-   *   finaltime: '1d'
+   *   finaltime: '2024-12-31'
    * });
    */
   async createSharedRecord(mode, identity, options = {}, requestMetadata = null) {
