@@ -32,7 +32,7 @@
     <div class="container">
         <h2>App Data Management</h2>
         <button onclick="storeAppData()">Store App Data</button>
-        <button onclick="getUserAppData()">Get App Data</button>
+        <button onclick="getAppData()">Get App Data</button>
         <button onclick="listAppNames()">List Apps</button>
         <div id="appResult" class="result"></div>
     </div>
@@ -133,9 +133,9 @@
             }
         }
 
-        async function getUserAppData() {
+        async function getAppData() {
             try {
-                const data = await api.getUserAppData('login', 'johndoe', 'myapp');
+                const data = await api.getAppData('login', 'johndoe', 'myapp');
                 displayResult('appResult', data);
             } catch (error) {
                 displayError('appResult', error);

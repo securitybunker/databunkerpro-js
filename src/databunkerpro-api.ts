@@ -210,7 +210,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('AppdataCreate', 'POST', { mode, identity, appname, data }, requestMetadata);
   }
 
-  async getUserAppData(mode: string, identity: string, appname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async getAppData(mode: string, identity: string, appname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname }, requestMetadata);
   }
 
@@ -222,7 +222,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('AppdataUpdateRequest', 'POST', { mode, identity, appname, data }, requestMetadata);
   }
 
-  async listUserAppDataRecords(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async listAppDataRecords(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('AppdataListUserAppNames', 'POST', { mode, identity }, requestMetadata);
   }
 

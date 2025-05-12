@@ -163,7 +163,7 @@ class DatabunkerproAPI {
     return this.makeRequest('AppdataCreate', 'POST', { mode, identity, appname, data }, requestMetadata);
   }
 
-  async getUserAppData(mode, identity, appname, requestMetadata = null) {
+  async getAppData(mode, identity, appname, requestMetadata = null) {
     return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname }, requestMetadata);
   }
 
@@ -175,7 +175,7 @@ class DatabunkerproAPI {
     return this.makeRequest('AppdataUpdateRequest', 'POST', { mode, identity, appname, data }, requestMetadata);
   }
 
-  async listUserAppDataRecords(mode, identity, requestMetadata = null) {
+  async listAppDataNames(mode, identity, requestMetadata = null) {
     return this.makeRequest('AppdataListUserAppNames', 'POST', { mode, identity }, requestMetadata);
   }
 

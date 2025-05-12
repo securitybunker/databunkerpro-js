@@ -82,7 +82,7 @@ async function basicUsageDemo() {
     console.log('Stored app data:', appData);
 
     // Retrieve app data
-    const retrievedAppData = await api.getUserAppData('login', 'johndoe', 'myapp');
+    const retrievedAppData = await api.getAppData('login', 'johndoe', 'myapp');
     console.log('Retrieved app data:', retrievedAppData);
 
     // List all apps

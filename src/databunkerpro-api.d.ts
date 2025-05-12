@@ -78,10 +78,10 @@ declare class DatabunkerproAPI {
 
   // App Data Management
   createAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
-  getUserAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
   updateAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   requestAppDataUpdate(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
-  listUserAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Agreement Management

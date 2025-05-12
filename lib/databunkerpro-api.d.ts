@@ -63,10 +63,10 @@ export declare class DatabunkerproAPI {
     preloginUser(mode: string, identity: string, code: string, captchacode: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     loginUser(mode: string, identity: string, smscode: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
-    getUserAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestAppDataUpdate(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
-    listUserAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppNames(requestMetadata?: RequestMetadata | null): Promise<any>;
     createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
