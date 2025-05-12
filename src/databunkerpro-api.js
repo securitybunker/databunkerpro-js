@@ -543,14 +543,6 @@ class DatabunkerproAPI {
     return this.makeRequest('TokenDelete', 'POST', { token }, requestMetadata);
   }
 
-  async listTokensBulk(tokens, requestMetadata = null) {
-    return this.makeRequest('TokenListBulk', 'POST', { tokens }, requestMetadata);
-  }
-
-  async deleteTokensBulk(tokens, requestMetadata = null) {
-    return this.makeRequest('TokenDeleteBulk', 'POST', { tokens }, requestMetadata);
-  }
-
   // Audit Management
   async listUserAuditEvents(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
     const data = { mode, identity, offset, limit }
@@ -649,6 +641,16 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListAuditEvents', 'POST', data, requestMetadata);
   }
 
+  async bulkListTokens(unlockuuid, tokens, requestMetadata = null) {
+    const data = { unlockuuid, tokens };
+    return this.makeRequest('BulkListTokens', 'POST', data, requestMetadata);
+  }
+
+  async bulkDeleteTokens(unlockuuid, tokens, requestMetadata = null) {
+    const data = { unlockuuid, tokens };
+    return this.makeRequest('BulkDeleteTokens', 'POST', data, requestMetadata);
+  }
+
   // System Configuration
   async getUIConf() {
     return this.makeRequest('TenantGetUIConf', 'POST');
@@ -731,7 +733,7 @@ class DatabunkerproAPI {
    * @param {Object} [options={}] - Optional parameters for shared record creation
    * @param {Array<string>} [options.fields] - A string containing names of fields to share separated by commas
    * @param {string} [options.partner] - It is used as a refference to partner name. It is not enforced.
-   * @param {string} [options.appname] - If defined, shows fields from the user app record instead of userwith this name
+   * @param {string} [options.appname] - If defined, shows fields from the user app record instead user profile
    * @param {string} [options.finaltime] - Expiration time for the shared record
    * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
    * @returns {Promise<Object>} The created shared record information

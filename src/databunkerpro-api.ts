@@ -390,14 +390,6 @@ export class DatabunkerproAPI {
     return this.makeRequest('TokenDelete', 'POST', { token }, requestMetadata);
   }
 
-  async listTokensBulk(tokens: string[], requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('TokenListBulk', 'POST', { tokens }, requestMetadata);
-  }
-
-  async deleteTokensBulk(tokens: string[], requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('TokenDeleteBulk', 'POST', { tokens }, requestMetadata);
-  }
-
   // Audit Management
   async listUserAuditEvents(mode: string, identity: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { mode, identity, offset, limit };
@@ -493,6 +485,16 @@ export class DatabunkerproAPI {
   async bulkListAuditEvents(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { unlockuuid, offset, limit };
     return this.makeRequest('BulkListAuditEvents', 'POST', data, requestMetadata);
+  }
+
+  async bulkListTokens(unlockuuid: string, tokens: string[], requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, tokens };
+    return this.makeRequest('BulkListTokens', 'POST', data, requestMetadata);
+  }
+
+  async bulkDeleteTokens(unlockuuid: string, tokens: string[], requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, tokens };
+    return this.makeRequest('BulkDeleteTokens', 'POST', data, requestMetadata);
   }
 
   // System Configuration

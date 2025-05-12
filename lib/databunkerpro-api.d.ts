@@ -150,8 +150,6 @@ export declare class DatabunkerproAPI {
     }, requestMetadata?: RequestMetadata | null): Promise<any>;
     getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    listTokensBulk(tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
-    deleteTokensBulk(tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createTenant(data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -170,6 +168,8 @@ export declare class DatabunkerproAPI {
     bulkListGroupUsers(unlockuuid: string, groupname: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListUserRequests(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    bulkListTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
+    bulkDeleteTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     getUIConf(): Promise<any>;
     getTenantConf(): Promise<any>;
     getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
