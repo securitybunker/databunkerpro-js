@@ -206,7 +206,7 @@ export declare class DatabunkerproAPI {
     connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    upsertSession(sessionuuid: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    upsertSession(sessionuuid: string, sessiondata: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
