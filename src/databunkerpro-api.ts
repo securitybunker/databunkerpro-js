@@ -641,8 +641,8 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
   }
 
-  async upsertSession(sessionuuid: string, sessiondata: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { sessionuuid, sessiondata };
+  async upsertSession(sessionuuid: string, sessiondata: Record<string, any>, options: { slidingtime?: string, finaltime?: string } = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { sessionuuid, sessiondata, ...options };
     return this.makeRequest('SessionUpsert', 'POST', data, requestMetadata);
   }
 

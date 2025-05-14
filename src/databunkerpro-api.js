@@ -668,8 +668,8 @@ class DatabunkerproAPI {
     return this.makeRequest('SystemGetUserReport', 'POST', { mode, identity }, requestMetadata);
   }
 
-  async upsertSession(sessionuuid, sessiondata, requestMetadata = null) {
-    const data = { sessionuuid, sessiondata };
+  async upsertSession(sessionuuid, sessiondata, options = {}, requestMetadata = null) {
+    const data = { sessionuuid, sessiondata, ...options };
     return this.makeRequest('SessionUpsert', 'POST', data, requestMetadata);
   }
 
