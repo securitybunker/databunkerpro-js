@@ -53,6 +53,11 @@ interface SharedRecordOptions {
   finaltime?: string; // Expiration time for the shared record
 }
 
+interface BasicOptions {
+  finaltime?: string;
+  slidingtime?: string;
+}
+
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
 
@@ -62,6 +67,21 @@ declare class DatabunkerproAPI {
 
   // User Management
   createUser(profile: Record<string, any>, options?: UserOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  /**
+   * Creates multiple users in bulk with their profiles and group information
+   * @param records - Array of user records to create
+   * @param options - Global options for all users
+   * @param options.finaltime - Global expiration time for all users
+   * @param options.slidingtime - Global sliding time period for all users
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  createUsersBulk(records: Array<{
+    profile: Record<string, any>;
+    groupname?: string | number;
+    groupid?: number;
+    rolename?: string | number;
+    roleid?: number;
+  }>, options?: BasicOptions, requestMetadata?: RequestMetadata): Promise<any>;
   getUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;

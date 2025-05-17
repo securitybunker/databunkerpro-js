@@ -38,6 +38,10 @@ interface ConnectorOptions {
     tablename?: string;
     status?: string;
 }
+interface BasicOptions {
+    finaltime?: string;
+    slidingtime?: string;
+}
 interface RequestMetadata {
     [key: string]: any;
 }
@@ -55,6 +59,39 @@ export declare class DatabunkerproAPI {
     private makeRequest;
     rawRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
     createUser(profile: Record<string, any>, options?: UserOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Creates multiple users in bulk with their profiles and group information
+     * @param records - Array of user records to create
+     * @param options - Global options for all users
+     * @param options.finaltime - Global expiration time for all users
+     * @param options.slidingtime - Global sliding time period for all users
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns {Promise<any>} The created users information
+     * @example
+     * // Create multiple users with global time settings
+     * const users = await api.createUsersBulk([
+     *   {
+     *     profile: { email: 'user1@example.com', name: 'User One' },
+     *     groupname: 'premium',
+     *     rolename: 'admin'
+     *   },
+     *   {
+     *     profile: { email: 'user2@example.com', name: 'User Two' },
+     *     groupid: 123,
+     *     rolename: 'team-member'
+     *   }
+     * ], {
+     *   finaltime: '2024-12-31',
+     *   slidingtime: '30d'
+     * });
+     */
+    createUsersBulk(records: Array<{
+        profile: Record<string, any>;
+        groupname?: string | number;
+        groupid?: number;
+        rolename?: string | number;
+        roleid?: number;
+    }>, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;

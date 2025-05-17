@@ -112,6 +112,69 @@ class DatabunkerproAPI {
     return this.makeRequest('UserCreate', 'POST', data, requestMetadata);
   }
 
+  /**
+   * Creates multiple users in bulk with their profiles and group information
+   * @param {Array<Object>} records - Array of user records to create
+   * @param {Object} [options={}] - Global options for all users
+   * @param {string} [options.finaltime] - Global expiration time for all users
+   * @param {string} [options.slidingtime] - Global sliding time period for all users
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The created users information
+   * @example
+   * // Create multiple users with global time settings
+   * const users = await api.createUsersBulk([
+   *   {
+   *     profile: { email: 'user1@example.com', name: 'User One' },
+   *     groupname: 'premium'
+   *   },
+   *   {
+   *     profile: { email: 'user2@example.com', name: 'User Two' },
+   *     groupid: 123
+   *   }
+   * ], {
+   *   finaltime: '2024-12-31',
+   *   slidingtime: '30d'
+   * });
+   */
+  async createUsersBulk(records, options = {}, requestMetadata = null) {
+    const data = {
+      records: records.map(record => {
+        const userData = { profile: record.profile };
+        // Handle groupname/groupid
+        if (record.groupname) {
+          if (Number.isInteger(Number(record.groupname))) {
+            userData.groupid = record.groupname;
+          } else {
+            userData.groupname = record.groupname;
+          }
+        } else if (record.groupid) {
+          userData.groupid = record.groupid;
+        }
+        // Handle rolename/roleid
+        if (record.rolename) {
+          if (Number.isInteger(Number(record.rolename))) {
+            userData.roleid = record.rolename;
+          } else {
+            userData.rolename = record.rolename;
+          }
+        } else if (record.roleid) {
+          userData.roleid = record.roleid;
+        }
+        return userData;
+      })
+    };
+
+    // Add global time options if provided
+    if (options.finaltime) {
+      data.finaltime = options.finaltime;
+    }
+    if (options.slidingtime) {
+      data.slidingtime = options.slidingtime;
+    }
+
+    return this.makeRequest('UserCreateBulk', 'POST', data, requestMetadata);
+  }
+
   async getUser(mode, identity, requestMetadata = null) {
     return this.makeRequest('UserGet', 'POST', { mode, identity }, requestMetadata);
   }
