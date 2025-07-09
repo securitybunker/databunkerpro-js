@@ -102,10 +102,12 @@ declare class DatabunkerproAPI {
   updateAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   requestAppDataUpdate(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
   listAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listAppDataNames(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Agreement Management
   createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  updateLegalBasis(brief: string, options: LegalBasisOptions, requestMetadata?: RequestMetadata): Promise<any>;
   acceptAgreement(mode: string, identity: string, options: AgreementOptions, requestMetadata?: RequestMetadata): Promise<any>;
   cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestAgreementCancellation(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -113,6 +115,61 @@ declare class DatabunkerproAPI {
   listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAgreements(requestMetadata?: RequestMetadata): Promise<any>;
   listProcessingActivities(requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Creates a new processing activity
+   * @param options - The processing activity options
+   * @param options.activity - Unique identifier for the processing activity
+   * @param options.title - Title of the processing activity
+   * @param options.script - Script or description of the processing activity
+   * @param options.fulldesc - Full description of the processing activity
+   * @param options.applicableto - What this activity applies to
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  createProcessingActivity(options: {
+    activity: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
+  }, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Updates an existing processing activity
+   * @param activity - Current activity identifier
+   * @param options - The processing activity update options
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  updateProcessingActivity(activity: string, options: {
+    newactivity?: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
+  }, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Deletes a processing activity
+   * @param activity - Activity identifier to delete
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  deleteProcessingActivity(activity: string, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Links a processing activity to a legal basis
+   * @param activity - Activity identifier
+   * @param brief - Legal basis brief identifier
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  linkProcessingActivityToLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Unlinks a processing activity from a legal basis
+   * @param activity - Activity identifier
+   * @param brief - Legal basis brief identifier
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Connector Management
   listSupportedConnectors(requestMetadata?: RequestMetadata): Promise<any>;
@@ -130,6 +187,19 @@ declare class DatabunkerproAPI {
   createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;
   getGroup(groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listAllGroups(requestMetadata?: RequestMetadata): Promise<any>;
+  listUserGroups(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  updateGroup(groupid: string | number, groupname: string, options?: { groupdesc?: string; grouptype?: string }, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteGroup(groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  removeUserFromGroup(mode: string, identity: string, groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Adds a user to a group with an optional role
+   * @param mode User identification mode (e.g., 'email', 'phone', 'token')
+   * @param identity User's identifier corresponding to the mode
+   * @param groupname Group name or ID to add the user to
+   * @param rolename Optional role name or ID to assign to the user in the group
+   * @param requestMetadata Additional metadata to include with the request
+   */
   addUserToGroup(mode: string, identity: string, groupname: string | number, rolename?: string | number | null, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Token Management
@@ -203,9 +273,63 @@ declare class DatabunkerproAPI {
   // Session Management
   upsertSession(sessionuuid: string, sessiondata: Record<string, any>, options?: { slidingtime?: string, finaltime?: string }, requestMetadata?: RequestMetadata): Promise<any>;
   deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserSessions(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   getSession(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 
-  // System Metrics
+  /**
+   * Creates a captcha for user verification
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  createCaptcha(requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Patches a user record with specific changes
+   * @param mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param identity - User's identifier corresponding to the mode
+   * @param patch - The patch data to apply
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  patchUser(mode: string, identity: string, patch: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Requests a user patch operation
+   * @param mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param identity - User's identifier corresponding to the mode
+   * @param patch - The patch data to apply
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  requestUserPatch(mode: string, identity: string, patch: Record<string, any>, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Revokes all agreements for a specific legal basis
+   * @param brief - Legal basis brief identifier
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  revokeAllAgreements(brief: string, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Deletes a legal basis
+   * @param brief - Legal basis brief identifier
+   * @param requestMetadata - Additional metadata to include with the request
+   */
+  deleteLegalBasis(brief: string, requestMetadata?: RequestMetadata): Promise<any>;
+
+  /**
+   * Gets system statistics
+   * @param requestMetadata - Additional metadata to include with the request
+   * @returns {Promise<Object>} System statistics
+   * 
+   * Response format:
+   * {
+   *   "status": "ok",
+   *   "stats": {
+   *     "numusers": 123,      // Total number of users in the system
+   *     "numtenants": 123,    // Total number of tenants
+   *     "numtokens": 123,     // Total number of tokens
+   *     "numsessions": 123    // Total number of active sessions
+   *   }
+   * }
+   */
   getSystemStats(requestMetadata?: RequestMetadata): Promise<any>;
   parsePrometheusMetrics(metricsText: string): Promise<Record<string, number>>;
   getSystemMetrics(requestMetadata?: RequestMetadata): Promise<Record<string, number>>;

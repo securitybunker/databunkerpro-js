@@ -308,6 +308,10 @@ class DatabunkerproAPI {
     return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
   }
 
+  async deleteLegalBasis(brief, requestMetadata = null) {
+    return this.makeRequest('LegalBasisDelete', 'POST', { brief }, requestMetadata);
+  }
+
   // Agreement Management
   /**
    * Records user's acceptance of a legal basis/agreement
@@ -370,9 +374,84 @@ class DatabunkerproAPI {
     return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, requestMetadata);
   }
 
+  async revokeAllAgreements(brief, requestMetadata = null) {
+    return this.makeRequest('AgreementRevokeAll', 'POST', { brief }, requestMetadata);
+  }
+
   // Processing Activity Management
   async listProcessingActivities(requestMetadata = null) {
     return this.makeRequest('ProcessingActivityListActivities', 'POST', null, requestMetadata);
+  }
+
+  /**
+   * Creates a new processing activity
+   * @param {Object} options - The processing activity options
+   * @param {string} options.activity - Unique identifier for the processing activity
+   * @param {string} [options.title] - Title of the processing activity
+   * @param {string} [options.script] - Script or description of the processing activity
+   * @param {string} [options.fulldesc] - Full description of the processing activity
+   * @param {string} [options.applicableto] - What this activity applies to
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The created processing activity
+   */
+  async createProcessingActivity(options, requestMetadata = null) {
+    const data = {
+      activity: options.activity,
+      title: options.title,
+      script: options.script,
+      fulldesc: options.fulldesc,
+      applicableto: options.applicableto
+    };
+    return this.makeRequest('ProcessingActivityCreate', 'POST', data, requestMetadata);
+  }
+
+  /**
+   * Updates an existing processing activity
+   * @param {string} activity - Current activity identifier
+   * @param {Object} options - The processing activity update options
+   * @param {string} [options.newactivity] - New activity identifier
+   * @param {string} [options.title] - Title of the processing activity
+   * @param {string} [options.script] - Script or description of the processing activity
+   * @param {string} [options.fulldesc] - Full description of the processing activity
+   * @param {string} [options.applicableto] - What this activity applies to
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The updated processing activity
+   */
+  async updateProcessingActivity(activity, options, requestMetadata = null) {
+    const data = { activity, ...options };
+    return this.makeRequest('ProcessingActivityUpdate', 'POST', data, requestMetadata);
+  }
+
+  /**
+   * Deletes a processing activity
+   * @param {string} activity - Activity identifier to delete
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The deletion result
+   */
+  async deleteProcessingActivity(activity, requestMetadata = null) {
+    return this.makeRequest('ProcessingActivityDelete', 'POST', { activity }, requestMetadata);
+  }
+
+  /**
+   * Links a processing activity to a legal basis
+   * @param {string} activity - Activity identifier
+   * @param {string} brief - Legal basis brief identifier
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The linking result
+   */
+  async linkProcessingActivityToLegalBasis(activity, brief, requestMetadata = null) {
+    return this.makeRequest('ProcessingActivityLinkLegalBasis', 'POST', { activity, brief }, requestMetadata);
+  }
+
+  /**
+   * Unlinks a processing activity from a legal basis
+   * @param {string} activity - Activity identifier
+   * @param {string} brief - Legal basis brief identifier
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The unlinking result
+   */
+  async unlinkProcessingActivityFromLegalBasis(activity, brief, requestMetadata = null) {
+    return this.makeRequest('ProcessingActivityUnlinkLegalBasis', 'POST', { activity, brief }, requestMetadata);
   }
 
   // Connector Management
@@ -523,6 +602,23 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupListAllGroups', 'POST', null, requestMetadata);
   }
 
+  async listUserGroups(mode, identity, requestMetadata = null) {
+    return this.makeRequest('GroupListUserGroups', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async updateGroup(groupid, groupname, options = {}, requestMetadata = null) {
+    const data = { groupid, groupname, ...options };
+    return this.makeRequest('GroupUpdate', 'POST', data, requestMetadata);
+  }
+
+  async deleteGroup(groupid, requestMetadata = null) {
+    return this.makeRequest('GroupDelete', 'POST', { groupid }, requestMetadata);
+  }
+
+  async removeUserFromGroup(mode, identity, groupid, requestMetadata = null) {
+    return this.makeRequest('GroupDeleteUser', 'POST', { mode, identity, groupid }, requestMetadata);
+  }
+
   /**
    * Adds a user to a group with an optional role
    * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
@@ -564,6 +660,7 @@ class DatabunkerproAPI {
    * @param {string} [options.finaltime] - Absolute expiration time for the token
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
+   */
   async createXToken(mode, identity, options = {}, requestMetadata = null) {
     const data = { mode, identity, ...options };
     return this.makeRequest('XTokenCreate', 'POST', data, requestMetadata);
@@ -791,8 +888,45 @@ class DatabunkerproAPI {
     return this.makeRequest('SessionDelete', 'POST', { sessionuuid }, requestMetadata);
   }
 
+  async listUserSessions(mode, identity, requestMetadata = null) {
+    return this.makeRequest('SessionListUserSessions', 'POST', { mode, identity }, requestMetadata);
+  }
+
   async getSession(sessionuuid, requestMetadata = null) {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
+  }
+
+  /**
+   * Creates a captcha for user verification
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The created captcha information
+   */
+  async createCaptcha(requestMetadata = null) {
+    return this.makeRequest('CaptchaCreate', 'POST', null, requestMetadata);
+  }
+
+  /**
+   * Patches a user record with specific changes
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {Object} patch - The patch data to apply
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The patched user information
+   */
+  async patchUser(mode, identity, patch, requestMetadata = null) {
+    return this.makeRequest('UserPatch', 'POST', { mode, identity, patch }, requestMetadata);
+  }
+
+  /**
+   * Requests a user patch operation
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {Object} patch - The patch data to apply
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The patch request result
+   */
+  async requestUserPatch(mode, identity, patch, requestMetadata = null) {
+    return this.makeRequest('UserPatchRequest', 'POST', { mode, identity, patch }, requestMetadata);
   }
 
   /**

@@ -104,8 +104,10 @@ export declare class DatabunkerproAPI {
     updateAppData(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestAppDataUpdate(mode: string, identity: string, appname: string, data: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listAppDataNames(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppNames(requestMetadata?: RequestMetadata | null): Promise<any>;
     createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateLegalBasis(brief: string, options: LegalBasisOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Records user's acceptance of a legal basis/agreement
      * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
@@ -141,11 +143,37 @@ export declare class DatabunkerproAPI {
     requestAgreementCancellation(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    revokeAllAgreements(brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAgreements(requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteLegalBasis(brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listProcessingActivities(requestMetadata?: RequestMetadata | null): Promise<any>;
+    createProcessingActivity(options: {
+        activity: string;
+        title?: string;
+        script?: string;
+        fulldesc?: string;
+        applicableto?: string;
+    }, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateProcessingActivity(activity: string, options: {
+        newactivity?: string;
+        title?: string;
+        script?: string;
+        fulldesc?: string;
+        applicableto?: string;
+    }, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteProcessingActivity(activity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    linkProcessingActivityToLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getGroup(groupid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAllGroups(requestMetadata?: RequestMetadata | null): Promise<any>;
+    listUserGroups(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateGroup(groupid: string | number, groupname: string, options?: {
+        groupdesc?: string;
+        grouptype?: string;
+    }, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteGroup(groupid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    removeUserFromGroup(mode: string, identity: string, groupid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Adds a user to a group with an optional role
      * @param mode User identification mode (e.g., 'email', 'phone', 'token')
@@ -248,7 +276,11 @@ export declare class DatabunkerproAPI {
         finaltime?: string;
     }, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    listUserSessions(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createCaptcha(requestMetadata?: RequestMetadata | null): Promise<any>;
+    patchUser(mode: string, identity: string, patch: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
+    requestUserPatch(mode: string, identity: string, patch: Record<string, any>, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Gets system statistics
      * @param {RequestMetadata} [requestMetadata=null] - Additional metadata to include with the request

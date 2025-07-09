@@ -305,6 +305,10 @@ export class DatabunkerproAPI {
     return this.makeRequest('AppdataListUserAppNames', 'POST', { mode, identity }, requestMetadata);
   }
 
+  async listAppDataNames(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('AppdataListUserAppNames', 'POST', { mode, identity }, requestMetadata);
+  }
+
   async listAppNames(requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('AppdataListAppNames', 'POST', null, requestMetadata);
   }
@@ -312,6 +316,12 @@ export class DatabunkerproAPI {
   // Agreement Management
   async createLegalBasis(options: LegalBasisOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('LegalBasisCreate', 'POST', options, requestMetadata);
+  }
+
+  async updateLegalBasis(brief: string, options: LegalBasisOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const { brief: _, ...optionsWithoutBrief } = options;
+    const data = { brief, ...optionsWithoutBrief };
+    return this.makeRequest('LegalBasisUpdate', 'POST', data, requestMetadata);
   }
 
   /**
@@ -375,12 +385,61 @@ export class DatabunkerproAPI {
     return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, requestMetadata);
   }
 
+  async revokeAllAgreements(brief: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('AgreementRevokeAll', 'POST', { brief }, requestMetadata);
+  }
+
   async listAgreements(requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
   }
 
+  async deleteLegalBasis(brief: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('LegalBasisDelete', 'POST', { brief }, requestMetadata);
+  }
+
+  // Processing Activity Management
   async listProcessingActivities(requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('ProcessingActivityListActivities', 'POST', null, requestMetadata);
+  }
+
+  async createProcessingActivity(options: {
+    activity: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
+  }, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = {
+      activity: options.activity,
+      title: options.title,
+      script: options.script,
+      fulldesc: options.fulldesc,
+      applicableto: options.applicableto
+    };
+    return this.makeRequest('ProcessingActivityCreate', 'POST', data, requestMetadata);
+  }
+
+  async updateProcessingActivity(activity: string, options: {
+    newactivity?: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
+  }, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { activity, ...options };
+    return this.makeRequest('ProcessingActivityUpdate', 'POST', data, requestMetadata);
+  }
+
+  async deleteProcessingActivity(activity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('ProcessingActivityDelete', 'POST', { activity }, requestMetadata);
+  }
+
+  async linkProcessingActivityToLegalBasis(activity: string, brief: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('ProcessingActivityLinkLegalBasis', 'POST', { activity, brief }, requestMetadata);
+  }
+
+  async unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('ProcessingActivityUnlinkLegalBasis', 'POST', { activity, brief }, requestMetadata);
   }
 
   // Group Management
@@ -394,6 +453,23 @@ export class DatabunkerproAPI {
 
   async listAllGroups(requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('GroupListAllGroups', 'POST', null, requestMetadata);
+  }
+
+  async listUserGroups(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('GroupListUserGroups', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async updateGroup(groupid: string | number, groupname: string, options: { groupdesc?: string; grouptype?: string } = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { groupid, groupname, ...options };
+    return this.makeRequest('GroupUpdate', 'POST', data, requestMetadata);
+  }
+
+  async deleteGroup(groupid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('GroupDelete', 'POST', { groupid }, requestMetadata);
+  }
+
+  async removeUserFromGroup(mode: string, identity: string, groupid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('GroupDeleteUser', 'POST', { mode, identity, groupid }, requestMetadata);
   }
 
   /**
@@ -729,8 +805,24 @@ export class DatabunkerproAPI {
     return this.makeRequest('SessionDelete', 'POST', { sessionuuid }, requestMetadata);
   }
 
+  async listUserSessions(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SessionListUserSessions', 'POST', { mode, identity }, requestMetadata);
+  }
+
   async getSession(sessionuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
+  }
+
+  async createCaptcha(requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('CaptchaCreate', 'POST', null, requestMetadata);
+  }
+
+  async patchUser(mode: string, identity: string, patch: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('UserPatch', 'POST', { mode, identity, patch }, requestMetadata);
+  }
+
+  async requestUserPatch(mode: string, identity: string, patch: Record<string, any>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('UserPatchRequest', 'POST', { mode, identity, patch }, requestMetadata);
   }
 
   /**
