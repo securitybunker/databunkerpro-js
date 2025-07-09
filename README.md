@@ -100,8 +100,8 @@ const acceptance = await client.acceptAgreement(
     brief: 'marketing-consent',
     agreementmethod: 'web-form',
     referencecode: 'REF123',
-    starttime: '2024-01-01T00:00:00Z',
-    finaltime: '2025-01-01T00:00:00Z',
+    starttime: '1d',
+    finaltime: '100d',
     status: 'active',
     lastmodifiedby: 'admin@company.com'
   }

@@ -216,6 +216,22 @@ class DatabunkerproAPI {
     return this.makeRequest('CaptchaCreate', 'POST', null, requestMetadata);
   }
 
+  // Create user API Access Token
+  /**
+   * Creates an access token for a user
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created token information
+   */
+  async createXToken(mode, identity, options = {}, requestMetadata = null) {
+    const data = { mode, identity, ...options };
+    return this.makeRequest('XTokenCreate', 'POST', data, requestMetadata);
+  }
+
   // User Request Management
   async getUserRequest(requestuuid, requestMetadata = null) {
     return this.makeRequest('UserRequestGet', 'POST', { requestuuid }, requestMetadata);
@@ -633,22 +649,6 @@ class DatabunkerproAPI {
     }
     
     return this.makeRequest('GroupAddUser', 'POST', data, requestMetadata);
-  }
-
-  // Create API Access Token
-  /**
-   * Creates an access token for a user
-   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
-   * @param {string} identity - User's identifier corresponding to the mode
-   * @param {Object} [options={}] - Optional parameters for token creation
-   * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
-   * @param {string} [options.finaltime] - Absolute expiration time for the token
-   * @param {Object} [requestMetadata=null] - Optional request metadata
-   * @returns {Promise<Object>} The created token information
-   */
-  async createXToken(mode, identity, options = {}, requestMetadata = null) {
-    const data = { mode, identity, ...options };
-    return this.makeRequest('XTokenCreate', 'POST', data, requestMetadata);
   }
 
   // Token Management (for example for credit cards)
