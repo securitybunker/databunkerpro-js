@@ -132,7 +132,7 @@ class DatabunkerproAPI {
    *     groupid: 123
    *   }
    * ], {
-   *   finaltime: '2024-12-31',
+   *   finaltime: '100d',
    *   slidingtime: '30d'
    * });
    */
@@ -681,7 +681,7 @@ class DatabunkerproAPI {
    * // Create a token with expiration
    * const token = await api.createToken('creditcard', '1234567890', {
    *   slidingtime: '1d',
-   *   finaltime: '2024-12-31',
+   *   finaltime: '10d',
    *   unique: true
    * });
    */
@@ -706,7 +706,7 @@ class DatabunkerproAPI {
    *   { tokentype: 'creditcard', record: '0987654321' }
    * ], {
    *   slidingtime: '1d',
-   *   finaltime: '2024-12-31',
+   *   finaltime: '10d',
    *   unique: true
    * });
    */
@@ -992,7 +992,7 @@ class DatabunkerproAPI {
    *   fields: 'name,email',
    *   partner: 'partner-org',
    *   appname: 'myapp',
-   *   finaltime: '2024-12-31'
+   *   finaltime: '100d'
    * });
    */
   async createSharedRecord(mode, identity, options = {}, requestMetadata = null) {
