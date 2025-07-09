@@ -179,14 +179,6 @@ class DatabunkerproAPI {
     return this.makeRequest('UserGet', 'POST', { mode, identity }, requestMetadata);
   }
 
-  async deleteUser(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserDelete', 'POST', { mode, identity }, requestMetadata);
-  }
-
-  async requestUserDeletion(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserDeleteRequest', 'POST', { mode, identity }, requestMetadata);
-  }
-
   async updateUser(mode, identity, profile, requestMetadata = null) {
     return this.makeRequest('UserUpdate', 'POST', { mode, identity, profile }, requestMetadata);
   }
@@ -195,12 +187,33 @@ class DatabunkerproAPI {
     return this.makeRequest('UserUpdateRequest', 'POST', { mode, identity, profile }, requestMetadata);
   }
 
+  async patchUser(mode, identity, patch, requestMetadata = null) {
+    return this.makeRequest('UserPatch', 'POST', { mode, identity, patch }, requestMetadata);
+  }
+
+  async requestUserPatch(mode, identity, patch, requestMetadata = null) {
+    return this.makeRequest('UserPatchRequest', 'POST', { mode, identity, patch }, requestMetadata);
+  }
+
+  async deleteUser(mode, identity, requestMetadata = null) {
+    return this.makeRequest('UserDelete', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async requestUserDeletion(mode, identity, requestMetadata = null) {
+    return this.makeRequest('UserDeleteRequest', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  // User Authentication
   async preloginUser(mode, identity, code, captchacode, requestMetadata = null) {
     return this.makeRequest('UserPrelogin', 'POST', { mode, identity, code, captchacode }, requestMetadata);
   }
 
   async loginUser(mode, identity, smscode, requestMetadata = null) {
     return this.makeRequest('UserLogin', 'POST', { mode, identity, smscode }, requestMetadata);
+  }
+
+  async createCaptcha(requestMetadata = null) {
+    return this.makeRequest('CaptchaCreate', 'POST', null, requestMetadata);
   }
 
   // User Request Management
@@ -257,34 +270,6 @@ class DatabunkerproAPI {
   }
 
   // Legal Basis Management
-
-  /**
-   * Creates a new legal basis for data processing
-   * @param {Object} options - The legal basis options
-   * @param {string} options.brief - Unique identifier for the legal basis
-   * @param {string} [options.status='active'] - Status of the legal basis ('active' or 'inactive')
-   * @param {string} [options.module] - Module or category this legal basis belongs to
-   * @param {string} [options.fulldesc] - Detailed description of the legal basis
-   * @param {string} [options.shortdesc] - Brief description or label
-   * @param {string} [options.basistype] - Type of legal basis (e.g., 'consent', 'contract', 
-   *        'legal-requirement', 'vital-interest', 'public-interest', 'legitimate-interest' )
-   * @param {string} [options.requiredmsg] - Message explaining why this legal basis is required
-   * @param {boolean} [options.requiredflag=false] - Whether this legal basis is mandatory
-   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
-   * @returns {Promise<Object>} The created legal basis object
-   * @example
-   * // Create a marketing consent legal basis
-   * const marketingConsent = await api.createLegalBasis({
-   *   brief: 'marketing-consent',
-   *   status: 'active',
-   *   module: 'marketing',
-   *   fulldesc: 'Consent for marketing communications',
-   *   shortdesc: 'Marketing Consent',
-   *   basistype: 'consent',
-   *   requiredmsg: 'Required for receiving promotional content',
-   *   requiredflag: false
-   * });
-   */
   async createLegalBasis(options, requestMetadata = null) {
     const data = {
       brief: options.brief,
@@ -304,12 +289,12 @@ class DatabunkerproAPI {
     return this.makeRequest('LegalBasisUpdate', 'POST', data, requestMetadata);
   }
 
-  async listAgreements(requestMetadata = null) {
-    return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
-  }
-
   async deleteLegalBasis(brief, requestMetadata = null) {
     return this.makeRequest('LegalBasisDelete', 'POST', { brief }, requestMetadata);
+  }
+
+  async listAgreements(requestMetadata = null) {
+    return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
   }
 
   // Agreement Management
@@ -358,20 +343,20 @@ class DatabunkerproAPI {
     return this.makeRequest('AgreementAccept', 'POST', data, requestMetadata);
   }
 
-  async cancelAgreement(mode, identity, brief, requestMetadata = null) {
-    return this.makeRequest('AgreementCancel', 'POST', {mode, identity, brief}, requestMetadata);
-  }
-
-  async requestAgreementCancellation(mode, identity, brief, requestMetadata = null) {
-    return this.makeRequest('AgreementCancelRequest', 'POST', {mode, identity, brief}, requestMetadata);
-  }
-
   async getUserAgreement(mode, identity, brief, requestMetadata = null) {
     return this.makeRequest('AgreementGet', 'POST', { mode, identity, brief }, requestMetadata);
   }
 
   async listUserAgreements(mode, identity, requestMetadata = null) {
     return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, requestMetadata);
+  }
+
+  async cancelAgreement(mode, identity, brief, requestMetadata = null) {
+    return this.makeRequest('AgreementCancel', 'POST', {mode, identity, brief}, requestMetadata);
+  }
+
+  async requestAgreementCancellation(mode, identity, brief, requestMetadata = null) {
+    return this.makeRequest('AgreementCancelRequest', 'POST', {mode, identity, brief}, requestMetadata);
   }
 
   async revokeAllAgreements(brief, requestMetadata = null) {
@@ -879,6 +864,7 @@ class DatabunkerproAPI {
     return this.makeRequest('SystemGetUserReport', 'POST', { mode, identity }, requestMetadata);
   }
 
+  // Session Management
   async upsertSession(sessionuuid, sessiondata, options = {}, requestMetadata = null) {
     const data = { sessionuuid, sessiondata, ...options };
     return this.makeRequest('SessionUpsert', 'POST', data, requestMetadata);
@@ -894,39 +880,6 @@ class DatabunkerproAPI {
 
   async getSession(sessionuuid, requestMetadata = null) {
     return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
-  }
-
-  /**
-   * Creates a captcha for user verification
-   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
-   * @returns {Promise<Object>} The created captcha information
-   */
-  async createCaptcha(requestMetadata = null) {
-    return this.makeRequest('CaptchaCreate', 'POST', null, requestMetadata);
-  }
-
-  /**
-   * Patches a user record with specific changes
-   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
-   * @param {string} identity - User's identifier corresponding to the mode
-   * @param {Object} patch - The patch data to apply
-   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
-   * @returns {Promise<Object>} The patched user information
-   */
-  async patchUser(mode, identity, patch, requestMetadata = null) {
-    return this.makeRequest('UserPatch', 'POST', { mode, identity, patch }, requestMetadata);
-  }
-
-  /**
-   * Requests a user patch operation
-   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
-   * @param {string} identity - User's identifier corresponding to the mode
-   * @param {Object} patch - The patch data to apply
-   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
-   * @returns {Promise<Object>} The patch request result
-   */
-  async requestUserPatch(mode, identity, patch, requestMetadata = null) {
-    return this.makeRequest('UserPatchRequest', 'POST', { mode, identity, patch }, requestMetadata);
   }
 
   /**
