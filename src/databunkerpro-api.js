@@ -213,12 +213,22 @@ class DatabunkerproAPI {
     return this.makeRequest('UserRequestListUserRequests', 'POST', data, requestMetadata);
   }
 
-  async cancelUserRequest(requestuuid, reason = null, requestMetadata = null) {
-    return this.makeRequest('UserRequestCancel', 'POST', { requestuuid, reason }, requestMetadata);
+  /**
+   * Cancels a user request
+   * @param {string} requestuuid - UUID of the request to cancel
+   * @param {Object} [options={}] - Optional parameters for cancellation
+   * @param {string} [options.reason] - Reason for cancellation
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The cancellation result
+   */
+  async cancelUserRequest(requestuuid, options = {}, requestMetadata = null) {
+    const data = { requestuuid, ...options };
+    return this.makeRequest('UserRequestCancel', 'POST', data, requestMetadata);
   }
 
-  async approveUserRequest(requestuuid, reason = null, requestMetadata = null) {
-    return this.makeRequest('UserRequestApprove', 'POST', { requestuuid, reason }, requestMetadata);
+  async approveUserRequest(requestuuid, options = {}, requestMetadata = null) {
+    const data = { requestuuid, ...options };
+    return this.makeRequest('UserRequestApprove', 'POST', data, requestMetadata);
   }
 
   // App Data Management
@@ -289,8 +299,8 @@ class DatabunkerproAPI {
     return this.makeRequest('LegalBasisCreate', 'POST', data, requestMetadata);
   }
 
-  async updateLegalBasis(options, requestMetadata = null) {
-    const data = { ...options };
+  async updateLegalBasis(brief, options, requestMetadata = null) {
+    const data = { brief, ...options };
     return this.makeRequest('LegalBasisUpdate', 'POST', data, requestMetadata);
   }
 
@@ -544,9 +554,19 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupAddUser', 'POST', data, requestMetadata);
   }
 
-  // Access Token Management
-  async createXToken(mode, identity, requestMetadata = null) {
-    return this.makeRequest('XTokenCreate', 'POST', { mode, identity }, requestMetadata);
+  // Create API Access Token
+  /**
+   * Creates an access token for a user
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created token information
+  async createXToken(mode, identity, options = {}, requestMetadata = null) {
+    const data = { mode, identity, ...options };
+    return this.makeRequest('XTokenCreate', 'POST', data, requestMetadata);
   }
 
   // Token Management (for example for credit cards)
@@ -617,7 +637,28 @@ class DatabunkerproAPI {
   }
 
   // Tenant Management
-  async createTenant(data, requestMetadata = null) {
+  /**
+   * Creates a new tenant
+   * @param {Object} options - Tenant creation options
+   * @param {string} options.tenantname - Name of the tenant
+   * @param {string} options.tenantorg - Organization name
+   * @param {string} options.email - Email address for tenant contact
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created tenant information
+   * @example
+   * // Create a tenant with organization and contact email
+   * const tenant = await api.createTenant({
+   *   tenantname: 'My Company',
+   *   tenantorg: 'My Company', 
+   *   email: 'contact@mycompany.com'
+   * });
+   */
+  async createTenant(options, requestMetadata = null) {
+    const data = {
+      tenantname: options.tenantname,
+      tenantorg: options.tenantorg,
+      email: options.email
+    };
     return this.makeRequest('TenantCreate', 'POST', data, requestMetadata);
   }
 
@@ -625,8 +666,18 @@ class DatabunkerproAPI {
     return this.makeRequest('TenantGet', 'POST', { tenantid }, requestMetadata);
   }
 
-  async updateTenant(tenantid, tenantname, tenantorg, email, requestMetadata = null) {
-    const data = { tenantid, tenantname, tenantorg, email };
+  /**
+   * Updates an existing tenant
+   * @param {string} tenantid - ID of the tenant to update
+   * @param {Object} options - Tenant update options
+   * @param {string} options.tenantname - New name of the tenant
+   * @param {string} options.tenantorg - New organization name
+   * @param {string} options.email - New email address for tenant admin
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The updated tenant information
+   */
+  async updateTenant(tenantid, options, requestMetadata = null) {
+    const data = { tenantid, ...options };
     return this.makeRequest('TenantUpdate', 'POST', data, requestMetadata);
   }
 
