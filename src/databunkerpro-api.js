@@ -252,12 +252,12 @@ class DatabunkerproAPI {
    * @returns {Promise<Object>} The cancellation result
    */
   async cancelUserRequest(requestuuid, options = {}, requestMetadata = null) {
-    const data = { requestuuid, ...options };
+    const data = { requestuuid, reason: options.reason };
     return this.makeRequest('UserRequestCancel', 'POST', data, requestMetadata);
   }
 
   async approveUserRequest(requestuuid, options = {}, requestMetadata = null) {
-    const data = { requestuuid, ...options };
+    const data = { requestuuid, reason: options.reason };
     return this.makeRequest('UserRequestApprove', 'POST', data, requestMetadata);
   }
 
@@ -636,6 +636,7 @@ class DatabunkerproAPI {
     const data = {
       groupname: options.groupname,
       groupdesc: options.groupdesc,
+      grouptype: options.grouptype,
     };
     return this.makeRequest('GroupCreate', 'POST', data, requestMetadata);
   }

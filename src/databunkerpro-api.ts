@@ -301,12 +301,12 @@ export class DatabunkerproAPI {
   }
 
   async cancelUserRequest(requestuuid: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { requestuuid, ...options };
+    const data = { requestuuid, reason: options.reason };
     return this.makeRequest('UserRequestCancel', 'POST', data, requestMetadata);
   }
 
   async approveUserRequest(requestuuid: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { requestuuid, ...options };
+    const data = { requestuuid, reason: options.reason };
     return this.makeRequest('UserRequestApprove', 'POST', data, requestMetadata);
   }
 
@@ -570,6 +570,7 @@ export class DatabunkerproAPI {
     const data = {
       groupname: options.groupname,
       groupdesc: options.groupdesc,
+      grouptype: options.grouptype,
     };
     return this.makeRequest('GroupCreate', 'POST', data, requestMetadata);
   }
