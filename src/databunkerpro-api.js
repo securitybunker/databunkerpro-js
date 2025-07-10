@@ -551,8 +551,6 @@ class DatabunkerproAPI {
 
   async validateConnectorConnectivity(connectorid, options, requestMetadata = null) {
     const data = {
-      connectorid,
-      connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
       username: options.username,
@@ -563,17 +561,27 @@ class DatabunkerproAPI {
       tablename: options.tablename,
       status: options.status
     };
+    if (Number.isInteger(Number(connectorid))) {
+      data.connectorid = connectorid;
+      data.connectorname = options.connectorname;
+    } else {
+      data.connectorname = connectorid;
+    }
     return this.makeRequest('ConnectorValidateConnectivity', 'POST', data, requestMetadata);
   }
 
   async deleteConnector(connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorDelete', 'POST', { connectorid }, requestMetadata);
+    const data = {};
+    if (Number.isInteger(Number(connectorid))) {
+      data.connectorid = connectorid;
+    } else {
+      data.connectorname = connectorid;
+    }
+    return this.makeRequest('ConnectorDelete', 'POST', data, requestMetadata);
   }
 
   async getTableMetadata(connectorid, options, requestMetadata = null) {
     const data = {
-      connectorid,
-      connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
       username: options.username,
@@ -584,21 +592,42 @@ class DatabunkerproAPI {
       tablename: options.tablename,
       status: options.status
     };
+    if (Number.isInteger(Number(connectorid))) {
+      data.connectorid = connectorid;
+      data.connectorname = options.connectorname;
+    } else {
+      data.connectorname = connectorid;
+    }
     return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
   }
   
   async connectorGetUserData(mode, identity, connectorid, requestMetadata = null) {
-    const data = { mode, identity, connectorid };
+    const data = { mode, identity };
+    if (Number.isInteger(Number(connectorid))) {
+      data.connectorid = connectorid;
+    } else {
+      data.connectorname = connectorid;
+    }
     return this.makeRequest('ConnectorGetUserData', 'POST', data, requestMetadata);
   }
 
   async connectorGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
-    const data = { mode, identity, connectorid };
+    const data = { mode, identity };
+    if (Number.isInteger(Number(connectorid))) {
+      data.connectorid = connectorid;
+    } else {
+      data.connectorname = connectorid;
+    }
     return this.makeRequest('ConnectorGetUserExtraData', 'POST', data, requestMetadata);
   }
 
   async connectorDeleteUser(mode, identity, connectorid, requestMetadata = null) {
-    const data = { mode, identity, connectorid };
+    const data = { mode, identity };
+    if (Number.isInteger(Number(connectorid))) {
+      data.connectorid = connectorid;
+    } else {
+      data.connectorname = connectorid;
+    }
     return this.makeRequest('ConnectorDeleteUser', 'POST', data, requestMetadata);
   }
 
@@ -630,16 +659,33 @@ class DatabunkerproAPI {
   }
 
   async updateGroup(groupid, options = {}, requestMetadata = null) {
-    const data = { groupid, ...options };
+    const data = { ...options };
+    if (Number.isInteger(Number(groupid))) {
+      data.groupid = groupid;
+    } else {
+      data.groupname = groupid;
+    }
     return this.makeRequest('GroupUpdate', 'POST', data, requestMetadata);
   }
 
   async deleteGroup(groupid, requestMetadata = null) {
-    return this.makeRequest('GroupDelete', 'POST', { groupid }, requestMetadata);
+    const data = {};
+    if (Number.isInteger(Number(groupid))) {
+      data.groupid = groupid;
+    } else {
+      data.groupname = groupid;
+    }
+    return this.makeRequest('GroupDelete', 'POST', data, requestMetadata);
   }
 
   async removeUserFromGroup(mode, identity, groupid, requestMetadata = null) {
-    return this.makeRequest('GroupDeleteUser', 'POST', { mode, identity, groupid }, requestMetadata);
+    const data = { mode, identity };
+    if (Number.isInteger(Number(groupid))) {
+      data.groupid = groupid;
+    } else {
+      data.groupname = groupid;
+    }
+    return this.makeRequest('GroupDeleteUser', 'POST', data, requestMetadata);
   }
 
   /**
@@ -651,32 +697,29 @@ class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
    * @returns {Promise<any>} The result of adding the user to the group
    */
-  async addUserToGroup(mode, identity, groupname, rolename = null, requestMetadata = null) {
+  async addUserToGroup(mode, identity, groupid, roleid = null, requestMetadata = null) {
     const data = { mode, identity };
- 
-    // Check if groupname is an integer (group ID) or string (group name)
-    if (Number.isInteger(Number(groupname))) {
-      data.groupid = groupname;
+    // Check if groupid is an integer (group ID) or string (group name)
+    if (Number.isInteger(Number(groupid))) {
+      data.groupid = groupid;
     } else {
-      data.groupname = groupname;
+      data.groupname = groupid;
     }
-
-    if (rolename) {
+    if (roleid) {
       // Check if rolename is an integer (role ID) or string (role name)
-      if (Number.isInteger(Number(rolename))) {
-        data.roleid = rolename;
+      if (Number.isInteger(Number(roleid))) {
+        data.roleid = roleid;
       } else {
-        data.rolename = rolename;
+        data.rolename = roleid;
       }
     }
-    
     return this.makeRequest('GroupAddUser', 'POST', data, requestMetadata);
   }
 
   // Token Management (for example for credit cards)
   /**
    * Creates a token for sensitive data like credit card numbers
-   * @param {string} tokentype - Type of token (e.g., 'creditcard')
+   * @param {string} tokentype - Type of token (e.g., 'creditcard') or 'email'
    * @param {string} record - The sensitive data to tokenize
    * @param {Object} [options={}] - Optional parameters for token creation
    * @param {string} [options.slidingtime] - Time period for token validity (e.g., '1d', '1h')
@@ -786,7 +829,8 @@ class DatabunkerproAPI {
   }
 
   async deleteTenant(tenantid, requestMetadata = null) {
-    return this.makeRequest('TenantDelete', 'POST', { tenantid }, requestMetadata);
+    const data = {tenantid};
+    return this.makeRequest('TenantDelete', 'POST', data, requestMetadata);
   }
 
   async listTenants(offset = 0, limit = 10, requestMetadata = null) {
@@ -834,7 +878,12 @@ class DatabunkerproAPI {
   }
 
   async updatePolicy(policyid, options = {}, requestMetadata = null) {
-    const data = { policyid, ...options };
+    const data = { ...options };
+    if (Number.isInteger(Number(policyid))) {
+      data.policyid = policyid;
+    } else {
+      data.policyname = policyid;
+    }
     return this.makeRequest('PolicyUpdate', 'POST', data, requestMetadata);
   }
 
