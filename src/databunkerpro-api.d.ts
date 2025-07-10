@@ -99,14 +99,6 @@ declare class DatabunkerproAPI {
 
   // User Management
   createUser(profile: any, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
-  /**
-   * Creates multiple users in bulk with their profiles and group information
-   * @param records - Array of user records to create
-   * @param options - Global options for all users
-   * @param options.finaltime - Global expiration time for all users
-   * @param options.slidingtime - Global sliding time period for all users
-   * @param requestMetadata - Additional metadata to include with the request
-   */
   createUsersBulk(records: any[], options?: any, requestMetadata?: RequestMetadata): Promise<any>;
   getUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   updateUser(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata): Promise<any>;
@@ -121,6 +113,9 @@ declare class DatabunkerproAPI {
   loginUser(mode: string, identity: string, smscode: string, requestMetadata?: RequestMetadata): Promise<any>;
   createCaptcha(requestMetadata?: RequestMetadata): Promise<any>;
 
+  // Create user API Access Token
+  createXToken(mode: string, identity: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+
   // User Request Management
   getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
   listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
@@ -128,22 +123,21 @@ declare class DatabunkerproAPI {
   approveUserRequest(requestuuid: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
 
   // App Data Management
-  createAppData(mode: string, identity: string, appname: string, data: any, requestMetadata?: RequestMetadata): Promise<any>;
+  createAppData(mode: string, identity: string, appname: string, appdata: any, requestMetadata?: RequestMetadata): Promise<any>;
   getAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
-  updateAppData(mode: string, identity: string, appname: string, data: any, requestMetadata?: RequestMetadata): Promise<any>;
-  requestAppDataUpdate(mode: string, identity: string, appname: string, data: any, requestMetadata?: RequestMetadata): Promise<any>;
-  listAppDataRecords(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  updateAppData(mode: string, identity: string, appname: string, appdata: any, requestMetadata?: RequestMetadata): Promise<any>;
+  requestAppDataUpdate(mode: string, identity: string, appname: string, appdata: any, requestMetadata?: RequestMetadata): Promise<any>;
   listAppDataNames(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Legal Basis Management
-  createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  updateLegalBasis(brief: string, options: LegalBasisOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  createLegalBasis(options: any, requestMetadata?: RequestMetadata): Promise<any>;
+  updateLegalBasis(brief: string, options: any, requestMetadata?: RequestMetadata): Promise<any>;
   deleteLegalBasis(brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAgreements(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Agreement Management
-  acceptAgreement(mode: string, identity: string, options: AgreementAcceptOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  acceptAgreement(mode: string, identity: string, brief: string, options: any, requestMetadata?: RequestMetadata): Promise<any>;
   getUserAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -152,8 +146,8 @@ declare class DatabunkerproAPI {
 
   // Processing Activity Management
   listProcessingActivities(requestMetadata?: RequestMetadata): Promise<any>;
-  createProcessingActivity(options: ProcessingActivityOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  updateProcessingActivity(activity: string, options: ProcessingActivityUpdateOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  createProcessingActivity(options: any, requestMetadata?: RequestMetadata): Promise<any>;
+  updateProcessingActivity(activity: string, options: any, requestMetadata?: RequestMetadata): Promise<any>;
   deleteProcessingActivity(activity: string, requestMetadata?: RequestMetadata): Promise<any>;
   linkProcessingActivityToLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
   unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -161,59 +155,57 @@ declare class DatabunkerproAPI {
   // Connector Management
   listSupportedConnectors(requestMetadata?: RequestMetadata): Promise<any>;
   listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
-  createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  updateConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  validateConnectorConnectivity(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  createConnector(options: any, requestMetadata?: RequestMetadata): Promise<any>;
+  updateConnector(connectorid: string | number, options: any, requestMetadata?: RequestMetadata): Promise<any>;
+  validateConnectorConnectivity(connectorid: string | number, options: any, requestMetadata?: RequestMetadata): Promise<any>;
   deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  getTableMetadata(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  getTableMetadata(connectorid: string | number, options: any, requestMetadata?: RequestMetadata): Promise<any>;
   connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Group Management
-  createGroup(groupname: string, groupdesc?: string, requestMetadata?: RequestMetadata): Promise<any>;
+  createGroup(options?: any, requestMetadata?: RequestMetadata): Promise<any>;
   getGroup(groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listAllGroups(requestMetadata?: RequestMetadata): Promise<any>;
   listUserGroups(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
-  updateGroup(groupid: string | number, groupname: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  updateGroup(groupid: string | number, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
   deleteGroup(groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   removeUserFromGroup(mode: string, identity: string, groupid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  addUserToGroup(mode: string, identity: string, groupname: string | number, rolename?: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  addUserToGroup(mode: string, identity: string, groupid: string | number, roleid?: string | number, requestMetadata?: RequestMetadata): Promise<any>;
 
-  // Token Management
-  createXToken(mode: string, identity: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  // Token Management (for example for credit cards)
   createToken(tokentype: string, record: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
   createTokensBulk(records: any[], options?: any, requestMetadata?: RequestMetadata): Promise<any>;
   getToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
-  listTokensBulk(tokens: string[], requestMetadata?: RequestMetadata): Promise<any>;
-  deleteTokensBulk(tokens: string[], requestMetadata?: RequestMetadata): Promise<any>;
 
   // Audit Management
   listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Tenant Management
-  createTenant(options: TenantOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  createTenant(options: any, requestMetadata?: RequestMetadata): Promise<any>;
   getTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
-  updateTenant(tenantid: string | number, options: TenantOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  updateTenant(tenantid: string | number, options: any, requestMetadata?: RequestMetadata): Promise<any>;
   deleteTenant(tenantid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listTenants(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Role Management
-  createRole(rolename: string, requestMetadata?: RequestMetadata): Promise<any>;
-  linkPolicy(rolename: string, policyname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  createRole(options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  updateRole(roleid: string | number, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  linkPolicy(roleid: string | number, policyid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Policy Management
-  createPolicy(data: any, requestMetadata?: RequestMetadata): Promise<any>;
-  updatePolicy(policyid: string | number, data: any, requestMetadata?: RequestMetadata): Promise<any>;
-  getPolicy(policyname: string | number, requestMetadata?: RequestMetadata): Promise<any>;
+  createPolicy(options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  updatePolicy(policyid: string | number, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  getPolicy(policyid: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   listPolicies(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Bulk Operations
   bulkListUnlock(requestMetadata?: RequestMetadata): Promise<any>;
   bulkListUsers(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
-  bulkListGroupUsers(unlockuuid: string, groupname: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
+  bulkListGroupUsers(unlockuuid: string, groupid: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   bulkListUserRequests(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
   bulkListTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata): Promise<any>;
