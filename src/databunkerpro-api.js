@@ -224,6 +224,7 @@ class DatabunkerproAPI {
    * @param {Object} [options={}] - Optional parameters for token creation
    * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
    * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {string} [options.slidingtime] - Sliding time period for the token
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
    */
@@ -261,20 +262,24 @@ class DatabunkerproAPI {
   }
 
   // App Data Management
-  async createAppData(mode, identity, appname, data, requestMetadata = null) {
-    return this.makeRequest('AppdataCreate', 'POST', { mode, identity, appname, data }, requestMetadata);
+  async createAppData(mode, identity, appname, appdata, requestMetadata = null) {
+    const data = { mode, identity, appname, appdata };
+    return this.makeRequest('AppdataCreate', 'POST', data, requestMetadata);
   }
 
   async getAppData(mode, identity, appname, requestMetadata = null) {
-    return this.makeRequest('AppdataGet', 'POST', { mode, identity, appname }, requestMetadata);
+    const data = { mode, identity, appname };
+    return this.makeRequest('AppdataGet', 'POST', data, requestMetadata);
   }
 
-  async updateAppData(mode, identity, appname, data, requestMetadata = null) {
-    return this.makeRequest('AppdataUpdate', 'POST', { mode, identity, appname, data }, requestMetadata);
+  async updateAppData(mode, identity, appname, appdata, requestMetadata = null) {
+    const data = { mode, identity, appname, appdata };
+    return this.makeRequest('AppdataUpdate', 'POST', data, requestMetadata);
   }
 
-  async requestAppDataUpdate(mode, identity, appname, data, requestMetadata = null) {
-    return this.makeRequest('AppdataUpdateRequest', 'POST', { mode, identity, appname, data }, requestMetadata);
+  async requestAppDataUpdate(mode, identity, appname, appdata, requestMetadata = null) {
+    const data = { mode, identity, appname, appdata };
+    return this.makeRequest('AppdataUpdateRequest', 'POST', data, requestMetadata);
   }
 
   async listAppDataNames(mode, identity, requestMetadata = null) {
@@ -344,11 +349,11 @@ class DatabunkerproAPI {
    *   }
    * );
    */
-  async acceptAgreement(mode, identity, options, requestMetadata = null) {
+  async acceptAgreement(mode, identity, brief, options, requestMetadata = null) {
     const data = {
       mode, 
       identity, 
-      brief: options.brief,
+      brief,
       agreementmethod: options.agreementmethod,
       lastmodifiedby: options.lastmodifiedby,
       referencecode: options.referencecode,
@@ -360,19 +365,23 @@ class DatabunkerproAPI {
   }
 
   async getUserAgreement(mode, identity, brief, requestMetadata = null) {
-    return this.makeRequest('AgreementGet', 'POST', { mode, identity, brief }, requestMetadata);
+    const data = { mode, identity, brief };
+    return this.makeRequest('AgreementGet', 'POST', data, requestMetadata);
   }
 
   async listUserAgreements(mode, identity, requestMetadata = null) {
-    return this.makeRequest('AgreementListUserAgreements', 'POST', { mode, identity }, requestMetadata);
+    const data = { mode, identity };
+    return this.makeRequest('AgreementListUserAgreements', 'POST', data, requestMetadata);
   }
 
   async cancelAgreement(mode, identity, brief, requestMetadata = null) {
-    return this.makeRequest('AgreementCancel', 'POST', {mode, identity, brief}, requestMetadata);
+    const data = { mode, identity, brief };
+    return this.makeRequest('AgreementCancel', 'POST', data, requestMetadata);
   }
 
   async requestAgreementCancellation(mode, identity, brief, requestMetadata = null) {
-    return this.makeRequest('AgreementCancelRequest', 'POST', {mode, identity, brief}, requestMetadata);
+    const data = { mode, identity, brief };
+    return this.makeRequest('AgreementCancelRequest', 'POST', data, requestMetadata);
   }
 
   async revokeAllAgreements(brief, requestMetadata = null) {
@@ -523,9 +532,9 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorCreate', 'POST', data, requestMetadata);
   }
 
-  async updateConnector(options, requestMetadata = null) {
+  async updateConnector(connectorid, options, requestMetadata = null) {
     const data = {
-      connectorid: options.connectorid,
+      connectorid,
       connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
@@ -540,9 +549,9 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorUpdate', 'POST', data, requestMetadata);
   }
 
-  async validateConnectorConnectivity(options, requestMetadata = null) {
+  async validateConnectorConnectivity(connectorid, options, requestMetadata = null) {
     const data = {
-      connectorid: options.connectorid,
+      connectorid,
       connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
@@ -561,9 +570,9 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorDelete', 'POST', { connectorid }, requestMetadata);
   }
 
-  async getTableMetadata(options, requestMetadata = null) {
+  async getTableMetadata(connectorid, options, requestMetadata = null) {
     const data = {
-      connectorid: options.connectorid,
+      connectorid,
       connectorname: options.connectorname,
       connectortype: options.connectortype,
       connectordesc: options.connectordesc,
@@ -579,24 +588,37 @@ class DatabunkerproAPI {
   }
   
   async connectorGetUserData(mode, identity, connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorGetUserData', 'POST', { mode, identity, connectorid }, requestMetadata);
+    const data = { mode, identity, connectorid };
+    return this.makeRequest('ConnectorGetUserData', 'POST', data, requestMetadata);
   }
 
   async connectorGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorGetUserExtraData', 'POST', { mode, identity, connectorid }, requestMetadata);
+    const data = { mode, identity, connectorid };
+    return this.makeRequest('ConnectorGetUserExtraData', 'POST', data, requestMetadata);
   }
 
   async connectorDeleteUser(mode, identity, connectorid, requestMetadata = null) {
-    return this.makeRequest('ConnectorDeleteUser', 'POST', { mode, identity, connectorid }, requestMetadata);
+    const data = { mode, identity, connectorid };
+    return this.makeRequest('ConnectorDeleteUser', 'POST', data, requestMetadata);
   }
 
   // Group Management
-  async createGroup(groupname, groupdesc = '', requestMetadata = null) {
-    return this.makeRequest('GroupCreate', 'POST', { groupname, groupdesc }, requestMetadata);
+  async createGroup(options = {}, requestMetadata = null) {
+    const data = {
+      groupname: options.groupname,
+      groupdesc: options.groupdesc,
+    };
+    return this.makeRequest('GroupCreate', 'POST', data, requestMetadata);
   }
 
   async getGroup(groupid, requestMetadata = null) {
-    return this.makeRequest('GroupGet', 'POST', { groupid }, requestMetadata);
+    const data = {};
+    if (Number.isInteger(Number(groupid))) {
+      data.groupid = groupid;
+    } else {
+      data.groupname = groupid;
+    }
+    return this.makeRequest('GroupGet', 'POST', data, requestMetadata);
   }
 
   async listAllGroups(requestMetadata = null) {
@@ -607,8 +629,8 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupListUserGroups', 'POST', { mode, identity }, requestMetadata);
   }
 
-  async updateGroup(groupid, groupname, options = {}, requestMetadata = null) {
-    const data = { groupid, groupname, ...options };
+  async updateGroup(groupid, options = {}, requestMetadata = null) {
+    const data = { groupid, ...options };
     return this.makeRequest('GroupUpdate', 'POST', data, requestMetadata);
   }
 
@@ -773,32 +795,55 @@ class DatabunkerproAPI {
   }
 
   // Role Management
-  async createRole(rolename, requestMetadata = null) {
-    return this.makeRequest('RoleCreate', 'POST', { rolename }, requestMetadata);
+  async createRole(options = {}, requestMetadata = null) {
+    const data = {
+      rolename: options.rolename,
+      roledesc: options.roledesc,
+    };
+    return this.makeRequest('RoleCreate', 'POST', data, requestMetadata);
   }
 
-  async linkPolicy(rolename, policyname, requestMetadata = null) {
-    return this.makeRequest('RoleLinkPolicy', 'POST', { rolename, policyname }, requestMetadata);
+  async updateRole(roleid, options = {}, requestMetadata = null) {
+    const data = {roleid, ...options};
+    return this.makeRequest('RoleUpdate', 'POST', data, requestMetadata);
+  }
+
+  async linkPolicy(roleid, policyid, requestMetadata = null) {
+    const data = {};
+    if (Number.isInteger(Number(roleid))) {
+      data.roleid = roleid;
+    } else {
+      data.rolename = roleid;
+    }
+    if (Number.isInteger(Number(policyid))) {
+      data.policyid = policyid;
+    } else {
+      data.policyname = policyid;
+    }
+    return this.makeRequest('RoleLinkPolicy', 'POST', data, requestMetadata);
   }
 
   // Policy Management
-  async createPolicy(data, requestMetadata = null) {
+  async createPolicy(options = {}, requestMetadata = null) {
+    const data = { 
+      policyname: options.policyname,
+      policydesc: options.policydesc,
+      policy: options.policy
+    };
     return this.makeRequest('PolicyCreate', 'POST', data, requestMetadata);
   }
 
-  async updatePolicy(policyid, data, requestMetadata = null) {
-    return this.makeRequest('PolicyUpdate', 'POST', { policyid, ...data }, requestMetadata);
+  async updatePolicy(policyid, options = {}, requestMetadata = null) {
+    const data = { policyid, ...options };
+    return this.makeRequest('PolicyUpdate', 'POST', data, requestMetadata);
   }
 
-  async getPolicy(policyname, requestMetadata = null) {
+  async getPolicy(policyid, requestMetadata = null) {
     const data = {};
-    if (policyname) {
-      // Check if policyname is an integer (policy ID) or string (policy name)
-      if (Number.isInteger(Number(policyname))) {
-        data.policyid = policyname;
-      } else {
-        data.policyname = policyname;
-      }
+    if (Number.isInteger(Number(policyid))) {
+      data.policyid = policyid;
+    } else {
+      data.policyname = policyid;
     }
     return this.makeRequest('PolicyGet', 'POST', data, requestMetadata);
   }
@@ -817,12 +862,12 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListUsers', 'POST', data, requestMetadata);
   }
 
-  async bulkListGroupUsers(unlockuuid, groupname, offset = 0, limit = 10, requestMetadata = null) {
+  async bulkListGroupUsers(unlockuuid, groupid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
-    if (Number.isInteger(Number(groupname))) {
-      data.groupid = groupname;
+    if (Number.isInteger(Number(groupid))) {
+      data.groupid = groupid;
     } else {
-      data.groupname = groupname;
+      data.groupname = groupid;
     }
     return this.makeRequest('BulkListGroupUsers', 'POST', data, requestMetadata);
   }
