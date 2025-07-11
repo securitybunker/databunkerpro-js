@@ -35,7 +35,7 @@ export declare class DatabunkerproAPI {
     updateLegalBasis(brief: string, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteLegalBasis(brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAgreements(requestMetadata?: RequestMetadata | null): Promise<any>;
-    acceptAgreement(mode: string, identity: string, brief: string, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    acceptAgreement(mode: string, identity: string, brief: string, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -51,9 +51,9 @@ export declare class DatabunkerproAPI {
     listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     createConnector(options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateConnector(connectorid: string | number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    validateConnectorConnectivity(connectorid: string | number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    validateConnectorConnectivity(connectorid: string | number, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteConnector(connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    getTableMetadata(connectorid: string | number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getTableMetadata(connectorid: string | number, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserExtraData(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorDeleteUser(mode: string, identity: string, connectorid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;

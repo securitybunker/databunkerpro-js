@@ -301,12 +301,18 @@ export class DatabunkerproAPI {
   }
 
   async cancelUserRequest(requestuuid: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { requestuuid, reason: options.reason };
+    const data: any = { requestuuid };
+    if (options.reason) {
+      data.reason = options.reason;
+    }
     return this.makeRequest('UserRequestCancel', 'POST', data, requestMetadata);
   }
 
   async approveUserRequest(requestuuid: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { requestuuid, reason: options.reason };
+    const data: any = { requestuuid };
+    if (options.reason) {
+      data.reason = options.reason;
+    }
     return this.makeRequest('UserRequestApprove', 'POST', data, requestMetadata);
   }
 
@@ -368,18 +374,26 @@ export class DatabunkerproAPI {
   }
 
   // Agreement Management
-  async acceptAgreement(mode: string, identity: string, brief: string, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = {
-      mode, 
-      identity, 
-      brief,
-      agreementmethod: options.agreementmethod,
-      lastmodifiedby: options.lastmodifiedby,
-      referencecode: options.referencecode,
-      starttime: options.starttime,
-      finaltime: options.finaltime,
-      status: options.status
-    };
+  async acceptAgreement(mode: string, identity: string, brief: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { mode, identity, brief };
+    if (options.agreementmethod) {
+      data.agreementmethod = options.agreementmethod;
+    }
+    if (options.lastmodifiedby) {
+      data.lastmodifiedby = options.lastmodifiedby;
+    }
+    if (options.referencecode) {
+      data.referencecode = options.referencecode;
+    }
+    if (options.starttime) {
+      data.starttime = options.starttime;
+    }
+    if (options.finaltime) {
+      data.finaltime = options.finaltime;
+    }
+    if (options.status) {
+      data.status = options.status;
+    }
     return this.makeRequest('AgreementAccept', 'POST', data, requestMetadata);
   }
 
@@ -467,37 +481,14 @@ export class DatabunkerproAPI {
   }
 
   async updateConnector(connectorid: string | number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = {
-      connectorid,
-      connectorname: options.connectorname,
-      connectortype: options.connectortype,
-      connectordesc: options.connectordesc,
-      username: options.username,
-      apikey: options.apikey,
-      dbhost: options.dbhost,
-      dbport: options.dbport,
-      dbname: options.dbname,
-      tablename: options.tablename,
-      status: options.status
-    };
+    const data = { connectorid, ...options };
     return this.makeRequest('ConnectorUpdate', 'POST', data, requestMetadata);
   }
 
-  async validateConnectorConnectivity(connectorid: string | number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = {
-      connectortype: options.connectortype,
-      connectordesc: options.connectordesc,
-      username: options.username,
-      apikey: options.apikey,
-      dbhost: options.dbhost,
-      dbport: options.dbport,
-      dbname: options.dbname,
-      tablename: options.tablename,
-      status: options.status
-    };
+  async validateConnectorConnectivity(connectorid: string | number, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { ...options };
     if (Number.isInteger(Number(connectorid))) {
       data.connectorid = connectorid;
-      data.connectorname = options.connectorname;
     } else {
       data.connectorname = connectorid;
     }
@@ -514,21 +505,10 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorDelete', 'POST', data, requestMetadata);
   }
 
-  async getTableMetadata(connectorid: string | number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = {
-      connectortype: options.connectortype,
-      connectordesc: options.connectordesc,
-      username: options.username,
-      apikey: options.apikey,
-      dbhost: options.dbhost,
-      dbport: options.dbport,
-      dbname: options.dbname,
-      tablename: options.tablename,
-      status: options.status
-    };
+  async getTableMetadata(connectorid: string | number, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { ...options };
     if (Number.isInteger(Number(connectorid))) {
       data.connectorid = connectorid;
-      data.connectorname = options.connectorname;
     } else {
       data.connectorname = connectorid;
     }
