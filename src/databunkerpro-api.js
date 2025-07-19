@@ -5,7 +5,7 @@ class DatabunkerproAPI {
     this.xBunkerTenant = xBunkerTenant;
   }
 
-  async makeRequest(endpoint, method = 'POST', data = null, requestMetadata = null) {
+  async makeRequest(endpoint, data = null, requestMetadata = null) {
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -16,7 +16,7 @@ class DatabunkerproAPI {
       headers['X-Bunker-Tenant'] = this.xBunkerTenant;
     }
     const options = {
-      method,
+      method: 'POST',
       headers,
     };
     if (data || requestMetadata) {
@@ -45,7 +45,7 @@ class DatabunkerproAPI {
     }
   }
 
-  async rawRequest(endpoint, method = 'POST', data = null, requestMetadata = null) {
+  async rawRequest(endpoint, data = null, requestMetadata = null) {
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -53,7 +53,7 @@ class DatabunkerproAPI {
       headers['X-Bunker-Token'] = this.xBunkerToken;
     }
     const options = {
-      method,
+      method: 'POST',
       headers,
     };
     if (data || requestMetadata) {
@@ -100,7 +100,7 @@ class DatabunkerproAPI {
     if (options.finaltime) {
       data.finaltime = options.finaltime;
     }
-    return this.makeRequest('UserCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('UserCreate', data, requestMetadata);
   }
 
   /**
@@ -163,54 +163,54 @@ class DatabunkerproAPI {
       data.slidingtime = options.slidingtime;
     }
 
-    return this.makeRequest('UserCreateBulk', 'POST', data, requestMetadata);
+    return this.makeRequest('UserCreateBulk', data, requestMetadata);
   }
 
   async getUser(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserGet', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('UserGet', { mode, identity }, requestMetadata);
   }
 
   async updateUser(mode, identity, profile, requestMetadata = null) {
     const data = { mode, identity, profile };
-    return this.makeRequest('UserUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('UserUpdate', data, requestMetadata);
   }
 
   async requestUserUpdate(mode, identity, profile, requestMetadata = null) {
     const data = { mode, identity, profile };
-    return this.makeRequest('UserUpdateRequest', 'POST', data, requestMetadata);
+    return this.makeRequest('UserUpdateRequest', data, requestMetadata);
   }
 
   async patchUser(mode, identity, patch, requestMetadata = null) {
     const data = { mode, identity, patch };
-    return this.makeRequest('UserPatch', 'POST', data, requestMetadata);
+    return this.makeRequest('UserPatch', data, requestMetadata);
   }
 
   async requestUserPatch(mode, identity, patch, requestMetadata = null) {
     const data = { mode, identity, patch };
-    return this.makeRequest('UserPatchRequest', 'POST', data, requestMetadata);
+    return this.makeRequest('UserPatchRequest', data, requestMetadata);
   }
 
   async deleteUser(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserDelete', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('UserDelete', { mode, identity }, requestMetadata);
   }
 
   async requestUserDeletion(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserDeleteRequest', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('UserDeleteRequest', { mode, identity }, requestMetadata);
   }
 
   // User Authentication
   async preloginUser(mode, identity, code, captchacode, requestMetadata = null) {
     const data = { mode, identity, code, captchacode };
-    return this.makeRequest('UserPrelogin', 'POST', data, requestMetadata);
+    return this.makeRequest('UserPrelogin', data, requestMetadata);
   }
 
   async loginUser(mode, identity, smscode, requestMetadata = null) {
     const data = { mode, identity, smscode };
-    return this.makeRequest('UserLogin', 'POST', data, requestMetadata);
+    return this.makeRequest('UserLogin', data, requestMetadata);
   }
 
   async createCaptcha(requestMetadata = null) {
-    return this.makeRequest('CaptchaCreate', 'POST', null, requestMetadata);
+    return this.makeRequest('CaptchaCreate', null, requestMetadata);
   }
 
   // Create user API Access Token
@@ -227,17 +227,17 @@ class DatabunkerproAPI {
    */
   async createXToken(mode, identity, options = {}, requestMetadata = null) {
     const data = { mode, identity, ...options };
-    return this.makeRequest('XTokenCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('XTokenCreate', data, requestMetadata);
   }
 
   // User Request Management
   async getUserRequest(requestuuid, requestMetadata = null) {
-    return this.makeRequest('UserRequestGet', 'POST', { requestuuid }, requestMetadata);
+    return this.makeRequest('UserRequestGet', { requestuuid }, requestMetadata);
   }
 
   async listUserRequests(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
     const data = { mode, identity, offset, limit }
-    return this.makeRequest('UserRequestListUserRequests', 'POST', data, requestMetadata);
+    return this.makeRequest('UserRequestListUserRequests', data, requestMetadata);
   }
 
   /**
@@ -253,7 +253,7 @@ class DatabunkerproAPI {
     if (options.reason) {
       data.reason = options.reason;
     }
-    return this.makeRequest('UserRequestCancel', 'POST', data, requestMetadata);
+    return this.makeRequest('UserRequestCancel', data, requestMetadata);
   }
 
   async approveUserRequest(requestuuid, options = {}, requestMetadata = null) {
@@ -261,36 +261,36 @@ class DatabunkerproAPI {
     if (options.reason) {
       data.reason = options.reason;
     }
-    return this.makeRequest('UserRequestApprove', 'POST', data, requestMetadata);
+    return this.makeRequest('UserRequestApprove', data, requestMetadata);
   }
 
   // App Data Management
   async createAppData(mode, identity, appname, appdata, requestMetadata = null) {
     const data = { mode, identity, appname, appdata };
-    return this.makeRequest('AppdataCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('AppdataCreate', data, requestMetadata);
   }
 
   async getAppData(mode, identity, appname, requestMetadata = null) {
     const data = { mode, identity, appname };
-    return this.makeRequest('AppdataGet', 'POST', data, requestMetadata);
+    return this.makeRequest('AppdataGet', data, requestMetadata);
   }
 
   async updateAppData(mode, identity, appname, appdata, requestMetadata = null) {
     const data = { mode, identity, appname, appdata };
-    return this.makeRequest('AppdataUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('AppdataUpdate', data, requestMetadata);
   }
 
   async requestAppDataUpdate(mode, identity, appname, appdata, requestMetadata = null) {
     const data = { mode, identity, appname, appdata };
-    return this.makeRequest('AppdataUpdateRequest', 'POST', data, requestMetadata);
+    return this.makeRequest('AppdataUpdateRequest', data, requestMetadata);
   }
 
   async listAppDataNames(mode, identity, requestMetadata = null) {
-    return this.makeRequest('AppdataListUserAppNames', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('AppdataListUserAppNames', { mode, identity }, requestMetadata);
   }
 
   async listAppNames(requestMetadata = null) {
-    return this.makeRequest('AppdataListAppNames', 'POST', null, requestMetadata);
+    return this.makeRequest('AppdataListAppNames', null, requestMetadata);
   }
 
   // Legal Basis Management
@@ -305,20 +305,20 @@ class DatabunkerproAPI {
       requiredmsg: options.requiredmsg,
       requiredflag: options.requiredflag
     };
-    return this.makeRequest('LegalBasisCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('LegalBasisCreate', data, requestMetadata);
   }
 
   async updateLegalBasis(brief, options, requestMetadata = null) {
     const data = { brief, ...options };
-    return this.makeRequest('LegalBasisUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('LegalBasisUpdate', data, requestMetadata);
   }
 
   async deleteLegalBasis(brief, requestMetadata = null) {
-    return this.makeRequest('LegalBasisDelete', 'POST', { brief }, requestMetadata);
+    return this.makeRequest('LegalBasisDelete', { brief }, requestMetadata);
   }
 
   async listAgreements(requestMetadata = null) {
-    return this.makeRequest('LegalBasisListAgreements', 'POST', null, requestMetadata);
+    return this.makeRequest('LegalBasisListAgreements', null, requestMetadata);
   }
 
   // Agreement Management
@@ -372,36 +372,36 @@ class DatabunkerproAPI {
     if (options.status) {
       data.status = options.status;
     }
-    return this.makeRequest('AgreementAccept', 'POST', data, requestMetadata);
+    return this.makeRequest('AgreementAccept', data, requestMetadata);
   }
 
   async getUserAgreement(mode, identity, brief, requestMetadata = null) {
     const data = { mode, identity, brief };
-    return this.makeRequest('AgreementGet', 'POST', data, requestMetadata);
+    return this.makeRequest('AgreementGet', data, requestMetadata);
   }
 
   async listUserAgreements(mode, identity, requestMetadata = null) {
     const data = { mode, identity };
-    return this.makeRequest('AgreementListUserAgreements', 'POST', data, requestMetadata);
+    return this.makeRequest('AgreementListUserAgreements', data, requestMetadata);
   }
 
   async cancelAgreement(mode, identity, brief, requestMetadata = null) {
     const data = { mode, identity, brief };
-    return this.makeRequest('AgreementCancel', 'POST', data, requestMetadata);
+    return this.makeRequest('AgreementCancel', data, requestMetadata);
   }
 
   async requestAgreementCancellation(mode, identity, brief, requestMetadata = null) {
     const data = { mode, identity, brief };
-    return this.makeRequest('AgreementCancelRequest', 'POST', data, requestMetadata);
+    return this.makeRequest('AgreementCancelRequest', data, requestMetadata);
   }
 
   async revokeAllAgreements(brief, requestMetadata = null) {
-    return this.makeRequest('AgreementRevokeAll', 'POST', { brief }, requestMetadata);
+    return this.makeRequest('AgreementRevokeAll', { brief }, requestMetadata);
   }
 
   // Processing Activity Management
   async listProcessingActivities(requestMetadata = null) {
-    return this.makeRequest('ProcessingActivityListActivities', 'POST', null, requestMetadata);
+    return this.makeRequest('ProcessingActivityListActivities', null, requestMetadata);
   }
 
   /**
@@ -423,7 +423,7 @@ class DatabunkerproAPI {
       fulldesc: options.fulldesc,
       applicableto: options.applicableto
     };
-    return this.makeRequest('ProcessingActivityCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('ProcessingActivityCreate', data, requestMetadata);
   }
 
   /**
@@ -440,7 +440,7 @@ class DatabunkerproAPI {
    */
   async updateProcessingActivity(activity, options, requestMetadata = null) {
     const data = { activity, ...options };
-    return this.makeRequest('ProcessingActivityUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('ProcessingActivityUpdate', data, requestMetadata);
   }
 
   /**
@@ -450,7 +450,7 @@ class DatabunkerproAPI {
    * @returns {Promise<Object>} The deletion result
    */
   async deleteProcessingActivity(activity, requestMetadata = null) {
-    return this.makeRequest('ProcessingActivityDelete', 'POST', { activity }, requestMetadata);
+    return this.makeRequest('ProcessingActivityDelete', { activity }, requestMetadata);
   }
 
   /**
@@ -462,7 +462,7 @@ class DatabunkerproAPI {
    */
   async linkProcessingActivityToLegalBasis(activity, brief, requestMetadata = null) {
     const data = { activity, brief };
-    return this.makeRequest('ProcessingActivityLinkLegalBasis', 'POST', data, requestMetadata);
+    return this.makeRequest('ProcessingActivityLinkLegalBasis', data, requestMetadata);
   }
 
   /**
@@ -474,17 +474,17 @@ class DatabunkerproAPI {
    */
   async unlinkProcessingActivityFromLegalBasis(activity, brief, requestMetadata = null) {
     const data = { activity, brief };
-    return this.makeRequest('ProcessingActivityUnlinkLegalBasis', 'POST', data, requestMetadata);
+    return this.makeRequest('ProcessingActivityUnlinkLegalBasis', data, requestMetadata);
   }
 
   // Connector Management
   async listSupportedConnectors(requestMetadata = null) {
-    return this.makeRequest('ConnectorListSupportedConnectors', 'POST', null, requestMetadata);
+    return this.makeRequest('ConnectorListSupportedConnectors', null, requestMetadata);
   }
 
   async listConnectors(offset = 0, limit = 10, requestMetadata = null) {
     const data = { offset, limit };
-    return this.makeRequest('ConnectorListConnectors', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorListConnectors', data, requestMetadata);
   }
 
   /**
@@ -542,12 +542,12 @@ class DatabunkerproAPI {
       tablename: options.tablename,
       status: options.status
     };
-    return this.makeRequest('ConnectorCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorCreate', data, requestMetadata);
   }
 
   async updateConnector(connectorid, options, requestMetadata = null) {
     const data = { connectorid,...options };
-    return this.makeRequest('ConnectorUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorUpdate', data, requestMetadata);
   }
 
   async validateConnectorConnectivity(connectorid, options = {}, requestMetadata = null) {
@@ -557,7 +557,7 @@ class DatabunkerproAPI {
     } else {
       data.connectorname = connectorid;
     }
-    return this.makeRequest('ConnectorValidateConnectivity', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorValidateConnectivity', data, requestMetadata);
   }
 
   async deleteConnector(connectorid, requestMetadata = null) {
@@ -567,7 +567,7 @@ class DatabunkerproAPI {
     } else {
       data.connectorname = connectorid;
     }
-    return this.makeRequest('ConnectorDelete', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorDelete', data, requestMetadata);
   }
 
   async getTableMetadata(connectorid, options = {}, requestMetadata = null) {
@@ -577,7 +577,7 @@ class DatabunkerproAPI {
     } else {
       data.connectorname = connectorid;
     }
-    return this.makeRequest('ConnectorGetTableMetaData', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorGetTableMetaData', data, requestMetadata);
   }
   
   async connectorGetUserData(mode, identity, connectorid, requestMetadata = null) {
@@ -587,7 +587,7 @@ class DatabunkerproAPI {
     } else {
       data.connectorname = connectorid;
     }
-    return this.makeRequest('ConnectorGetUserData', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorGetUserData', data, requestMetadata);
   }
 
   async connectorGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
@@ -597,7 +597,7 @@ class DatabunkerproAPI {
     } else {
       data.connectorname = connectorid;
     }
-    return this.makeRequest('ConnectorGetUserExtraData', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorGetUserExtraData', data, requestMetadata);
   }
 
   async connectorDeleteUser(mode, identity, connectorid, requestMetadata = null) {
@@ -607,7 +607,7 @@ class DatabunkerproAPI {
     } else {
       data.connectorname = connectorid;
     }
-    return this.makeRequest('ConnectorDeleteUser', 'POST', data, requestMetadata);
+    return this.makeRequest('ConnectorDeleteUser', data, requestMetadata);
   }
 
   // Group Management
@@ -617,7 +617,7 @@ class DatabunkerproAPI {
       groupdesc: options.groupdesc,
       grouptype: options.grouptype,
     };
-    return this.makeRequest('GroupCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('GroupCreate', data, requestMetadata);
   }
 
   async getGroup(groupid, requestMetadata = null) {
@@ -627,15 +627,15 @@ class DatabunkerproAPI {
     } else {
       data.groupname = groupid;
     }
-    return this.makeRequest('GroupGet', 'POST', data, requestMetadata);
+    return this.makeRequest('GroupGet', data, requestMetadata);
   }
 
   async listAllGroups(requestMetadata = null) {
-    return this.makeRequest('GroupListAllGroups', 'POST', null, requestMetadata);
+    return this.makeRequest('GroupListAllGroups', null, requestMetadata);
   }
 
   async listUserGroups(mode, identity, requestMetadata = null) {
-    return this.makeRequest('GroupListUserGroups', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('GroupListUserGroups', { mode, identity }, requestMetadata);
   }
 
   async updateGroup(groupid, options = {}, requestMetadata = null) {
@@ -645,7 +645,7 @@ class DatabunkerproAPI {
     } else {
       data.groupname = groupid;
     }
-    return this.makeRequest('GroupUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('GroupUpdate', data, requestMetadata);
   }
 
   async deleteGroup(groupid, requestMetadata = null) {
@@ -655,7 +655,7 @@ class DatabunkerproAPI {
     } else {
       data.groupname = groupid;
     }
-    return this.makeRequest('GroupDelete', 'POST', data, requestMetadata);
+    return this.makeRequest('GroupDelete', data, requestMetadata);
   }
 
   async removeUserFromGroup(mode, identity, groupid, requestMetadata = null) {
@@ -665,7 +665,7 @@ class DatabunkerproAPI {
     } else {
       data.groupname = groupid;
     }
-    return this.makeRequest('GroupDeleteUser', 'POST', data, requestMetadata);
+    return this.makeRequest('GroupDeleteUser', data, requestMetadata);
   }
 
   /**
@@ -693,7 +693,7 @@ class DatabunkerproAPI {
         data.rolename = roleid;
       }
     }
-    return this.makeRequest('GroupAddUser', 'POST', data, requestMetadata);
+    return this.makeRequest('GroupAddUser', data, requestMetadata);
   }
 
   // Token Management (for example for credit cards)
@@ -717,7 +717,7 @@ class DatabunkerproAPI {
    */
   async createToken(tokentype, record, options = {}, requestMetadata = null) {
     const data = {tokentype, record, ...options};
-    return this.makeRequest('TokenCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('TokenCreate', data, requestMetadata);
   }
 
   /**
@@ -742,25 +742,25 @@ class DatabunkerproAPI {
    */
   async createTokensBulk(records, options = {}, requestMetadata = null) {
     const data = {records, ...options};
-    return this.makeRequest('TokenCreateBulk', 'POST', data, requestMetadata);
+    return this.makeRequest('TokenCreateBulk', data, requestMetadata);
   }
 
   async getToken(token, requestMetadata = null) {
-    return this.makeRequest('TokenGet', 'POST', { token }, requestMetadata);
+    return this.makeRequest('TokenGet', { token }, requestMetadata);
   }
 
   async deleteToken(token, requestMetadata = null) {
-    return this.makeRequest('TokenDelete', 'POST', { token }, requestMetadata);
+    return this.makeRequest('TokenDelete', { token }, requestMetadata);
   }
 
   // Audit Management
   async listUserAuditEvents(mode, identity, offset = 0, limit = 10, requestMetadata = null) {
     const data = { mode, identity, offset, limit }
-    return this.makeRequest('AuditListUserEvents', 'POST', data, requestMetadata);
+    return this.makeRequest('AuditListUserEvents', data, requestMetadata);
   }
 
   async getAuditEvent(auditeventuuid, requestMetadata = null) {
-    return this.makeRequest('AuditGetEvent', 'POST', { auditeventuuid }, requestMetadata);
+    return this.makeRequest('AuditGetEvent', { auditeventuuid }, requestMetadata);
   }
 
   // Tenant Management
@@ -786,11 +786,11 @@ class DatabunkerproAPI {
       tenantorg: options.tenantorg,
       email: options.email
     };
-    return this.makeRequest('TenantCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('TenantCreate', data, requestMetadata);
   }
 
   async getTenant(tenantid, requestMetadata = null) {
-    return this.makeRequest('TenantGet', 'POST', { tenantid }, requestMetadata);
+    return this.makeRequest('TenantGet', { tenantid }, requestMetadata);
   }
 
   /**
@@ -805,17 +805,17 @@ class DatabunkerproAPI {
    */
   async updateTenant(tenantid, options, requestMetadata = null) {
     const data = { tenantid, ...options };
-    return this.makeRequest('TenantUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('TenantUpdate', data, requestMetadata);
   }
 
   async deleteTenant(tenantid, requestMetadata = null) {
     const data = {tenantid};
-    return this.makeRequest('TenantDelete', 'POST', data, requestMetadata);
+    return this.makeRequest('TenantDelete', data, requestMetadata);
   }
 
   async listTenants(offset = 0, limit = 10, requestMetadata = null) {
     const data = { offset, limit };
-    return this.makeRequest('TenantListTenants', 'POST', data, requestMetadata);
+    return this.makeRequest('TenantListTenants', data, requestMetadata);
   }
 
   // Role Management
@@ -824,12 +824,12 @@ class DatabunkerproAPI {
       rolename: options.rolename,
       roledesc: options.roledesc,
     };
-    return this.makeRequest('RoleCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('RoleCreate', data, requestMetadata);
   }
 
   async updateRole(roleid, options, requestMetadata = null) {
     const data = {roleid, ...options};
-    return this.makeRequest('RoleUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('RoleUpdate', data, requestMetadata);
   }
 
   async linkPolicy(roleid, policyid, requestMetadata = null) {
@@ -844,7 +844,7 @@ class DatabunkerproAPI {
     } else {
       data.policyname = policyid;
     }
-    return this.makeRequest('RoleLinkPolicy', 'POST', data, requestMetadata);
+    return this.makeRequest('RoleLinkPolicy', data, requestMetadata);
   }
 
   // Policy Management
@@ -854,7 +854,7 @@ class DatabunkerproAPI {
       policydesc: options.policydesc,
       policy: options.policy
     };
-    return this.makeRequest('PolicyCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('PolicyCreate', data, requestMetadata);
   }
 
   async updatePolicy(policyid, options, requestMetadata = null) {
@@ -864,7 +864,7 @@ class DatabunkerproAPI {
     } else {
       data.policyname = policyid;
     }
-    return this.makeRequest('PolicyUpdate', 'POST', data, requestMetadata);
+    return this.makeRequest('PolicyUpdate', data, requestMetadata);
   }
 
   async getPolicy(policyid, requestMetadata = null) {
@@ -874,21 +874,21 @@ class DatabunkerproAPI {
     } else {
       data.policyname = policyid;
     }
-    return this.makeRequest('PolicyGet', 'POST', data, requestMetadata);
+    return this.makeRequest('PolicyGet', data, requestMetadata);
   }
 
   async listPolicies(requestMetadata = null) {
-    return this.makeRequest('PolicyListAllPolicies', 'POST', null, requestMetadata);
+    return this.makeRequest('PolicyListAllPolicies', null, requestMetadata);
   }
 
   // Bulk Operations
   async bulkListUnlock(requestMetadata = null) {
-    return this.makeRequest('BulkListUnlock', 'POST', null, requestMetadata);
+    return this.makeRequest('BulkListUnlock', null, requestMetadata);
   }
 
   async bulkListUsers(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit }
-    return this.makeRequest('BulkListUsers', 'POST', data, requestMetadata);
+    return this.makeRequest('BulkListUsers', data, requestMetadata);
   }
 
   async bulkListGroupUsers(unlockuuid, groupid, offset = 0, limit = 10, requestMetadata = null) {
@@ -898,62 +898,62 @@ class DatabunkerproAPI {
     } else {
       data.groupname = groupid;
     }
-    return this.makeRequest('BulkListGroupUsers', 'POST', data, requestMetadata);
+    return this.makeRequest('BulkListGroupUsers', data, requestMetadata);
   }
 
   async bulkListUserRequests(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
-    return this.makeRequest('BulkListUserRequests', 'POST', data, requestMetadata);
+    return this.makeRequest('BulkListUserRequests', data, requestMetadata);
   }
 
   async bulkListAuditEvents(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
-    return this.makeRequest('BulkListAuditEvents', 'POST', data, requestMetadata);
+    return this.makeRequest('BulkListAuditEvents', data, requestMetadata);
   }
 
   async bulkListTokens(unlockuuid, tokens, requestMetadata = null) {
     const data = { unlockuuid, tokens };
-    return this.makeRequest('BulkListTokens', 'POST', data, requestMetadata);
+    return this.makeRequest('BulkListTokens', data, requestMetadata);
   }
 
   async bulkDeleteTokens(unlockuuid, tokens, requestMetadata = null) {
     const data = { unlockuuid, tokens };
-    return this.makeRequest('BulkDeleteTokens', 'POST', data, requestMetadata);
+    return this.makeRequest('BulkDeleteTokens', data, requestMetadata);
   }
 
   // System Configuration
   async getUIConf() {
-    return this.makeRequest('TenantGetUIConf', 'POST');
+    return this.makeRequest('TenantGetUIConf');
   }
 
   async getTenantConf() {
-    return this.makeRequest('TenantGetConf', 'POST');
+    return this.makeRequest('TenantGetConf');
   }
 
   async getUserHTMLReport(mode, identity, requestMetadata = null) {
-    return this.makeRequest('SystemGetUserHTMLReport', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('SystemGetUserHTMLReport', { mode, identity }, requestMetadata);
   }
 
   async getUserReport(mode, identity, requestMetadata = null) {
-    return this.makeRequest('SystemGetUserReport', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('SystemGetUserReport', { mode, identity }, requestMetadata);
   }
 
   // Session Management
   async upsertSession(sessionuuid, sessiondata, options = {}, requestMetadata = null) {
     const data = { sessionuuid, sessiondata, ...options };
-    return this.makeRequest('SessionUpsert', 'POST', data, requestMetadata);
+    return this.makeRequest('SessionUpsert', data, requestMetadata);
   }
 
   async deleteSession(sessionuuid, requestMetadata = null) {
-    return this.makeRequest('SessionDelete', 'POST', { sessionuuid }, requestMetadata);
+    return this.makeRequest('SessionDelete', { sessionuuid }, requestMetadata);
   }
 
   async listUserSessions(mode, identity, requestMetadata = null) {
-    return this.makeRequest('SessionListUserSessions', 'POST', { mode, identity }, requestMetadata);
+    return this.makeRequest('SessionListUserSessions', { mode, identity }, requestMetadata);
   }
 
   async getSession(sessionuuid, requestMetadata = null) {
-    return this.makeRequest('SessionGet', 'POST', { sessionuuid }, requestMetadata);
+    return this.makeRequest('SessionGet', { sessionuuid }, requestMetadata);
   }
 
   /**
@@ -973,7 +973,7 @@ class DatabunkerproAPI {
    * }
    */
   async getSystemStats(requestMetadata = null) {
-    return this.makeRequest('SystemGetSystemStats', 'POST', null, requestMetadata);
+    return this.makeRequest('SystemGetSystemStats', null, requestMetadata);
   }
 
   async parsePrometheusMetrics(metricsText) {
@@ -1031,7 +1031,7 @@ class DatabunkerproAPI {
       appname: options.appname,
       finaltime: options.finaltime
     };
-    return this.makeRequest('SharedRecordCreate', 'POST', data, requestMetadata);
+    return this.makeRequest('SharedRecordCreate', data, requestMetadata);
   }
 
   /**
@@ -1044,7 +1044,7 @@ class DatabunkerproAPI {
    * const sharedRecord = await api.getSharedRecord('123e4567-e89b-12d3-a456-426614174000');
    */
   async getSharedRecord(recorduuid, requestMetadata = null) {
-    return this.makeRequest('SharedRecordGet', 'POST', { recorduuid }, requestMetadata);
+    return this.makeRequest('SharedRecordGet', { recorduuid }, requestMetadata);
   }
 }
 

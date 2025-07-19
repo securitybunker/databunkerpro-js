@@ -7,7 +7,7 @@ export declare class DatabunkerproAPI {
     private xBunkerTenant;
     constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
     private makeRequest;
-    rawRequest(endpoint: string, method?: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
+    rawRequest(endpoint: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
     createUser(profile: any, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     createUsersBulk(records: any[], options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
