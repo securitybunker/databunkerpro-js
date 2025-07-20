@@ -550,62 +550,62 @@ class DatabunkerproAPI {
     return this.makeRequest('ConnectorUpdate', data, requestMetadata);
   }
 
-  async validateConnectorConnectivity(connectorid, options = {}, requestMetadata = null) {
+  async validateConnectorConnectivity(connectorref, options = {}, requestMetadata = null) {
     const data = { ...options };
-    if (Number.isInteger(Number(connectorid))) {
-      data.connectorid = connectorid;
+    if (Number.isInteger(Number(connectorref))) {
+      data.connectorid = connectorref;
     } else {
-      data.connectorname = connectorid;
+      data.connectorname = connectorref;
     }
     return this.makeRequest('ConnectorValidateConnectivity', data, requestMetadata);
   }
 
-  async deleteConnector(connectorid, requestMetadata = null) {
+  async deleteConnector(connectorref, requestMetadata = null) {
     const data = {};
-    if (Number.isInteger(Number(connectorid))) {
-      data.connectorid = connectorid;
+    if (Number.isInteger(Number(connectorref))) {
+      data.connectorid = connectorref;
     } else {
-      data.connectorname = connectorid;
+      data.connectorname = connectorref;
     }
     return this.makeRequest('ConnectorDelete', data, requestMetadata);
   }
 
-  async getTableMetadata(connectorid, options = {}, requestMetadata = null) {
+  async getTableMetadata(connectorref, options = {}, requestMetadata = null) {
     const data = { ...options };
-    if (Number.isInteger(Number(connectorid))) {
-      data.connectorid = connectorid;
+    if (Number.isInteger(Number(connectorref))) {
+      data.connectorid = connectorref;
     } else {
-      data.connectorname = connectorid;
+      data.connectorname = connectorref;
     }
     return this.makeRequest('ConnectorGetTableMetaData', data, requestMetadata);
   }
   
-  async connectorGetUserData(mode, identity, connectorid, requestMetadata = null) {
+  async connectorGetUserData(mode, identity, connectorref, requestMetadata = null) {
     const data = { mode, identity };
-    if (Number.isInteger(Number(connectorid))) {
-      data.connectorid = connectorid;
+    if (Number.isInteger(Number(connectorref))) {
+      data.connectorid = connectorref;
     } else {
-      data.connectorname = connectorid;
+      data.connectorname = connectorref;
     }
     return this.makeRequest('ConnectorGetUserData', data, requestMetadata);
   }
 
-  async connectorGetUserExtraData(mode, identity, connectorid, requestMetadata = null) {
+  async connectorGetUserExtraData(mode, identity, connectorref, requestMetadata = null) {
     const data = { mode, identity };
-    if (Number.isInteger(Number(connectorid))) {
-      data.connectorid = connectorid;
+    if (Number.isInteger(Number(connectorref))) {
+      data.connectorid = connectorref;
     } else {
-      data.connectorname = connectorid;
+      data.connectorname = connectorref;
     }
     return this.makeRequest('ConnectorGetUserExtraData', data, requestMetadata);
   }
 
-  async connectorDeleteUser(mode, identity, connectorid, requestMetadata = null) {
+  async connectorDeleteUser(mode, identity, connectorref, requestMetadata = null) {
     const data = { mode, identity };
-    if (Number.isInteger(Number(connectorid))) {
-      data.connectorid = connectorid;
+    if (Number.isInteger(Number(connectorref))) {
+      data.connectorid = connectorref;
     } else {
-      data.connectorname = connectorid;
+      data.connectorname = connectorref;
     }
     return this.makeRequest('ConnectorDeleteUser', data, requestMetadata);
   }
@@ -620,12 +620,12 @@ class DatabunkerproAPI {
     return this.makeRequest('GroupCreate', data, requestMetadata);
   }
 
-  async getGroup(groupid, requestMetadata = null) {
+  async getGroup(groupref, requestMetadata = null) {
     const data = {};
-    if (Number.isInteger(Number(groupid))) {
-      data.groupid = groupid;
+    if (Number.isInteger(Number(groupref))) {
+      data.groupid = groupref;
     } else {
-      data.groupname = groupid;
+      data.groupname = groupref;
     }
     return this.makeRequest('GroupGet', data, requestMetadata);
   }
@@ -640,30 +640,26 @@ class DatabunkerproAPI {
 
   async updateGroup(groupid, options = {}, requestMetadata = null) {
     const data = { ...options };
-    if (Number.isInteger(Number(groupid))) {
-      data.groupid = groupid;
-    } else {
-      data.groupname = groupid;
-    }
+    data.groupid = groupid;
     return this.makeRequest('GroupUpdate', data, requestMetadata);
   }
 
-  async deleteGroup(groupid, requestMetadata = null) {
+  async deleteGroup(groupref, requestMetadata = null) {
     const data = {};
-    if (Number.isInteger(Number(groupid))) {
-      data.groupid = groupid;
+    if (Number.isInteger(Number(groupref))) {
+      data.groupid = groupref;
     } else {
-      data.groupname = groupid;
+      data.groupname = groupref;
     }
     return this.makeRequest('GroupDelete', data, requestMetadata);
   }
 
-  async removeUserFromGroup(mode, identity, groupid, requestMetadata = null) {
+  async removeUserFromGroup(mode, identity, groupref, requestMetadata = null) {
     const data = { mode, identity };
-    if (Number.isInteger(Number(groupid))) {
-      data.groupid = groupid;
+    if (Number.isInteger(Number(groupref))) {
+      data.groupid = groupref;
     } else {
-      data.groupname = groupid;
+      data.groupname = groupref;
     }
     return this.makeRequest('GroupDeleteUser', data, requestMetadata);
   }
@@ -677,20 +673,20 @@ class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
    * @returns {Promise<any>} The result of adding the user to the group
    */
-  async addUserToGroup(mode, identity, groupid, roleid = null, requestMetadata = null) {
+  async addUserToGroup(mode, identity, groupref, roleref = null, requestMetadata = null) {
     const data = { mode, identity };
     // Check if groupid is an integer (group ID) or string (group name)
-    if (Number.isInteger(Number(groupid))) {
-      data.groupid = groupid;
+    if (Number.isInteger(Number(groupref))) {
+      data.groupid = groupref;
     } else {
-      data.groupname = groupid;
+      data.groupname = groupref;
     }
-    if (roleid) {
+    if (roleref) {
       // Check if rolename is an integer (role ID) or string (role name)
-      if (Number.isInteger(Number(roleid))) {
-        data.roleid = roleid;
+      if (Number.isInteger(Number(roleref))) {
+        data.roleid = roleref;
       } else {
-        data.rolename = roleid;
+        data.rolename = roleref;
       }
     }
     return this.makeRequest('GroupAddUser', data, requestMetadata);
@@ -832,17 +828,17 @@ class DatabunkerproAPI {
     return this.makeRequest('RoleUpdate', data, requestMetadata);
   }
 
-  async linkPolicy(roleid, policyid, requestMetadata = null) {
+  async linkPolicy(roleref, policyref, requestMetadata = null) {
     const data = {};
-    if (Number.isInteger(Number(roleid))) {
-      data.roleid = roleid;
+    if (Number.isInteger(Number(roleref))) {
+      data.roleid = roleref;
     } else {
-      data.rolename = roleid;
+      data.rolename = roleref;
     }
-    if (Number.isInteger(Number(policyid))) {
-      data.policyid = policyid;
+    if (Number.isInteger(Number(policyref))) {
+      data.policyid = policyref;
     } else {
-      data.policyname = policyid;
+      data.policyname = policyref;
     }
     return this.makeRequest('RoleLinkPolicy', data, requestMetadata);
   }
@@ -859,20 +855,16 @@ class DatabunkerproAPI {
 
   async updatePolicy(policyid, options, requestMetadata = null) {
     const data = { ...options };
-    if (Number.isInteger(Number(policyid))) {
-      data.policyid = policyid;
-    } else {
-      data.policyname = policyid;
-    }
+    data.policyid = policyid;
     return this.makeRequest('PolicyUpdate', data, requestMetadata);
   }
 
-  async getPolicy(policyid, requestMetadata = null) {
+  async getPolicy(policyref, requestMetadata = null) {
     const data = {};
-    if (Number.isInteger(Number(policyid))) {
-      data.policyid = policyid;
+    if (Number.isInteger(Number(policyref))) {
+      data.policyid = policyref;
     } else {
-      data.policyname = policyid;
+      data.policyname = policyref;
     }
     return this.makeRequest('PolicyGet', data, requestMetadata);
   }
@@ -891,12 +883,12 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListUsers', data, requestMetadata);
   }
 
-  async bulkListGroupUsers(unlockuuid, groupid, offset = 0, limit = 10, requestMetadata = null) {
+  async bulkListGroupUsers(unlockuuid, groupref, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
-    if (Number.isInteger(Number(groupid))) {
-      data.groupid = groupid;
+    if (Number.isInteger(Number(groupref))) {
+      data.groupid = groupref;
     } else {
-      data.groupname = groupid;
+      data.groupname = groupref;
     }
     return this.makeRequest('BulkListGroupUsers', data, requestMetadata);
   }
