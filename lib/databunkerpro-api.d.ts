@@ -1,5 +1,91 @@
+interface LegalBasisOptions {
+    brief: string;
+    status?: string;
+    module?: string;
+    fulldesc?: string;
+    shortdesc?: string;
+    basistype?: string;
+    requiredmsg?: string;
+    requiredflag?: boolean;
+}
+interface LegalBasisUpdateOptions {
+    status?: string;
+    module?: string;
+    fulldesc?: string;
+    shortdesc?: string;
+    basistype?: string;
+    requiredmsg?: string;
+    requiredflag?: boolean;
+}
+interface AgreementAcceptOptions {
+    agreementmethod?: string;
+    referencecode?: string;
+    starttime?: string;
+    finaltime?: string;
+    status?: string;
+    lastmodifiedby?: string;
+}
+interface UserOptions {
+    groupname?: string | number;
+    groupid?: number;
+    rolename?: string | number;
+    roleid?: number;
+    slidingtime?: string;
+    finaltime?: string;
+}
+interface ConnectorOptions {
+    connectorid?: string | number;
+    connectorname?: string;
+    connectortype?: string;
+    apikey?: string;
+    username?: string;
+    connectordesc?: string;
+    dbhost?: string;
+    dbport?: number;
+    dbname?: string;
+    tablename?: string;
+    status?: string;
+}
+interface BasicOptions {
+    finaltime?: string;
+    slidingtime?: string;
+}
 interface RequestMetadata {
     [key: string]: any;
+}
+interface SharedRecordOptions {
+    fields?: string;
+    partner?: string;
+    appname?: string;
+    finaltime?: string;
+}
+interface TenantOptions {
+    tenantname: string;
+    tenantorg: string;
+    email: string;
+}
+interface ProcessingActivityOptions {
+    activity: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
+}
+interface ProcessingActivityUpdateOptions {
+    newactivity?: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
+}
+interface GroupOptions {
+    groupname: string;
+    grouptype?: string;
+    groupdesc?: string;
+}
+interface RoleOptions {
+    rolename: string;
+    roledesc?: string;
 }
 export declare class DatabunkerproAPI {
     private baseURL;
@@ -8,7 +94,7 @@ export declare class DatabunkerproAPI {
     constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
     private makeRequest;
     rawRequest(endpoint: string, data?: any, requestMetadata?: RequestMetadata | null): Promise<Blob>;
-    createUser(profile: any, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createUser(profile: any, options?: UserOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Creates multiple users in bulk with their profiles and group information
      * @param {Array<Object>} records - Array of user records to create
@@ -33,7 +119,7 @@ export declare class DatabunkerproAPI {
      *   slidingtime: '30d'
      * });
      */
-    createUsersBulk(records: any[], options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createUsersBulk(records: any[], options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateUser(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserUpdate(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -74,8 +160,8 @@ export declare class DatabunkerproAPI {
     requestAppDataUpdate(mode: string, identity: string, appname: string, appdata: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppDataNames(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppNames(requestMetadata?: RequestMetadata | null): Promise<any>;
-    createLegalBasis(options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateLegalBasis(brief: string, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateLegalBasis(brief: string, options: LegalBasisUpdateOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteLegalBasis(brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAgreements(requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
@@ -108,7 +194,7 @@ export declare class DatabunkerproAPI {
      *   }
      * );
      */
-    acceptAgreement(mode: string, identity: string, brief: string, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    acceptAgreement(mode: string, identity: string, brief: string, options: AgreementAcceptOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAgreements(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     cancelAgreement(mode: string, identity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -126,8 +212,8 @@ export declare class DatabunkerproAPI {
      * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
      * @returns {Promise<Object>} The created processing activity
      */
-    createProcessingActivity(options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateProcessingActivity(activity: string, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createProcessingActivity(options: ProcessingActivityOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateProcessingActivity(activity: string, options: ProcessingActivityUpdateOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Deletes a processing activity
      * @param {string} activity - Activity identifier to delete
@@ -153,19 +239,19 @@ export declare class DatabunkerproAPI {
     unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listSupportedConnectors(requestMetadata?: RequestMetadata | null): Promise<any>;
     listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createConnector(options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateConnector(connectorid: number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    validateConnectorConnectivity(connectorref: string | number, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateConnector(connectorid: number, options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    validateConnectorConnectivity(connectorref: string | number, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteConnector(connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    getTableMetadata(connectorref: string | number, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getTableMetadata(connectorref: string | number, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserData(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorGetUserExtraData(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     connectorDeleteUser(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createGroup(options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createGroup(options: GroupOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getGroup(groupref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAllGroups(requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserGroups(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateGroup(groupid: number, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateGroup(groupid: number, options: GroupOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteGroup(groupref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     removeUserFromGroup(mode: string, identity: string, groupref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     addUserToGroup(mode: string, identity: string, groupref: string | number, roleref?: string | number | null, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -229,13 +315,13 @@ export declare class DatabunkerproAPI {
      *   email: 'contact@mycompany.com'
      * });
      */
-    createTenant(options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    getTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateTenant(tenantid: string | number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    deleteTenant(tenantid: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createTenant(options: TenantOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getTenant(tenantid: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateTenant(tenantid: number, options: TenantOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteTenant(tenantid: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listTenants(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createRole(options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateRole(roleid: number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createRole(options: RoleOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updateRole(roleid: number, options: RoleOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     linkPolicy(roleref: string | number, policyref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     createPolicy(options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     updatePolicy(policyid: number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -295,7 +381,7 @@ export declare class DatabunkerproAPI {
      *   finaltime: '100d'
      * });
      */
-    createSharedRecord(mode: string, identity: string, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createSharedRecord(mode: string, identity: string, options?: SharedRecordOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Gets a shared record by its UUID
      * @param {string} recorduuid - UUID of the shared record to retrieve

@@ -17,8 +17,17 @@ interface LegalBasisOptions {
   requiredflag?: boolean;
 }
 
+interface LegalBasisUpdateOptions {
+  status?: string;
+  module?: string;
+  fulldesc?: string;
+  shortdesc?: string;
+  basistype?: string;
+  requiredmsg?: string;
+  requiredflag?: boolean;
+}
+
 interface AgreementAcceptOptions {
-  brief: string;
   agreementmethod?: string;
   referencecode?: string;
   starttime?: string;
@@ -87,6 +96,19 @@ interface ProcessingActivityUpdateOptions {
   fulldesc?: string;
   applicableto?: string;
 }
+
+interface GroupOptions {
+  groupname: string;
+  grouptype?: string;
+  groupdesc?: string;
+}
+
+interface RoleOptions {
+  rolename: string;
+  roledesc?: string;
+}
+
+
 
 export class DatabunkerproAPI {
   private baseURL: string;
@@ -172,7 +194,7 @@ export class DatabunkerproAPI {
   }
 
   // User Management
-  async createUser(profile: any, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createUser(profile: any, options: UserOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { profile };
     // Handle groupname/groupid
     if (options.groupname) {
@@ -230,7 +252,7 @@ export class DatabunkerproAPI {
    *   slidingtime: '30d'
    * });
    */
-  async createUsersBulk(records: any[], options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createUsersBulk(records: any[], options: BasicOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = {
       records: records.map(record => {
         const userData: any = { profile: record.profile };
@@ -391,7 +413,7 @@ export class DatabunkerproAPI {
   }
 
   // Legal Basis Management
-  async createLegalBasis(options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createLegalBasis(options: LegalBasisOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       brief: options.brief,
       status: options.status,
@@ -405,7 +427,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('LegalBasisCreate', data, requestMetadata);
   }
 
-  async updateLegalBasis(brief: string, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async updateLegalBasis(brief: string, options: LegalBasisUpdateOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { brief, ...options };
     return this.makeRequest('LegalBasisUpdate', data, requestMetadata);
   }
@@ -449,7 +471,7 @@ export class DatabunkerproAPI {
    *   }
    * );
    */
-  async acceptAgreement(mode: string, identity: string, brief: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async acceptAgreement(mode: string, identity: string, brief: string, options: AgreementAcceptOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { mode, identity, brief };
     if (options.agreementmethod) {
       data.agreementmethod = options.agreementmethod;
@@ -512,7 +534,7 @@ export class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
    * @returns {Promise<Object>} The created processing activity
    */
-  async createProcessingActivity(options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createProcessingActivity(options: ProcessingActivityOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       activity: options.activity,
       title: options.title,
@@ -523,7 +545,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('ProcessingActivityCreate', data, requestMetadata);
   }
 
-  async updateProcessingActivity(activity: string, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async updateProcessingActivity(activity: string, options: ProcessingActivityUpdateOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { activity, ...options };
     return this.makeRequest('ProcessingActivityUpdate', data, requestMetadata);
   }
@@ -572,7 +594,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorListConnectors', data, requestMetadata);
   }
 
-  async createConnector(options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createConnector(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       connectorname: options.connectorname,
       connectortype: options.connectortype,
@@ -588,12 +610,12 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorCreate', data, requestMetadata);
   }
 
-  async updateConnector(connectorid: number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async updateConnector(connectorid: number, options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { connectorid, ...options };
     return this.makeRequest('ConnectorUpdate', data, requestMetadata);
   }
 
-  async validateConnectorConnectivity(connectorref: string | number, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async validateConnectorConnectivity(connectorref: string | number, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options };
     if (Number.isInteger(Number(connectorref))) {
       data.connectorid = connectorref;
@@ -613,7 +635,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('ConnectorDelete', data, requestMetadata);
   }
 
-  async getTableMetadata(connectorref: string | number, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async getTableMetadata(connectorref: string | number, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options };
     if (Number.isInteger(Number(connectorref))) {
       data.connectorid = connectorref;
@@ -654,7 +676,7 @@ export class DatabunkerproAPI {
   }
 
   // Group Management
-  async createGroup(options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createGroup(options: GroupOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       groupname: options.groupname,
       groupdesc: options.groupdesc,
@@ -681,9 +703,8 @@ export class DatabunkerproAPI {
     return this.makeRequest('GroupListUserGroups', { mode, identity }, requestMetadata);
   }
 
-  async updateGroup(groupid: number, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { ...options };
-    data.groupid = groupid;
+  async updateGroup(groupid: number, options: GroupOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { groupid, ...options };
     return this.makeRequest('GroupUpdate', data, requestMetadata);
   }
 
@@ -810,7 +831,7 @@ export class DatabunkerproAPI {
    *   email: 'contact@mycompany.com'
    * });
    */
-  async createTenant(options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createTenant(options: TenantOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       tenantname: options.tenantname,
       tenantorg: options.tenantorg,
@@ -819,16 +840,16 @@ export class DatabunkerproAPI {
     return this.makeRequest('TenantCreate', data, requestMetadata);
   }
 
-  async getTenant(tenantid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async getTenant(tenantid: number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('TenantGet', { tenantid }, requestMetadata);
   }
 
-  async updateTenant(tenantid: string | number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async updateTenant(tenantid: number, options: TenantOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { tenantid, ...options };
     return this.makeRequest('TenantUpdate', data, requestMetadata);
   }
 
-  async deleteTenant(tenantid: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async deleteTenant(tenantid: number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {tenantid};
     return this.makeRequest('TenantDelete', data, requestMetadata);
   }
@@ -839,7 +860,7 @@ export class DatabunkerproAPI {
   }
 
   // Role Management
-  async createRole(options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createRole(options: RoleOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       rolename: options.rolename,
       roledesc: options.roledesc,
@@ -847,7 +868,7 @@ export class DatabunkerproAPI {
     return this.makeRequest('RoleCreate', data, requestMetadata);
   }
 
-  async updateRole(roleid: number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async updateRole(roleid: number, options: RoleOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {roleid, ...options};
     return this.makeRequest('RoleUpdate', data, requestMetadata);
   }
@@ -1038,7 +1059,7 @@ export class DatabunkerproAPI {
    *   finaltime: '100d'
    * });
    */
-  async createSharedRecord(mode: string, identity: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createSharedRecord(mode: string, identity: string, options: SharedRecordOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {
       mode,
       identity,
