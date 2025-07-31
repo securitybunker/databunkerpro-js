@@ -102,6 +102,47 @@ interface RoleOptions {
   roledesc?: string;
 }
 
+interface TokenOptions {
+  unique?: boolean;
+  slidingtime?: string;
+  finaltime?: string;
+}
+
+interface TokenBulkOptions {
+  unique?: boolean;
+  slidingtime?: string;
+  finaltime?: string;
+}
+
+interface PolicyOptions {
+  policyname: string;
+  policydesc?: string;
+  policy: any;
+}
+
+interface PolicyUpdateOptions {
+  policyname?: string;
+  policydesc?: string;
+  policy: any;
+}
+
+interface SessionOptions {
+  slidingtime?: string;
+  finaltime?: string;
+}
+
+interface XTokenOptions {
+  tokentype?: string;
+  slidingtime?: string;
+  finaltime?: string;
+}
+
+interface XTokenRoleOptions {
+  rolename?: string;
+  slidingtime?: string;
+  finaltime?: string;
+}
+
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
 
@@ -137,7 +178,18 @@ declare class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
    */
-  createXToken(mode: string, identity: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  createXToken(mode: string, identity: string, options?: XTokenOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  /**
+   * Creates an access token for a role
+   * @param {string|number} roleid - Role ID
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.rolename] - Role name (alternative to roleid)
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {string} [options.slidingtime] - Sliding time period for the token
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created token information
+   */
+  createXTokenForRole(roleid: string | number, options?: XTokenRoleOptions, requestMetadata?: RequestMetadata): Promise<any>;
 
   // User Request Management
   getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -300,7 +352,7 @@ declare class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
    */
-  createToken(tokentype: string, record: string, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  createToken(tokentype: string, record: string, options?: TokenOptions, requestMetadata?: RequestMetadata): Promise<any>;
   /**
    * Creates multiple tokens in bulk for sensitive data
    * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
@@ -311,7 +363,7 @@ declare class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created tokens information
    */
-  createTokensBulk(records: any[], options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  createTokensBulk(records: any[], options?: TokenBulkOptions, requestMetadata?: RequestMetadata): Promise<any>;
   getToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
 
@@ -351,8 +403,8 @@ declare class DatabunkerproAPI {
   linkPolicy(roleref: string | number, policyref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
 
   // Policy Management
-  createPolicy(options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-  updatePolicy(policyid: string | number, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+  createPolicy(options: PolicyOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+  updatePolicy(policyid: string | number, options?: PolicyUpdateOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
   getPolicy(policyref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
   listPolicies(requestMetadata?: RequestMetadata | null): Promise<any>;
 
@@ -372,7 +424,7 @@ declare class DatabunkerproAPI {
   getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // Session Management
-  upsertSession(sessionuuid: string, sessiondata: any, options?: any, requestMetadata?: RequestMetadata): Promise<any>;
+  upsertSession(sessionuuid: string, sessiondata: any, options?: SessionOptions, requestMetadata?: RequestMetadata): Promise<any>;
   deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
   listUserSessions(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   getSession(sessionuuid: string, requestMetadata?: RequestMetadata): Promise<any>;

@@ -6,6 +6,11 @@ interface RequestOptions {
   body?: string;
 }
 
+interface BasicOptions {
+  finaltime?: string;
+  slidingtime?: string;
+}
+
 interface LegalBasisOptions {
   brief: string;
   status?: string;
@@ -59,11 +64,6 @@ interface ConnectorOptions {
   status?: string;
 }
 
-interface BasicOptions {
-  finaltime?: string;
-  slidingtime?: string;
-}
-
 interface RequestMetadata {
   [key: string]: any;
 }
@@ -108,6 +108,17 @@ interface RoleOptions {
   roledesc?: string;
 }
 
+interface TokenOptions {
+  unique?: boolean;
+  slidingtime?: string;
+  finaltime?: string;
+}
+
+interface PolicyOptions {
+  policyname: string;
+  policydesc?: string;
+  policy: any;
+}
 
 
 export class DatabunkerproAPI {
@@ -338,15 +349,33 @@ export class DatabunkerproAPI {
    * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
    * @param {string} identity - User's identifier corresponding to the mode
    * @param {Object} [options={}] - Optional parameters for token creation
-   * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
    * @param {string} [options.finaltime] - Absolute expiration time for the token
    * @param {string} [options.slidingtime] - Sliding time period for the token
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
    */
-  async createXToken(mode: string, identity: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createUserXToken(mode: string, identity: string, options: BasicOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { mode, identity, ...options };
-    return this.makeRequest('XTokenCreate', data, requestMetadata);
+    return this.makeRequest('XTokenCreateForUser', data, requestMetadata);
+  }
+
+  /**
+   * Creates an access token for a role
+   * @param {string|number} roleid - Role ID
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {string} [options.slidingtime] - Sliding time period for the token
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created token information
+   */
+  async createRoleXToken(roleref: string | number, options: BasicOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { ...options };
+    if (Number.isInteger(Number(roleref))) {
+      data.roleid = roleref;
+    } else {
+      data.rolename = roleref;
+    }
+    return this.makeRequest('XTokenCreateForRole', data, requestMetadata);
   }
 
   // User Request Management
@@ -766,7 +795,7 @@ export class DatabunkerproAPI {
    *   unique: true
    * });
    */
-  async createToken(tokentype: string, record: string, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createToken(tokentype: string, record: string, options: TokenOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {tokentype, record, ...options};
     return this.makeRequest('TokenCreate', data, requestMetadata);
   }
@@ -791,7 +820,7 @@ export class DatabunkerproAPI {
    *   unique: true
    * });
    */
-  async createTokensBulk(records: any[], options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createTokensBulk(records: any[], options: TokenOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {records, ...options};
     return this.makeRequest('TokenCreateBulk', data, requestMetadata);
   }
@@ -889,7 +918,7 @@ export class DatabunkerproAPI {
   }
 
   // Policy Management
-  async createPolicy(options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createPolicy(options: PolicyOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { 
       policyname: options.policyname,
       policydesc: options.policydesc,
@@ -898,9 +927,8 @@ export class DatabunkerproAPI {
     return this.makeRequest('PolicyCreate', data, requestMetadata);
   }
 
-  async updatePolicy(policyid: number, options: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { ...options };
-    data.policyid = policyid;
+  async updatePolicy(policyid: number, options: PolicyOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { policyid, ...options };
     return this.makeRequest('PolicyUpdate', data, requestMetadata);
   }
 
@@ -964,7 +992,7 @@ export class DatabunkerproAPI {
   }
 
   async getTenantConf(): Promise<any> {
-    return this.makeRequest('TenantGetConf');
+    return this.makeRequest('TenantGetUIConf');
   }
 
   async getUserHTMLReport(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -976,7 +1004,7 @@ export class DatabunkerproAPI {
   }
 
   // Session Management
-  async upsertSession(sessionuuid: string, sessiondata: any, options: any = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async upsertSession(sessionuuid: string, sessiondata: any, options: BasicOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { sessionuuid, sessiondata, ...options };
     return this.makeRequest('SessionUpsert', data, requestMetadata);
   }

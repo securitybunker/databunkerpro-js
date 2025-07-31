@@ -1,3 +1,7 @@
+interface BasicOptions {
+    finaltime?: string;
+    slidingtime?: string;
+}
 interface LegalBasisOptions {
     brief: string;
     status?: string;
@@ -46,10 +50,6 @@ interface ConnectorOptions {
     tablename?: string;
     status?: string;
 }
-interface BasicOptions {
-    finaltime?: string;
-    slidingtime?: string;
-}
 interface RequestMetadata {
     [key: string]: any;
 }
@@ -86,6 +86,16 @@ interface GroupOptions {
 interface RoleOptions {
     rolename: string;
     roledesc?: string;
+}
+interface TokenOptions {
+    unique?: boolean;
+    slidingtime?: string;
+    finaltime?: string;
+}
+interface PolicyOptions {
+    policyname: string;
+    policydesc?: string;
+    policy: any;
 }
 export declare class DatabunkerproAPI {
     private baseURL;
@@ -135,13 +145,22 @@ export declare class DatabunkerproAPI {
      * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
      * @param {string} identity - User's identifier corresponding to the mode
      * @param {Object} [options={}] - Optional parameters for token creation
-     * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
      * @param {string} [options.finaltime] - Absolute expiration time for the token
      * @param {string} [options.slidingtime] - Sliding time period for the token
      * @param {Object} [requestMetadata=null] - Optional request metadata
      * @returns {Promise<Object>} The created token information
      */
-    createXToken(mode: string, identity: string, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createUserXToken(mode: string, identity: string, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Creates an access token for a role
+     * @param {string|number} roleid - Role ID
+     * @param {Object} [options={}] - Optional parameters for token creation
+     * @param {string} [options.finaltime] - Absolute expiration time for the token
+     * @param {string} [options.slidingtime] - Sliding time period for the token
+     * @param {Object} [requestMetadata=null] - Optional request metadata
+     * @returns {Promise<Object>} The created token information
+     */
+    createRoleXToken(roleref: string | number, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserRequest(requestuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserRequests(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
@@ -273,7 +292,7 @@ export declare class DatabunkerproAPI {
      *   unique: true
      * });
      */
-    createToken(tokentype: string, record: string, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createToken(tokentype: string, record: string, options?: TokenOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Creates multiple tokens in bulk for sensitive data
      * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
@@ -294,7 +313,7 @@ export declare class DatabunkerproAPI {
      *   unique: true
      * });
      */
-    createTokensBulk(records: any[], options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createTokensBulk(records: any[], options?: TokenOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -323,8 +342,8 @@ export declare class DatabunkerproAPI {
     createRole(options: RoleOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateRole(roleid: number, options: RoleOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     linkPolicy(roleref: string | number, policyref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createPolicy(options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updatePolicy(policyid: number, options: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createPolicy(options: PolicyOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    updatePolicy(policyid: number, options: PolicyOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getPolicy(policyref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listPolicies(requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListUnlock(requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -338,7 +357,7 @@ export declare class DatabunkerproAPI {
     getTenantConf(): Promise<any>;
     getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    upsertSession(sessionuuid: string, sessiondata: any, options?: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    upsertSession(sessionuuid: string, sessiondata: any, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserSessions(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;

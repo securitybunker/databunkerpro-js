@@ -219,15 +219,33 @@ class DatabunkerproAPI {
    * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
    * @param {string} identity - User's identifier corresponding to the mode
    * @param {Object} [options={}] - Optional parameters for token creation
-   * @param {string} [options.tokentype] - Type of token (e.g., 'access', 'refresh')
    * @param {string} [options.finaltime] - Absolute expiration time for the token
    * @param {string} [options.slidingtime] - Sliding time period for the token
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
    */
-  async createXToken(mode, identity, options = {}, requestMetadata = null) {
+  async createUserXToken(mode, identity, options = {}, requestMetadata = null) {
     const data = { mode, identity, ...options };
-    return this.makeRequest('XTokenCreate', data, requestMetadata);
+    return this.makeRequest('XTokenCreateForUser', data, requestMetadata);
+  }
+
+  /**
+   * Creates an access token for a role
+   * @param {string|number} roleid - Role ID
+   * @param {Object} [options={}] - Optional parameters for token creation
+   * @param {string} [options.finaltime] - Absolute expiration time for the token
+   * @param {string} [options.slidingtime] - Sliding time period for the token
+   * @param {Object} [requestMetadata=null] - Optional request metadata
+   * @returns {Promise<Object>} The created token information
+   */
+  async createUserXToken(roleref, options = {}, requestMetadata = null) {
+    const data = { ...options };
+    if (Number.isInteger(Number(roleref))) {
+      data.roleid = roleref;
+    } else {
+      data.rolename = roleref;
+    }
+    return this.makeRequest('XTokenCreateForRole', data, requestMetadata);
   }
 
   // User Request Management
@@ -919,7 +937,7 @@ class DatabunkerproAPI {
   }
 
   async getTenantConf() {
-    return this.makeRequest('TenantGetConf');
+    return this.makeRequest('TenantGetUIConf');
   }
 
   async getUserHTMLReport(mode, identity, requestMetadata = null) {
