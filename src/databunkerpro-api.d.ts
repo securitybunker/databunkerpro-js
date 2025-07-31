@@ -108,6 +108,12 @@ interface TokenOptions {
   finaltime?: string;
 }
 
+interface PatchOperation {
+  op: string;
+  path: string;
+  value?: any;
+}
+
 interface TokenBulkOptions {
   unique?: boolean;
   slidingtime?: string;
@@ -156,8 +162,8 @@ declare class DatabunkerproAPI {
   getUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   updateUser(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserUpdate(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata): Promise<any>;
-  patchUser(mode: string, identity: string, patch: any, requestMetadata?: RequestMetadata): Promise<any>;
-  requestUserPatch(mode: string, identity: string, patch: any, requestMetadata?: RequestMetadata): Promise<any>;
+  patchUser(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata): Promise<any>;
+  requestUserPatch(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata): Promise<any>;
   deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 

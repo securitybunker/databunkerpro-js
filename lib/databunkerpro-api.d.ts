@@ -92,6 +92,11 @@ interface TokenOptions {
     slidingtime?: string;
     finaltime?: string;
 }
+interface PatchOperation {
+    op: string;
+    path: string;
+    value?: any;
+}
 interface PolicyOptions {
     policyname: string;
     policydesc?: string;
@@ -133,8 +138,8 @@ export declare class DatabunkerproAPI {
     getUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateUser(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserUpdate(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    patchUser(mode: string, identity: string, patch: any, requestMetadata?: RequestMetadata | null): Promise<any>;
-    requestUserPatch(mode: string, identity: string, patch: any, requestMetadata?: RequestMetadata | null): Promise<any>;
+    patchUser(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata | null): Promise<any>;
+    requestUserPatch(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     preloginUser(mode: string, identity: string, code: string, captchacode: string, requestMetadata?: RequestMetadata | null): Promise<any>;

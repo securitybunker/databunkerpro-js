@@ -114,6 +114,12 @@ interface TokenOptions {
   finaltime?: string;
 }
 
+interface PatchOperation {
+  op: string;
+  path: string;
+  value?: any;
+}
+
 interface PolicyOptions {
   policyname: string;
   policydesc?: string;
@@ -314,11 +320,11 @@ export class DatabunkerproAPI {
     return this.makeRequest('UserUpdateRequest', { mode, identity, profile }, requestMetadata);
   }
 
-  async patchUser(mode: string, identity: string, patch: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async patchUser(mode: string, identity: string, patch: PatchOperation[], requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('UserPatch', { mode, identity, patch }, requestMetadata);
   }
 
-  async requestUserPatch(mode: string, identity: string, patch: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async requestUserPatch(mode: string, identity: string, patch: PatchOperation[], requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('UserPatchRequest', { mode, identity, patch }, requestMetadata);
   }
 
