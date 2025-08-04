@@ -245,7 +245,7 @@ class DatabunkerproAPI {
     } else {
       data.rolename = roleref;
     }
-    return this.makeRequest('XTokenCreateForRole', data, requestMetadata);
+    return this.makeRequest('XTokenCreateForUser', data, requestMetadata);
   }
 
   // User Request Management
