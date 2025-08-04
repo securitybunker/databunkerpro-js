@@ -238,14 +238,14 @@ class DatabunkerproAPI {
    * @param {Object} [requestMetadata=null] - Optional request metadata
    * @returns {Promise<Object>} The created token information
    */
-  async createUserXToken(roleref, options = {}, requestMetadata = null) {
+  async createRoleXToken(roleref, options = {}, requestMetadata = null) {
     const data = { ...options };
     if (Number.isInteger(Number(roleref))) {
       data.roleid = roleref;
     } else {
       data.rolename = roleref;
     }
-    return this.makeRequest('XTokenCreateForUser', data, requestMetadata);
+    return this.makeRequest('XTokenCreateForRole', data, requestMetadata);
   }
 
   // User Request Management
