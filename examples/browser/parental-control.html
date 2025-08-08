@@ -37,12 +37,17 @@
         <div class="description">Set up the family group structure and define parent/child roles</div>
         <div class="code-container">
             <textarea class="code-editor" id="code1">// Create family group
-const familyGroup = await api.createGroup('family1', 'Family Members Group');
-
+const familyGroup = await api.createGroup({
+    groupname: 'family1',
+    groupdesc: 'Family Members Group'
+});
 // Create parent and child roles
-const parentRole = await api.createRole('parent');
-const childRole = await api.createRole('child');
-
+const parentRole = await api.createRole({
+    rolename: 'parent'
+});
+const childRole = await api.createRole({
+    rolename: 'child'
+});
 return { 
     familyGroup,
     parentRole,
@@ -66,7 +71,6 @@ const childUser = await api.createUser({
     age: 13,
     is_child: true
 });
-
 // Create parent user account and add to family group
 const parentUser = await api.createUser({
     login: 'parent_user1',
@@ -78,7 +82,6 @@ const parentUser = await api.createUser({
     groupname: 'family1',
     rolename: 'parent'
 });
-
 return { 
     childUser,
     parentUser,
@@ -100,7 +103,6 @@ const familyMembership = await api.addUserToGroup(
     'family1',
     'child'
 );
-
 // Create legal basis for parental consent
 const parentalConsentBasis = await api.createLegalBasis({
     brief: 'parental-consent',
@@ -112,18 +114,16 @@ const parentalConsentBasis = await api.createLegalBasis({
     requiredmsg: 'Parental consent is required for processing child data',
     requiredflag: true
 });
-
 // Record parental consent with verification
 const parentalConsent = await api.acceptAgreement(
     'login',
     'child_user1',
+    'parental-consent',
     {
-        brief: 'parental-consent',
         agreementmethod: 'verified-parent',
         referencecode: 'PRNT-2024'
     }
 );
-
 return { 
     familyMembership,
     parentalConsentBasis,
@@ -154,7 +154,6 @@ const parentalAccessPolicy = await api.createPolicy({
         }
     }
 });
-
 // Create policy for third-party access to child data
 const childDataPolicy = await api.createPolicy({
     policyname: 'ChildDataProtection',
@@ -177,7 +176,6 @@ const childDataPolicy = await api.createPolicy({
         }
     }
 });
-
 // Link policies
 await api.linkPolicy('parent', 'ParentalAccess');
 
@@ -196,18 +194,14 @@ return {
         <div class="description">Verify parent's ability to access and manage child's data</div>
         <div class="code-container">
             <textarea class="code-editor" id="code5">// Create parent access token
-const parentToken = await api.createXToken('login', 'parent_user1');
-
+const parentToken = await api.createUserXToken('login', 'parent_user1');
 // Store current token
 const currentToken = api.xBunkerToken;
-
 // Switch to parent token and get child data
 api.xBunkerToken = parentToken.xtoken;
 const childData = await api.getUser('login', 'child_user1');
-
 // Reset token to original
 api.xBunkerToken = currentToken;
-
 return { 
     parentToken,
     childData,
@@ -229,13 +223,11 @@ const auditEvents = await api.listUserAuditEvents(
     0,  // offset
     100  // limit
 );
-
 // Filter parental access events
 const parentalAccessEvents = auditEvents.rows.filter(event =>
     event.title === 'UserGet' ||
     event.title === 'UserUpdate'
 );
-
 return { 
     parentalAccessEvents,
     note: "Shows all parental access and control activities"

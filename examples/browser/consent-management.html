@@ -47,7 +47,6 @@ const marketingConsent = await api.createLegalBasis({
     requiredmsg: 'Marketing consent is required for receiving promotional communications',
     requiredflag: false
 });
-
 // Create analytics consent legal basis
 const analyticsConsent = await api.createLegalBasis({
     brief: 'analytics-consent',
@@ -59,7 +58,6 @@ const analyticsConsent = await api.createLegalBasis({
     requiredmsg: 'Analytics consent helps us improve our services',
     requiredflag: false
 });
-
 return { marketingConsent, analyticsConsent };</textarea>
             <button onclick="executeStep(1)">Run</button>
             <div class="result" id="result1"></div>
@@ -77,7 +75,6 @@ const user = await api.createUser({
     name: 'John Doe',
     phone: '+1234567890'
 });
-
 return { user };</textarea>
             <button onclick="executeStep(2)">Run</button>
             <div class="result" id="result2"></div>
@@ -92,27 +89,25 @@ return { user };</textarea>
 const marketingAgreement = await api.acceptAgreement(
     'login',
     'user1',
+    'marketing-consent',
     {
-        brief: 'marketing-consent',
         agreementmethod: 'web-form',
         referencecode: 'MKTG-2024',
         finaltime: '100d',
         status: 'active'
     }
 );
-
 // Record analytics consent
 const analyticsAgreement = await api.acceptAgreement(
     'login',
     'user1',
+    'analytics-consent',
     {
-        brief: 'analytics-consent',
         agreementmethod: 'in-app',
         referencecode: 'ANLX-2024',
         status: 'active'
     }
 );
-
 return { marketingAgreement, analyticsAgreement };</textarea>
             <button onclick="executeStep(3)">Run</button>
             <div class="result" id="result3"></div>
@@ -145,13 +140,11 @@ const withdrawalResult = await api.cancelAgreement(
     'user1',
     'marketing-consent'
 );
-
 // Verify updated consent status
 const updatedAgreements = await api.listUserAgreements(
     'login',
     'user1'
 );
-
 return { 
     withdrawalResult, 
     updatedAgreements,
@@ -173,13 +166,11 @@ const auditEvents = await api.listUserAuditEvents(
     0,  // offset
     100  // limit
 );
-
 // Filter consent-related events
 const consentEvents = auditEvents.rows.filter(event => 
     event.title.includes('Agreement') ||
     event.title.includes('Consent')
 );
-
 return { 
     consentEvents,
     note: "Shows all consent-related activities including acceptance and withdrawal"

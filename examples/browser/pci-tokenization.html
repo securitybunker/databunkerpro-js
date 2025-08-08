@@ -40,10 +40,8 @@ const tokenResult = await api.createToken(
     'creditcard',  // tokentype
     '5467047429390590'  // record
 );
-
 // Store the token for use in subsequent steps
 window.tokenResult = tokenResult;
-
 return { 
     tokenResult,
     note: "The token can be used to retrieve the original credit card number"
@@ -61,17 +59,14 @@ return {
 if (!window.tokenResult) {
     throw new Error('Please run Step 1 first to create a token');
 }
-
 // Retrieve using tokenuuid
 const tokenDataByUUID = await api.getToken(
     window.tokenResult.tokenuuid
 );
-
 // Retrieve using tokenbase
 const tokenDataByBase = await api.getToken(
     window.tokenResult.tokenbase
 );
-
 return { 
     tokenDataByUUID,
     tokenDataByBase,
@@ -90,16 +85,13 @@ return {
 if (!window.tokenResult) {
     throw new Error('Please run Step 1 first to create a token');
 }
-
 // Delete using tokenuuid
 const deleteResult = await api.deleteToken(
     window.tokenResult.tokenuuid
 );
-
 // Verify both token types are deleted
 let uuidDeleted = false;
 let baseDeleted = false;
-
 try {
     const result = await api.getToken(window.tokenResult.tokenuuid);
     if (result.status === 'error') {
@@ -108,7 +100,6 @@ try {
 } catch (error) {
     uuidDeleted = true;
 }
-
 try {
     const result = await api.getToken(window.tokenResult.tokenbase);
     if (result.status === 'error') {
@@ -117,7 +108,6 @@ try {
 } catch (error) {
     baseDeleted = true;
 }
-
 return { 
     deleteResult,
     verification: {
@@ -150,7 +140,6 @@ const bulkTokens = await api.createTokensBulk([
         record: '4716182333661234'
     }
 ]);
-
 // Store the bulk tokens for use in subsequent steps
 window.bulkTokens = bulkTokens;
 
@@ -173,7 +162,6 @@ const bulkInit = await api.bulkListUnlock();
 window.stateData = {
     unlockUUID: bulkInit.unlockuuid
 };
-
 return {
     bulkInit,
     note: "Bulk operations initialized with unlock UUID. This is required for listing and deleting tokens in bulk."
@@ -191,21 +179,17 @@ return {
 if (!window.bulkTokens) {
     throw new Error('Please run Step 4 first to create bulk tokens');
 }
-
 if (!window.stateData || !window.stateData.unlockUUID) {
     throw new Error('Please run Step 5 first to initialize bulk operations');
 }
-
 // Extract all tokenuuids from the created records
 const tokenList = window.bulkTokens.created.map(item => item.tokenbase);
 const bulkData = await api.bulkListTokens(
     window.stateData.unlockUUID,
     tokenList
 );
-
 // Store the token list for use in the next step
 window.tokenList = tokenList;
-
 return { 
     bulkData,
     note: "Each record in the rows array contains the original data"
@@ -223,22 +207,18 @@ return {
 if (!window.tokenList) {
     throw new Error('Please run Step 6 first to get the token list');
 }
-
 if (!window.stateData || !window.stateData.unlockUUID) {
     throw new Error('Please run Step 5 first to initialize bulk operations');
 }
-
 const deleteBulkResult = await api.bulkDeleteTokens(
     window.stateData.unlockUUID,
     window.tokenList  // array of tokens to delete
 );
-
 // Verify the tokens are deleted
 const remainingTokens = await api.bulkListTokens(
     window.stateData.unlockUUID,
     window.tokenList
 );
-
 return { 
     deleteBulkResult,
     remainingTokens,
