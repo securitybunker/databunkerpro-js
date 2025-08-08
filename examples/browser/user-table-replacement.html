@@ -10,12 +10,12 @@
     <h1>Databunker Pro: User Table Replacement Demo</h1>
     
     <div class="intro">
-        <p>This example demonstrates how to implement secure team management using Databunker Pro. It shows how to:</p>
+        <p>This example demonstrates how to securely manage user records using our specialized API. It showcases how to:</p>
         <ul>
-            <li><strong>Team Management:</strong> Create and manage team groups with role-based access</li>
-            <li><strong>Data Masking:</strong> Automatically mask sensitive data while allowing access to necessary fields</li>
+            <li><strong>Team Management:</strong> Create and manage team groups with role-based access control</li>
+            <li><strong>Data Masking:</strong> Automatically mask sensitive data while exposing only the necessary fields</li>
             <li><strong>Bulk Operations:</strong> Secure listing of team members with automatic data protection</li>
-            <li><strong>Access Control:</strong> Implement manager-level access with field-level security</li>
+            <li><strong>Access Control:</strong> Enable manager-level access with field-level security</li>
             <li><strong>Audit Trail:</strong> Track all access to team member data</li>
         </ul>
     </div>
@@ -37,10 +37,19 @@
         <div class="description">Set up the team structure with manager and member roles.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code1">// Create team group
-const teamGroup = await api.createGroup('sales-team', 'Sales Team Group');
+const teamGroup = await api.createGroup({
+    groupname: 'sales-team',
+    groupdesc: 'Sales Team Group'
+});
+
 // Create roles for managers and members
-const managerRole = await api.createRole('manager');
-const memberRole = await api.createRole('team-member');
+const managerRole = await api.createRole({
+    rolename: 'manager'
+});
+const memberRole = await api.createRole({
+    rolename: 'team-member'
+});
+
 return { 
     teamGroup,
     managerRole,
@@ -136,6 +145,7 @@ return {
     <div class="step" id="step4">
         <h2>Step 4: Create Manager Access Policy</h2>
         <div class="description">Create policy that allows managers to see team members' names and phones while masking other data.</div>
+        <div class="description">✱ Access is granted only to name and phone number. All other fields will be masked.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code4">// Create policy for manager access
 const managerPolicy = await api.createPolicy({
@@ -170,6 +180,7 @@ return {
     <div class="step" id="step5">
         <h2>Step 5: Initialize Bulk Operations</h2>
         <div class="description">Get an unlock UUID token for bulk operations.</div>
+        <div class="description">✱ The bulk unlock UUID is valid for only a few seconds and expires automatically. You must include it in every <b>bulk*</b> request.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code5">// Get unlock UUID for bulk operations
 const bulkInit = await api.bulkListUnlock();
@@ -191,7 +202,7 @@ return {
         <div class="description">Create an access token for the manager to use in subsequent operations.</div>
         <div class="code-container">
             <textarea class="code-editor" id="code6">// Create manager access token
-const managerToken = await api.createXToken('login', 'manager1');
+const managerToken = await api.createUserXToken('login', 'manager1');
 // Add token to state data (preserving unlock UUID)
 window.stateData.managerToken = managerToken.xtoken;
 return { 
