@@ -132,12 +132,6 @@ interface PolicyUpdateOptions {
   policy: any;          // Updated policy configuration object
 }
 
-interface TokenBulkOptions {
-  unique?: boolean;     // Whether to create unique tokens for each request
-  slidingtime?: string; // Time period for token validity (e.g., '1d', '1h')
-  finaltime?: string;   // Absolute expiration time for the token
-}
-
 
 export class DatabunkerproAPI {
   private baseURL: string;
@@ -816,7 +810,7 @@ export class DatabunkerproAPI {
   /**
    * Creates multiple tokens in bulk for sensitive data
    * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
-   * @param {TokenBulkOptions} [options] - Optional parameters for token creation
+   * @param {TokenOptions} [options] - Optional parameters for token creation
    * @param {RequestMetadata} [requestMetadata] - Optional request metadata
    * @returns {Promise<Object>} The created tokens information
    * @example
@@ -830,7 +824,7 @@ export class DatabunkerproAPI {
    *   unique: true
    * });
    */
-  async createTokensBulk(records: any[], options: TokenBulkOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async createTokensBulk(records: any[], options: TokenOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = {records, ...options};
     return this.makeRequest('TokenCreateBulk', data, requestMetadata);
   }

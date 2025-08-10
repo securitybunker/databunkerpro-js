@@ -102,11 +102,6 @@ interface PolicyOptions {
     policydesc?: string;
     policy: any;
 }
-interface TokenBulkOptions {
-    unique?: boolean;
-    slidingtime?: string;
-    finaltime?: string;
-}
 export declare class DatabunkerproAPI {
     private baseURL;
     private xBunkerToken;
@@ -301,7 +296,7 @@ export declare class DatabunkerproAPI {
     /**
      * Creates multiple tokens in bulk for sensitive data
      * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
-     * @param {TokenBulkOptions} [options] - Optional parameters for token creation
+     * @param {TokenOptions} [options] - Optional parameters for token creation
      * @param {RequestMetadata} [requestMetadata] - Optional request metadata
      * @returns {Promise<Object>} The created tokens information
      * @example
@@ -315,7 +310,7 @@ export declare class DatabunkerproAPI {
      *   unique: true
      * });
      */
-    createTokensBulk(records: any[], options?: TokenBulkOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createTokensBulk(records: any[], options?: TokenOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;

@@ -112,12 +112,6 @@ interface PatchOperation {
   value?: any;   // New value for the field
 }
 
-interface TokenBulkOptions {
-  unique?: boolean;     // Whether to create unique tokens for each request
-  slidingtime?: string; // Time period for token validity (e.g., '1d', '1h')
-  finaltime?: string;   // Absolute expiration time for the token
-}
-
 interface PolicyOptions {
   policyname: string;   // Name of the policy
   policydesc?: string;  // Description of the policy
@@ -307,11 +301,11 @@ declare class DatabunkerproAPI {
   /**
    * Creates multiple tokens in bulk for sensitive data
    * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
-   * @param {TokenBulkOptions} [options] - Optional parameters for token creation
+   * @param {TokenOptions} [options] - Optional parameters for token creation
    * @param {RequestMetadata} [requestMetadata] - Optional request metadata
    * @returns {Promise<Object>} The created tokens information
    */
-  createTokensBulk(records: any[], options?: TokenBulkOptions, requestMetadata?: RequestMetadata): Promise<any>;
+  createTokensBulk(records: any[], options?: TokenOptions, requestMetadata?: RequestMetadata): Promise<any>;
   getToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
   deleteToken(token: string, requestMetadata?: RequestMetadata): Promise<any>;
 
