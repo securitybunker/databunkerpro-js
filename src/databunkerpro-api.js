@@ -344,23 +344,23 @@ class DatabunkerproAPI {
    * Records user's acceptance of a legal basis/agreement
    * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
    * @param {string} identity - User's identifier corresponding to the mode (e.g., email address, phone number)
-   * @param {Object} options - Agreement acceptance options
-   * @param {string} options.brief - Unique identifier of the legal basis/agreement being accepted
+   * @param {string} brief - Unique identifier of the legal basis/agreement being accepted
+   * @param {Object} [options] - Agreement acceptance options
    * @param {string} [options.agreementmethod] - Method of agreement (e.g., 'web-form', 'checkbox', 'signature')
    * @param {string} [options.lastmodifiedby] - Identifier of the person/system that last modified this agreement
    * @param {string} [options.referencecode] - External reference code or identifier for this acceptance
    * @param {string} [options.starttime] - Start time of the agreement validity (ISO 8601 format)
    * @param {string} [options.finaltime] - End time of the agreement validity (ISO 8601 format)
    * @param {string} [options.status] - Status of the agreement (e.g., 'pending', 'active', 'expired')
-   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @param {Object} [requestMetadata] - Additional metadata to include with the request
    * @returns {Promise<Object>} The recorded agreement acceptance
    * @example
    * // Record user's acceptance of marketing consent with additional details
    * const acceptance = await api.acceptAgreement(
    *   'email',
    *   'user@example.com',
+   *   'marketing-consent',
    *   {
-   *     brief: 'marketing-consent',
    *     agreementmethod: 'web-form',
    *     referencecode: 'REF123',
    *     starttime: '10d',
@@ -872,8 +872,7 @@ class DatabunkerproAPI {
   }
 
   async updatePolicy(policyid, options, requestMetadata = null) {
-    const data = { ...options };
-    data.policyid = policyid;
+    const data = { policyid, ...options };
     return this.makeRequest('PolicyUpdate', data, requestMetadata);
   }
 
