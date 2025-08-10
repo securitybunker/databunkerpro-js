@@ -214,6 +214,25 @@ await client.connectorsDeleteUser(
 );
 ```
 
+### System Operations
+```javascript
+// Get system statistics
+const stats = await client.getSystemStats();
+console.log('System stats:', stats);
+
+// Generate wrapping key from three Shamir's Secret Sharing keys
+const wrappingKeyResult = await client.generateWrappingKey(
+  'shamir-key-1',
+  'shamir-key-2',
+  'shamir-key-3'
+);
+console.log('Generated wrapping key:', wrappingKeyResult.wrappingkey);
+
+// Get system metrics (Prometheus format)
+const metrics = await client.getSystemMetrics();
+console.log('System metrics:', metrics);
+```
+
 ## API Reference
 
 The library provides methods for interacting with all Databunkerpro endpoints:
@@ -228,6 +247,7 @@ The library provides methods for interacting with all Databunkerpro endpoints:
 - Tenant Management
 - Role Management
 - Policy Management
+- System Operations
 
 For detailed API documentation, please visit our [API Documentation](https://databunker.com/docs).
 
