@@ -931,23 +931,6 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkDeleteTokens', data, requestMetadata);
   }
 
-  // System Configuration
-  async getUIConf() {
-    return this.makeRequest('TenantGetUIConf');
-  }
-
-  async getTenantConf() {
-    return this.makeRequest('TenantGetUIConf');
-  }
-
-  async getUserHTMLReport(mode, identity, requestMetadata = null) {
-    return this.makeRequest('SystemGetUserHTMLReport', { mode, identity }, requestMetadata);
-  }
-
-  async getUserReport(mode, identity, requestMetadata = null) {
-    return this.makeRequest('SystemGetUserReport', { mode, identity }, requestMetadata);
-  }
-
   // Session Management
   async upsertSession(sessionuuid, sessiondata, options = {}, requestMetadata = null) {
     const data = { sessionuuid, sessiondata, ...options };
@@ -964,6 +947,23 @@ class DatabunkerproAPI {
 
   async getSession(sessionuuid, requestMetadata = null) {
     return this.makeRequest('SessionGet', { sessionuuid }, requestMetadata);
+  }
+
+  // System Configuration
+  async getUIConf() {
+    return this.makeRequest('TenantGetUIConf');
+  }
+
+  async getTenantConf() {
+    return this.makeRequest('TenantGetUIConf');
+  }
+
+  async getUserHTMLReport(mode, identity, requestMetadata = null) {
+    return this.makeRequest('SystemGetUserHTMLReport', { mode, identity }, requestMetadata);
+  }
+
+  async getUserReport(mode, identity, requestMetadata = null) {
+    return this.makeRequest('SystemGetUserReport', { mode, identity }, requestMetadata);
   }
 
   /**

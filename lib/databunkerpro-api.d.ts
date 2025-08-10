@@ -1,3 +1,6 @@
+interface RequestMetadata {
+    [key: string]: any;
+}
 interface BasicOptions {
     finaltime?: string;
     slidingtime?: string;
@@ -50,14 +53,18 @@ interface ConnectorOptions {
     tablename?: string;
     status?: string;
 }
-interface RequestMetadata {
-    [key: string]: any;
-}
 interface SharedRecordOptions {
     fields?: string;
     partner?: string;
     appname?: string;
     finaltime?: string;
+}
+interface ProcessingActivityUpdateOptions {
+    newactivity?: string;
+    title?: string;
+    script?: string;
+    fulldesc?: string;
+    applicableto?: string;
 }
 interface TenantOptions {
     tenantname: string;
@@ -66,13 +73,6 @@ interface TenantOptions {
 }
 interface ProcessingActivityOptions {
     activity: string;
-    title?: string;
-    script?: string;
-    fulldesc?: string;
-    applicableto?: string;
-}
-interface ProcessingActivityUpdateOptions {
-    newactivity?: string;
     title?: string;
     script?: string;
     fulldesc?: string;
@@ -101,6 +101,11 @@ interface PolicyOptions {
     policyname: string;
     policydesc?: string;
     policy: any;
+}
+interface TokenBulkOptions {
+    unique?: boolean;
+    slidingtime?: string;
+    finaltime?: string;
 }
 export declare class DatabunkerproAPI {
     private baseURL;
@@ -149,20 +154,16 @@ export declare class DatabunkerproAPI {
      * Creates an access token for a user
      * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
      * @param {string} identity - User's identifier corresponding to the mode
-     * @param {Object} [options={}] - Optional parameters for token creation
-     * @param {string} [options.finaltime] - Absolute expiration time for the token
-     * @param {string} [options.slidingtime] - Sliding time period for the token
-     * @param {Object} [requestMetadata=null] - Optional request metadata
+     * @param {BasicOptions} [options] - Optional parameters for token creation
+     * @param {RequestMetadata} [requestMetadata] - Optional request metadata
      * @returns {Promise<Object>} The created token information
      */
     createUserXToken(mode: string, identity: string, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Creates an access token for a role
-     * @param {string|number} roleid - Role ID
-     * @param {Object} [options={}] - Optional parameters for token creation
-     * @param {string} [options.finaltime] - Absolute expiration time for the token
-     * @param {string} [options.slidingtime] - Sliding time period for the token
-     * @param {Object} [requestMetadata=null] - Optional request metadata
+     * @param {string|number} roleref - Role ID or name
+     * @param {BasicOptions} [options] - Optional parameters for token creation
+     * @param {RequestMetadata} [requestMetadata] - Optional request metadata
      * @returns {Promise<Object>} The created token information
      */
     createRoleXToken(roleref: string | number, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -227,21 +228,23 @@ export declare class DatabunkerproAPI {
     listProcessingActivities(requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Creates a new processing activity
-     * @param {Object} options - The processing activity options
-     * @param {string} options.activity - Unique identifier for the processing activity
-     * @param {string} [options.title] - Title of the processing activity
-     * @param {string} [options.script] - Script or description of the processing activity
-     * @param {string} [options.fulldesc] - Full description of the processing activity
-     * @param {string} [options.applicableto] - What this activity applies to
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {ProcessingActivityOptions} options - The processing activity options
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} The created processing activity
      */
     createProcessingActivity(options: ProcessingActivityOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Updates an existing processing activity
+     * @param {string} activity - Current activity identifier
+     * @param {ProcessingActivityUpdateOptions} options - The processing activity update options
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
+     * @returns {Promise<Object>} The updated processing activity
+     */
     updateProcessingActivity(activity: string, options: ProcessingActivityUpdateOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Deletes a processing activity
      * @param {string} activity - Activity identifier to delete
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} The deletion result
      */
     deleteProcessingActivity(activity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -249,7 +252,7 @@ export declare class DatabunkerproAPI {
      * Links a processing activity to a legal basis
      * @param {string} activity - Activity identifier
      * @param {string} brief - Legal basis brief identifier
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} The linking result
      */
     linkProcessingActivityToLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -257,7 +260,7 @@ export declare class DatabunkerproAPI {
      * Unlinks a processing activity from a legal basis
      * @param {string} activity - Activity identifier
      * @param {string} brief - Legal basis brief identifier
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} The unlinking result
      */
     unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -283,11 +286,8 @@ export declare class DatabunkerproAPI {
      * Creates a token for sensitive data like credit card numbers
      * @param {string} tokentype - Type of token (e.g., 'creditcard') or 'email'
      * @param {string} record - The sensitive data to tokenize
-     * @param {Object} [options={}] - Optional parameters for token creation
-     * @param {string} [options.slidingtime] - Time period for token validity (e.g., '1d', '1h')
-     * @param {string} [options.finaltime] - Absolute expiration time for the token
-     * @param {boolean} [options.unique] - Whether to create a unique token for each request
-     * @param {Object} [requestMetadata=null] - Optional request metadata
+     * @param {TokenOptions} [options] - Optional parameters for token creation
+     * @param {RequestMetadata} [requestMetadata] - Optional request metadata
      * @returns {Promise<Object>} The created token information
      * @example
      * // Create a token with expiration
@@ -301,11 +301,8 @@ export declare class DatabunkerproAPI {
     /**
      * Creates multiple tokens in bulk for sensitive data
      * @param {Array<Object>} records - Array of records to tokenize, each containing tokentype and record
-     * @param {Object} [options={}] - Optional parameters for token creation
-     * @param {string} [options.slidingtime] - Time period for token validity (e.g., '1d', '1h')
-     * @param {string} [options.finaltime] - Absolute expiration time for the token
-     * @param {boolean} [options.unique] - Whether to create unique tokens for each request
-     * @param {Object} [requestMetadata=null] - Optional request metadata
+     * @param {TokenBulkOptions} [options] - Optional parameters for token creation
+     * @param {RequestMetadata} [requestMetadata] - Optional request metadata
      * @returns {Promise<Object>} The created tokens information
      * @example
      * // Create multiple tokens with expiration
@@ -318,18 +315,15 @@ export declare class DatabunkerproAPI {
      *   unique: true
      * });
      */
-    createTokensBulk(records: any[], options?: TokenOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    createTokensBulk(records: any[], options?: TokenBulkOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteToken(token: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserAuditEvents(mode: string, identity: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getAuditEvent(auditeventuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Creates a new tenant
-     * @param {Object} options - Tenant creation options
-     * @param {string} options.tenantname - Name of the tenant
-     * @param {string} options.tenantorg - Organization name
-     * @param {string} options.email - Email address for tenant contact
-     * @param {Object} [requestMetadata=null] - Optional request metadata
+     * @param {TenantOptions} options - Tenant creation options
+     * @param {RequestMetadata} [requestMetadata] - Optional request metadata
      * @returns {Promise<Object>} The created tenant information
      * @example
      * // Create a tenant with organization and contact email
@@ -358,17 +352,17 @@ export declare class DatabunkerproAPI {
     bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkDeleteTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
-    getUIConf(): Promise<any>;
-    getTenantConf(): Promise<any>;
-    getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     upsertSession(sessionuuid: string, sessiondata: any, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserSessions(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getUIConf(): Promise<any>;
+    getTenantConf(): Promise<any>;
+    getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
      * Gets system statistics
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} System statistics
      *
      * Response format:
@@ -388,7 +382,7 @@ export declare class DatabunkerproAPI {
      * @param {string} key1 - First Shamir secret sharing key
      * @param {string} key2 - Second Shamir secret sharing key
      * @param {string} key3 - Third Shamir secret sharing key
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} Generated wrapping key
      *
      * Response format:
@@ -404,12 +398,8 @@ export declare class DatabunkerproAPI {
      * Creates a shared record for a user
      * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
      * @param {string} identity - User's identifier corresponding to the mode
-     * @param {Object} [options={}] - Optional parameters for shared record creation
-     * @param {Array<string>} [options.fields] - A string containing names of fields to share separated by commas
-     * @param {string} [options.partner] - It is used as a refference to partner name. It is not enforced.
-     * @param {string} [options.appname] - If defined, shows fields from the user app record instead user profile
-     * @param {string} [options.finaltime] - Expiration time for the shared record
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {SharedRecordOptions} [options] - Optional parameters for shared record creation
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} The created shared record information
      * @example
      * // Create a shared record with specific fields
@@ -424,7 +414,7 @@ export declare class DatabunkerproAPI {
     /**
      * Gets a shared record by its UUID
      * @param {string} recorduuid - UUID of the shared record to retrieve
-     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
      * @returns {Promise<Object>} The shared record information
      * @example
      * // Get a shared record by UUID
