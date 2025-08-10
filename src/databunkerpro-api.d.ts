@@ -130,11 +130,6 @@ interface PolicyUpdateOptions {
   policy: any;          // Updated policy configuration object
 }
 
-interface SessionOptions {
-  slidingtime?: string; // Sliding time period for session validity
-  finaltime?: string;   // Absolute expiration time for the session
-}
-
 declare class DatabunkerproAPI {
   constructor(baseURL: string, xBunkerToken?: string, xBunkerTenant?: string);
 
