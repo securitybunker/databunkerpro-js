@@ -384,20 +384,6 @@ declare class DatabunkerproAPI {
    * }
    */
   getSystemStats(requestMetadata?: RequestMetadata): Promise<any>;
-  /**
-   * Generates a wrapping key from three Shamir's Secret Sharing keys
-   * @param {string} key1 - First Shamir secret sharing key
-   * @param {string} key2 - Second Shamir secret sharing key
-   * @param {string} key3 - Third Shamir secret sharing key
-   * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
-   * @returns {Promise<Object>} Generated wrapping key
-   *
-   * Response format:
-   * {
-   *   "status": "ok",
-   *   "wrappingkey": "generated-wrapping-key-value"
-   * }
-   */
   getSystemMetrics(requestMetadata?: RequestMetadata): Promise<any>;
   parsePrometheusMetrics(metricsText: string): Promise<any>;
 
