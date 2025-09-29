@@ -941,7 +941,7 @@ class DatabunkerproAPI {
 
   async bulkListUserRequests(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
-    return this.makeRequest('BulkListUserRequests', data, requestMetadata);
+    return this.makeRequest('BulkListAllUserRequests', data, requestMetadata);
   }
 
   async bulkListAuditEvents(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {

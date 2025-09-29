@@ -1006,9 +1006,9 @@ export class DatabunkerproAPI {
     return this.makeRequest('BulkListGroupUsers', data, requestMetadata);
   }
 
-  async bulkListUserRequests(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+  async bulkListAllUserRequests(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { unlockuuid, offset, limit };
-    return this.makeRequest('BulkListUserRequests', data, requestMetadata);
+    return this.makeRequest('BulkListAllUserRequests', data, requestMetadata);
   }
 
   async bulkListAuditEvents(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
