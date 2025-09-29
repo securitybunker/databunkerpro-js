@@ -939,14 +939,14 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListGroupUsers', data, requestMetadata);
   }
 
-  async bulkListUserRequests(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
+  async bulkListAllUserRequests(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
     return this.makeRequest('BulkListAllUserRequests', data, requestMetadata);
   }
 
-  async bulkListAuditEvents(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
+  async bulkListAllAuditEvents(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
-    return this.makeRequest('BulkListAuditEvents', data, requestMetadata);
+    return this.makeRequest('BulkListAllAuditEvents', data, requestMetadata);
   }
 
   async bulkListTokens(unlockuuid, tokens, requestMetadata = null) {
