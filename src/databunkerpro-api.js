@@ -166,8 +166,12 @@ class DatabunkerproAPI {
     return this.makeRequest('UserCreateBulk', data, requestMetadata);
   }
 
-  async getUser(mode, identity, requestMetadata = null) {
-    return this.makeRequest('UserGet', { mode, identity }, requestMetadata);
+  async getUser(mode, identity, version = null, requestMetadata = null) {
+    const data = { mode, identity };
+    if (version !== null) {
+      data.version = version;
+    }
+    return this.makeRequest('UserGet', data, requestMetadata);
   }
 
   async updateUser(mode, identity, profile, requestMetadata = null) {
@@ -196,6 +200,16 @@ class DatabunkerproAPI {
 
   async requestUserDeletion(mode, identity, requestMetadata = null) {
     return this.makeRequest('UserDeleteRequest', { mode, identity }, requestMetadata);
+  }
+
+  async searchUser(mode, identity, unlockuuid, requestMetadata = null) {
+    const data = { mode, identity, unlockuuid };
+    return this.makeRequest('UserSearch', data, requestMetadata);
+  }
+
+  async listUserVersions(mode, identity, requestMetadata = null) {
+    const data = { mode, identity };
+    return this.makeRequest('UserListVersions', data, requestMetadata);
   }
 
   // User Authentication
@@ -305,6 +319,16 @@ class DatabunkerproAPI {
 
   async listAppDataNames(mode, identity, requestMetadata = null) {
     return this.makeRequest('AppdataListUserAppNames', { mode, identity }, requestMetadata);
+  }
+
+  async deleteAppData(mode, identity, appname, requestMetadata = null) {
+    const data = { mode, identity, appname };
+    return this.makeRequest('AppdataDelete', data, requestMetadata);
+  }
+
+  async listAppDataVersions(mode, identity, appname, requestMetadata = null) {
+    const data = { mode, identity, appname };
+    return this.makeRequest('AppdataListVersions', data, requestMetadata);
   }
 
   async listAppNames(requestMetadata = null) {
@@ -895,9 +919,14 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListUnlock', null, requestMetadata);
   }
 
-  async bulkListUsers(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
-    const data = { unlockuuid, offset, limit }
+  async bulkListUsers(unlockuuid, users, requestMetadata = null) {
+    const data = { unlockuuid, users };
     return this.makeRequest('BulkListUsers', data, requestMetadata);
+  }
+
+  async bulkListAllUsers(unlockuuid, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListAllUsers', data, requestMetadata);
   }
 
   async bulkListGroupUsers(unlockuuid, groupref, offset = 0, limit = 10, requestMetadata = null) {

@@ -314,8 +314,12 @@ export class DatabunkerproAPI {
     return this.makeRequest('UserCreateBulk', data, requestMetadata);
   }
 
-  async getUser(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('UserGet', { mode, identity }, requestMetadata);
+  async getUser(mode: string, identity: string, version: number | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { mode, identity };
+    if (version !== null) {
+      data.version = version;
+    }
+    return this.makeRequest('UserGet', data, requestMetadata);
   }
 
   async updateUser(mode: string, identity: string, profile: any, requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -340,6 +344,16 @@ export class DatabunkerproAPI {
 
   async requestUserDeletion(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('UserDeleteRequest', { mode, identity }, requestMetadata);
+  }
+
+  async searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { mode, identity, unlockuuid };
+    return this.makeRequest('UserSearch', data, requestMetadata);
+  }
+
+  async listUserVersions(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { mode, identity };
+    return this.makeRequest('UserListVersions', data, requestMetadata);
   }
 
   // User Authentication
@@ -443,6 +457,16 @@ export class DatabunkerproAPI {
 
   async listAppDataNames(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('AppdataListUserAppNames', { mode, identity }, requestMetadata);
+  }
+
+  async deleteAppData(mode: string, identity: string, appname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { mode, identity, appname };
+    return this.makeRequest('AppdataDelete', data, requestMetadata);
+  }
+
+  async listAppDataVersions(mode: string, identity: string, appname: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { mode, identity, appname };
+    return this.makeRequest('AppdataListVersions', data, requestMetadata);
   }
 
   async listAppNames(requestMetadata: RequestMetadata | null = null): Promise<any> {
@@ -898,8 +922,13 @@ export class DatabunkerproAPI {
     return this.makeRequest('RoleCreate', data, requestMetadata);
   }
 
-  async updateRole(roleid: number, options: RoleOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = {roleid, ...options};
+  async updateRole(roleid: string | number, options: RoleOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { ...options};
+    if (Number.isInteger(Number(roleid))) {
+      data.roleid = roleid;
+    } else {
+      data.rolename = roleid;
+    }
     return this.makeRequest('RoleUpdate', data, requestMetadata);
   }
 
@@ -928,8 +957,13 @@ export class DatabunkerproAPI {
     return this.makeRequest('PolicyCreate', data, requestMetadata);
   }
 
-  async updatePolicy(policyid: number, options: PolicyOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { policyid, ...options };
+  async updatePolicy(policyid: string | number, options: PolicyOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { ...options };
+    if (Number.isInteger(Number(policyid))) {
+      data.policyid = policyid;
+    } else {
+      data.policyname = policyid;
+    }
     return this.makeRequest('PolicyUpdate', data, requestMetadata);
   }
 
@@ -952,9 +986,14 @@ export class DatabunkerproAPI {
     return this.makeRequest('BulkListUnlock', null, requestMetadata);
   }
 
-  async bulkListUsers(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { unlockuuid, offset, limit }
+  async bulkListUsers(unlockuuid: string, users: Array<{mode: string, identity: string}>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, users };
     return this.makeRequest('BulkListUsers', data, requestMetadata);
+  }
+
+  async bulkListAllUsers(unlockuuid: string, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { unlockuuid, offset, limit };
+    return this.makeRequest('BulkListAllUsers', data, requestMetadata);
   }
 
   async bulkListGroupUsers(unlockuuid: string, groupref: string | number, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {

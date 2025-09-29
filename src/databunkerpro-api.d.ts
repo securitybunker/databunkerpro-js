@@ -134,13 +134,15 @@ declare class DatabunkerproAPI {
   // User Management
   createUser(profile: any, options?: UserOptions, requestMetadata?: RequestMetadata): Promise<any>;
   createUsersBulk(records: any[], options?: BasicOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  getUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  getUser(mode: string, identity: string, version?: number | null, requestMetadata?: RequestMetadata): Promise<any>;
   updateUser(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserUpdate(mode: string, identity: string, profile: any, requestMetadata?: RequestMetadata): Promise<any>;
   patchUser(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata): Promise<any>;
   requestUserPatch(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata): Promise<any>;
   deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listUserVersions(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // User Authentication
   preloginUser(mode: string, identity: string, code: string, captchacode: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -185,6 +187,8 @@ declare class DatabunkerproAPI {
   updateAppData(mode: string, identity: string, appname: string, appdata: any, requestMetadata?: RequestMetadata): Promise<any>;
   requestAppDataUpdate(mode: string, identity: string, appname: string, appdata: any, requestMetadata?: RequestMetadata): Promise<any>;
   listAppDataNames(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
+  listAppDataVersions(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata): Promise<any>;
   listAppNames(requestMetadata?: RequestMetadata): Promise<any>;
 
   // Legal Basis Management
@@ -346,7 +350,8 @@ declare class DatabunkerproAPI {
 
   // Bulk Operations
   bulkListUnlock(requestMetadata?: RequestMetadata | null): Promise<any>;
-  bulkListUsers(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+  bulkListUsers(unlockuuid: string, users: Array<{mode: string, identity: string}>, requestMetadata?: RequestMetadata | null): Promise<any>;
+  bulkListAllUsers(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
   bulkListGroupUsers(unlockuuid: string, groupref: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
   bulkListUserRequests(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
   bulkListAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
