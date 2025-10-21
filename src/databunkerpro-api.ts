@@ -342,6 +342,24 @@ export class DatabunkerproAPI {
     return this.makeRequest('UserDelete', { mode, identity }, requestMetadata);
   }
 
+  /**
+   * Deletes multiple users in bulk
+   * @param {Array<Object>} users - Array of user identifiers to delete
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The bulk deletion result
+   * @example
+   * // Delete multiple users by their identifiers
+   * const result = await api.deleteUsersBulk([
+   *   { mode: 'email', identity: 'user1@example.com' },
+   *   { mode: 'email', identity: 'user2@example.com' },
+   *   { mode: 'phone', identity: '+1234567890' }
+   * ]);
+   */
+  async deleteUsersBulk(users: Array<{mode: string, identity: string}>, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { users };
+    return this.makeRequest('UserDeleteBulk', data, requestMetadata);
+  }
+
   async requestUserDeletion(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('UserDeleteRequest', { mode, identity }, requestMetadata);
   }
@@ -1098,6 +1116,11 @@ export class DatabunkerproAPI {
   async generateWrappingKey(key1: string, key2: string, key3: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { key1, key2, key3 };
     return this.makeRequest('SystemGenerateWrappingKey', data, requestMetadata);
+  }
+
+  async setLicenseKey(licensekey: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { licensekey };
+    return this.makeRequest('SystemSetLicenseKey', data, requestMetadata);
   }
 
   async parsePrometheusMetrics(metricsText: string): Promise<any> {

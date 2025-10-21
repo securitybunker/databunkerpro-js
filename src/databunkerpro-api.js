@@ -198,6 +198,24 @@ class DatabunkerproAPI {
     return this.makeRequest('UserDelete', { mode, identity }, requestMetadata);
   }
 
+  /**
+   * Deletes multiple users in bulk
+   * @param {Array<Object>} users - Array of user identifiers to delete
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The bulk deletion result
+   * @example
+   * // Delete multiple users by their identifiers
+   * const result = await api.deleteUsersBulk([
+   *   { mode: 'email', identity: 'user1@example.com' },
+   *   { mode: 'email', identity: 'user2@example.com' },
+   *   { mode: 'phone', identity: '+1234567890' }
+   * ]);
+   */
+  async deleteUsersBulk(users, requestMetadata = null) {
+    const data = { users };
+    return this.makeRequest('UserDeleteBulk', data, requestMetadata);
+  }
+
   async requestUserDeletion(mode, identity, requestMetadata = null) {
     return this.makeRequest('UserDeleteRequest', { mode, identity }, requestMetadata);
   }
@@ -1031,6 +1049,20 @@ class DatabunkerproAPI {
   async generateWrappingKey(key1, key2, key3, requestMetadata = null) {
     const data = { key1, key2, key3 };
     return this.makeRequest('SystemGenerateWrappingKey', data, requestMetadata);
+  }
+
+  /**
+   * Sets the system license key
+   * @param {string} licensekey - The license key to set for the system
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The license key setting result
+   * @example
+   * // Set a new license key for the system
+   * const result = await api.setLicenseKey('your-license-key-here');
+   */
+  async setLicenseKey(licensekey, requestMetadata = null) {
+    const data = { licensekey };
+    return this.makeRequest('SystemSetLicenseKey', data, requestMetadata);
   }
 
   async parsePrometheusMetrics(metricsText) {

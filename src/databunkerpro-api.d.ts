@@ -140,6 +140,13 @@ declare class DatabunkerproAPI {
   patchUser(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata): Promise<any>;
   requestUserPatch(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata): Promise<any>;
   deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
+  /**
+   * Deletes multiple users in bulk
+   * @param {Array<Object>} users - Array of user identifiers to delete
+   * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The bulk deletion result
+   */
+  deleteUsersBulk(users: Array<{mode: string, identity: string}>, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
   listUserVersions(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
@@ -370,6 +377,7 @@ declare class DatabunkerproAPI {
   getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   generateWrappingKey(key1: string, key2: string, key3: string, requestMetadata?: RequestMetadata): Promise<any>;
+  setLicenseKey(licensekey: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // System Monitoring
   /**

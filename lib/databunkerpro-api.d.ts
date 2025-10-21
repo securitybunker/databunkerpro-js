@@ -141,6 +141,23 @@ export declare class DatabunkerproAPI {
     patchUser(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserPatch(mode: string, identity: string, patch: PatchOperation[], requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteUser(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Deletes multiple users in bulk
+     * @param {Array<Object>} users - Array of user identifiers to delete
+     * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+     * @returns {Promise<Object>} The bulk deletion result
+     * @example
+     * // Delete multiple users by their identifiers
+     * const result = await api.deleteUsersBulk([
+     *   { mode: 'email', identity: 'user1@example.com' },
+     *   { mode: 'email', identity: 'user2@example.com' },
+     *   { mode: 'phone', identity: '+1234567890' }
+     * ]);
+     */
+    deleteUsersBulk(users: Array<{
+        mode: string;
+        identity: string;
+    }>, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserVersions(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -395,6 +412,7 @@ export declare class DatabunkerproAPI {
      * }
      */
     generateWrappingKey(key1: string, key2: string, key3: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    setLicenseKey(licensekey: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     parsePrometheusMetrics(metricsText: string): Promise<any>;
     getSystemMetrics(requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
