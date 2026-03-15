@@ -364,8 +364,8 @@ export class DatabunkerproAPI {
     return this.makeRequest('UserDeleteRequest', { mode, identity }, requestMetadata);
   }
 
-  async searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { mode, identity, unlockuuid };
+  async searchUser(identity: string, unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data = { identity, unlockuuid };
     return this.makeRequest('UserSearch', data, requestMetadata);
   }
 
@@ -1069,6 +1069,14 @@ export class DatabunkerproAPI {
 
   async getTenantConf(): Promise<any> {
     return this.makeRequest('TenantGetUIConf');
+  }
+
+  async getUserProfiles(mode: string, identity: string, unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SystemGetUserProfiles', { mode, identity, unlockuuid }, requestMetadata);
+  }
+
+  async searchUserProfiles(identity: string, unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    return this.makeRequest('SystemSearchUserProfiles', { identity, unlockuuid }, requestMetadata);
   }
 
   async getUserHTMLReport(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {

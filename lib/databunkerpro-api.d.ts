@@ -159,7 +159,7 @@ export declare class DatabunkerproAPI {
         identity: string;
     }>, requestMetadata?: RequestMetadata | null): Promise<any>;
     requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    searchUser(identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listUserVersions(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     preloginUser(mode: string, identity: string, code: string, captchacode: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     loginUser(mode: string, identity: string, smscode: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -378,6 +378,8 @@ export declare class DatabunkerproAPI {
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUIConf(): Promise<any>;
     getTenantConf(): Promise<any>;
+    getUserProfiles(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    searchUserProfiles(identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**
