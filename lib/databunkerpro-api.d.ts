@@ -380,6 +380,8 @@ export declare class DatabunkerproAPI {
     getTenantConf(): Promise<any>;
     getUserProfiles(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     searchUserProfiles(identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteUserProfiles(mode: string, identity: string, unlockuuid: string, tenantref?: string | number | null, requestMetadata?: RequestMetadata | null): Promise<any>;
+    restoreUserProfile(token: string, unlockuuid: string, tenantref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     /**

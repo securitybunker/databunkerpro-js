@@ -75,23 +75,23 @@ class DatabunkerproAPI {
     if (options.groupname) {
       // Check if groupname is actually a numeric id
       if (Number.isInteger(Number(options.groupname))) {
-        data.groupid = options.groupname;
+        data.groupid = Number(options.groupname);
       } else {
         data.groupname = options.groupname;
       }
     } else if (options.groupid) {
-      data.groupid = options.groupid;
+      data.groupid = Number(options.groupid);
     }
     // Handle rolename/roleid
     if (options.rolename) {
       // Check if rolename is actually a numeric id
       if (Number.isInteger(Number(options.rolename))) {
-        data.roleid = options.rolename;
+        data.roleid = Number(options.rolename);
       } else {
         data.rolename = options.rolename;
       }
     } else if (options.roleid) {
-      data.roleid = options.roleid;
+      data.roleid = Number(options.roleid);
     }
     // Handle time parameters
     if (options.slidingtime) {
@@ -134,22 +134,22 @@ class DatabunkerproAPI {
         // Handle groupname/groupid
         if (record.groupname) {
           if (Number.isInteger(Number(record.groupname))) {
-            userData.groupid = record.groupname;
+            userData.groupid = Number(record.groupname);
           } else {
             userData.groupname = record.groupname;
           }
         } else if (record.groupid) {
-          userData.groupid = record.groupid;
+          userData.groupid = Number(record.groupid);
         }
         // Handle rolename/roleid
         if (record.rolename) {
           if (Number.isInteger(Number(record.rolename))) {
-            userData.roleid = record.rolename;
+            userData.roleid = Number(record.rolename);
           } else {
             userData.rolename = record.rolename;
           }
         } else if (record.roleid) {
-          userData.roleid = record.roleid;
+          userData.roleid = Number(record.roleid);
         }
         return userData;
       })
@@ -273,7 +273,7 @@ class DatabunkerproAPI {
   async createRoleXToken(roleref, options = {}, requestMetadata = null) {
     const data = { ...options };
     if (Number.isInteger(Number(roleref))) {
-      data.roleid = roleref;
+      data.roleid = Number(roleref);
     } else {
       data.rolename = roleref;
     }
@@ -606,14 +606,14 @@ class DatabunkerproAPI {
   }
 
   async updateConnector(connectorid, options, requestMetadata = null) {
-    const data = { connectorid,...options };
+    const data = { connectorid: Number(connectorid),...options };
     return this.makeRequest('ConnectorUpdate', data, requestMetadata);
   }
 
   async validateConnectorConnectivity(connectorref, options = {}, requestMetadata = null) {
     const data = { ...options };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -623,7 +623,7 @@ class DatabunkerproAPI {
   async deleteConnector(connectorref, requestMetadata = null) {
     const data = {};
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -633,7 +633,7 @@ class DatabunkerproAPI {
   async getTableMetadata(connectorref, options = {}, requestMetadata = null) {
     const data = { ...options };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -643,7 +643,7 @@ class DatabunkerproAPI {
   async connectorGetUserData(mode, identity, connectorref, requestMetadata = null) {
     const data = { mode, identity };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -653,7 +653,7 @@ class DatabunkerproAPI {
   async connectorGetUserExtraData(mode, identity, connectorref, requestMetadata = null) {
     const data = { mode, identity };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -663,7 +663,7 @@ class DatabunkerproAPI {
   async connectorDeleteUser(mode, identity, connectorref, requestMetadata = null) {
     const data = { mode, identity };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -683,7 +683,7 @@ class DatabunkerproAPI {
   async getGroup(groupref, requestMetadata = null) {
     const data = {};
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -700,14 +700,14 @@ class DatabunkerproAPI {
 
   async updateGroup(groupid, options = {}, requestMetadata = null) {
     const data = { ...options };
-    data.groupid = groupid;
+    data.groupid = Number(groupid);
     return this.makeRequest('GroupUpdate', data, requestMetadata);
   }
 
   async deleteGroup(groupref, requestMetadata = null) {
     const data = {};
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -717,7 +717,7 @@ class DatabunkerproAPI {
   async removeUserFromGroup(mode, identity, groupref, requestMetadata = null) {
     const data = { mode, identity };
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -737,14 +737,14 @@ class DatabunkerproAPI {
     const data = { mode, identity };
     // Check if groupid is an integer (group ID) or string (group name)
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
     if (roleref) {
       // Check if rolename is an integer (role ID) or string (role name)
       if (Number.isInteger(Number(roleref))) {
-        data.roleid = roleref;
+        data.roleid = Number(roleref);
       } else {
         data.rolename = roleref;
       }
@@ -884,19 +884,19 @@ class DatabunkerproAPI {
   }
 
   async updateRole(roleid, options, requestMetadata = null) {
-    const data = {roleid, ...options};
+    const data = {roleid: Number(roleid), ...options};
     return this.makeRequest('RoleUpdate', data, requestMetadata);
   }
 
   async linkPolicy(roleref, policyref, requestMetadata = null) {
     const data = {};
     if (Number.isInteger(Number(roleref))) {
-      data.roleid = roleref;
+      data.roleid = Number(roleref);
     } else {
       data.rolename = roleref;
     }
     if (Number.isInteger(Number(policyref))) {
-      data.policyid = policyref;
+      data.policyid = Number(policyref);
     } else {
       data.policyname = policyref;
     }
@@ -914,14 +914,14 @@ class DatabunkerproAPI {
   }
 
   async updatePolicy(policyid, options, requestMetadata = null) {
-    const data = { policyid, ...options };
+    const data = { policyid: Number(policyid), ...options };
     return this.makeRequest('PolicyUpdate', data, requestMetadata);
   }
 
   async getPolicy(policyref, requestMetadata = null) {
     const data = {};
     if (Number.isInteger(Number(policyref))) {
-      data.policyid = policyref;
+      data.policyid = Number(policyref);
     } else {
       data.policyname = policyref;
     }
@@ -950,7 +950,7 @@ class DatabunkerproAPI {
   async bulkListGroupUsers(unlockuuid, groupref, offset = 0, limit = 10, requestMetadata = null) {
     const data = { unlockuuid, offset, limit };
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -1010,6 +1010,28 @@ class DatabunkerproAPI {
 
   async searchUserProfiles(identity, unlockuuid, requestMetadata = null) {
     return this.makeRequest('SystemSearchUserProfiles', { identity, unlockuuid }, requestMetadata);
+  }
+
+  async deleteUserProfiles(mode, identity, unlockuuid, tenantref = null, requestMetadata = null) {
+    const data = { mode, identity, unlockuuid };
+    if (tenantref !== null) {
+      if (Number.isInteger(Number(tenantref))) {
+        data.tenantid = tenantref;
+      } else {
+        data.tenantname = tenantref;
+      }
+    }
+    return this.makeRequest('SystemDeleteUserProfiles', data, requestMetadata);
+  }
+
+  async restoreUserProfile(token, unlockuuid, tenantref, requestMetadata = null) {
+    const data = { token, unlockuuid };
+    if (Number.isInteger(Number(tenantref))) {
+      data.tenantid = tenantref;
+    } else {
+      data.tenantname = tenantref;
+    }
+    return this.makeRequest('SystemRestoreUserProfile', data, requestMetadata);
   }
 
   async getUserHTMLReport(mode, identity, requestMetadata = null) {

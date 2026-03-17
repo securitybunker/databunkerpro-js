@@ -223,23 +223,23 @@ export class DatabunkerproAPI {
     if (options.groupname) {
       // Check if groupname is actually a numeric id
       if (Number.isInteger(Number(options.groupname))) {
-        data.groupid = options.groupname;
+        data.groupid = Number(options.groupname);
       } else {
         data.groupname = options.groupname;
       }
     } else if (options.groupid) {
-      data.groupid = options.groupid;
+      data.groupid = Number(options.groupid);
     }
     // Handle rolename/roleid
     if (options.rolename) {
       // Check if rolename is actually a numeric id
       if (Number.isInteger(Number(options.rolename))) {
-        data.roleid = options.rolename;
+        data.roleid = Number(options.rolename);
       } else {
         data.rolename = options.rolename;
       }
     } else if (options.roleid) {
-      data.roleid = options.roleid;
+      data.roleid = Number(options.roleid);
     }
     // Handle time parameters
     if (options.slidingtime) {
@@ -282,22 +282,22 @@ export class DatabunkerproAPI {
         // Handle groupname/groupid
         if (record.groupname) {
           if (Number.isInteger(Number(record.groupname))) {
-            userData.groupid = record.groupname;
+            userData.groupid = Number(record.groupname);
           } else {
             userData.groupname = record.groupname;
           }
         } else if (record.groupid) {
-          userData.groupid = record.groupid;
+          userData.groupid = Number(record.groupid);
         }
         // Handle rolename/roleid
         if (record.rolename) {
           if (Number.isInteger(Number(record.rolename))) {
-            userData.roleid = record.rolename;
+            userData.roleid = Number(record.rolename);
           } else {
             userData.rolename = record.rolename;
           }
         } else if (record.roleid) {
-          userData.roleid = record.roleid;
+          userData.roleid = Number(record.roleid);
         }
         return userData;
       })
@@ -411,7 +411,7 @@ export class DatabunkerproAPI {
   async createRoleXToken(roleref: string | number, options: BasicOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options };
     if (Number.isInteger(Number(roleref))) {
-      data.roleid = roleref;
+      data.roleid = Number(roleref);
     } else {
       data.rolename = roleref;
     }
@@ -699,7 +699,7 @@ export class DatabunkerproAPI {
   async validateConnectorConnectivity(connectorref: string | number, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -709,7 +709,7 @@ export class DatabunkerproAPI {
   async deleteConnector(connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = {};
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -719,7 +719,7 @@ export class DatabunkerproAPI {
   async getTableMetadata(connectorref: string | number, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -729,7 +729,7 @@ export class DatabunkerproAPI {
   async connectorGetUserData(mode: string, identity: string, connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { mode, identity };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -739,7 +739,7 @@ export class DatabunkerproAPI {
   async connectorGetUserExtraData(mode: string, identity: string, connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { mode, identity };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -749,7 +749,7 @@ export class DatabunkerproAPI {
   async connectorDeleteUser(mode: string, identity: string, connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { mode, identity };
     if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = connectorref;
+      data.connectorid = Number(connectorref);
     } else {
       data.connectorname = connectorref;
     }
@@ -769,7 +769,7 @@ export class DatabunkerproAPI {
   async getGroup(groupref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = {};
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -792,7 +792,7 @@ export class DatabunkerproAPI {
   async deleteGroup(groupref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = {};
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -802,7 +802,7 @@ export class DatabunkerproAPI {
   async removeUserFromGroup(mode: string, identity: string, groupref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { mode, identity };
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -813,14 +813,14 @@ export class DatabunkerproAPI {
     const data: any = { mode, identity };
     // Check if groupref is an integer (group ID) or string (group name)
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
     if (roleref) {
       // Check if roleref is an integer (role ID) or string (role name)
       if (Number.isInteger(Number(roleref))) {
-        data.roleid = roleref;
+        data.roleid = Number(roleref);
       } else {
         data.rolename = roleref;
       }
@@ -943,7 +943,7 @@ export class DatabunkerproAPI {
   async updateRole(roleid: string | number, options: RoleOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options};
     if (Number.isInteger(Number(roleid))) {
-      data.roleid = roleid;
+      data.roleid = Number(roleid);
     } else {
       data.rolename = roleid;
     }
@@ -953,12 +953,12 @@ export class DatabunkerproAPI {
   async linkPolicy(roleref: string | number, policyref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = {};
     if (Number.isInteger(Number(roleref))) {
-      data.roleid = roleref;
+      data.roleid = Number(roleref);
     } else {
       data.rolename = roleref;
     }
     if (Number.isInteger(Number(policyref))) {
-      data.policyid = policyref;
+      data.policyid = Number(policyref);
     } else {
       data.policyname = policyref;
     }
@@ -978,7 +978,7 @@ export class DatabunkerproAPI {
   async updatePolicy(policyid: string | number, options: PolicyOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { ...options };
     if (Number.isInteger(Number(policyid))) {
-      data.policyid = policyid;
+      data.policyid = Number(policyid);
     } else {
       data.policyname = policyid;
     }
@@ -988,7 +988,7 @@ export class DatabunkerproAPI {
   async getPolicy(policyref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = {};
     if (Number.isInteger(Number(policyref))) {
-      data.policyid = policyref;
+      data.policyid = Number(policyref);
     } else {
       data.policyname = policyref;
     }
@@ -1017,7 +1017,7 @@ export class DatabunkerproAPI {
   async bulkListGroupUsers(unlockuuid: string, groupref: string | number, offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data: any = { unlockuuid, offset, limit };
     if (Number.isInteger(Number(groupref))) {
-      data.groupid = groupref;
+      data.groupid = Number(groupref);
     } else {
       data.groupname = groupref;
     }
@@ -1077,6 +1077,28 @@ export class DatabunkerproAPI {
 
   async searchUserProfiles(identity: string, unlockuuid: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     return this.makeRequest('SystemSearchUserProfiles', { identity, unlockuuid }, requestMetadata);
+  }
+
+  async deleteUserProfiles(mode: string, identity: string, unlockuuid: string, tenantref: string | number | null = null, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { mode, identity, unlockuuid };
+    if (tenantref !== null) {
+      if (Number.isInteger(Number(tenantref))) {
+        data.tenantid = tenantref;
+      } else {
+        data.tenantname = tenantref;
+      }
+    }
+    return this.makeRequest('SystemDeleteUserProfiles', data, requestMetadata);
+  }
+
+  async restoreUserProfile(token: string, unlockuuid: string, tenantref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
+    const data: any = { token, unlockuuid };
+    if (Number.isInteger(Number(tenantref))) {
+      data.tenantid = tenantref;
+    } else {
+      data.tenantname = tenantref;
+    }
+    return this.makeRequest('SystemRestoreUserProfile', data, requestMetadata);
   }
 
   async getUserHTMLReport(mode: string, identity: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
