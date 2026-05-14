@@ -54,20 +54,6 @@ interface UserOptions {
   finaltime?: string;           // Absolute expiration time for user data
 }
 
-interface ConnectorOptions {
-  connectorid?: string | number;  // ID of the connector
-  connectorname?: string;         // Name of the connector (e.g., "MySQL Production")
-  connectortype?: string;         // Type of the connector (e.g., 'mysql', 'postgresql', 'mongodb')
-  apikey?: string;                // API key for authentication with the database
-  username?: string;              // Username for database connection
-  connectordesc?: string;         // Description of the connector's purpose
-  dbhost?: string;                // Database host address (e.g., "db.example.com")
-  dbport?: number;                // Database port number (e.g., 3306 for MySQL)
-  dbname?: string;                // Name of the database to connect to
-  tablename?: string;             // Specific table name if applicable
-  status?: string;                // Status of the connector (e.g., 'active', 'inactive')
-}
-
 interface SharedRecordOptions {
   fields?: string;  // A string containing names of fields to share separated by commas
   partner?: string; // It is used as a reference to partner name. It is not enforced.
@@ -663,97 +649,6 @@ export class DatabunkerproAPI {
   async unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata: RequestMetadata | null = null): Promise<any> {
     const data = { activity, brief };
     return this.makeRequest('ProcessingActivityUnlinkLegalBasis', data, requestMetadata);
-  }
-
-  // Connector Management
-  async listSupportedConnectors(requestMetadata: RequestMetadata | null = null): Promise<any> {
-    return this.makeRequest('ConnectorListSupportedConnectors', null, requestMetadata);
-  }
-
-  async listConnectors(offset: number = 0, limit: number = 10, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { offset, limit };
-    return this.makeRequest('ConnectorListConnectors', data, requestMetadata);
-  }
-
-  async createConnector(options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = {
-      connectorname: options.connectorname,
-      connectortype: options.connectortype,
-      connectordesc: options.connectordesc,
-      username: options.username,
-      apikey: options.apikey,
-      dbhost: options.dbhost,
-      dbport: options.dbport,
-      dbname: options.dbname,
-      tablename: options.tablename,
-      status: options.status
-    };
-    return this.makeRequest('ConnectorCreate', data, requestMetadata);
-  }
-
-  async updateConnector(connectorid: number, options: ConnectorOptions, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data = { connectorid, ...options };
-    return this.makeRequest('ConnectorUpdate', data, requestMetadata);
-  }
-
-  async validateConnectorConnectivity(connectorref: string | number, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = { ...options };
-    if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = Number(connectorref);
-    } else {
-      data.connectorname = connectorref;
-    }
-    return this.makeRequest('ConnectorValidateConnectivity', data, requestMetadata);
-  }
-
-  async deleteConnector(connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = {};
-    if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = Number(connectorref);
-    } else {
-      data.connectorname = connectorref;
-    }
-    return this.makeRequest('ConnectorDelete', data, requestMetadata);
-  }
-
-  async getTableMetadata(connectorref: string | number, options: ConnectorOptions = {}, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = { ...options };
-    if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = Number(connectorref);
-    } else {
-      data.connectorname = connectorref;
-    }
-    return this.makeRequest('ConnectorGetTableMetaData', data, requestMetadata);
-  }
-  
-  async connectorGetUserData(mode: string, identity: string, connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = { mode, identity };
-    if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = Number(connectorref);
-    } else {
-      data.connectorname = connectorref;
-    }
-    return this.makeRequest('ConnectorGetUserData', data, requestMetadata);
-  }
-
-  async connectorGetUserExtraData(mode: string, identity: string, connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = { mode, identity };
-    if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = Number(connectorref);
-    } else {
-      data.connectorname = connectorref;
-    }
-    return this.makeRequest('ConnectorGetUserExtraData', data, requestMetadata);
-  }
-
-  async connectorDeleteUser(mode: string, identity: string, connectorref: string | number, requestMetadata: RequestMetadata | null = null): Promise<any> {
-    const data: any = { mode, identity };
-    if (Number.isInteger(Number(connectorref))) {
-      data.connectorid = Number(connectorref);
-    } else {
-      data.connectorname = connectorref;
-    }
-    return this.makeRequest('ConnectorDeleteUser', data, requestMetadata);
   }
 
   // Group Management

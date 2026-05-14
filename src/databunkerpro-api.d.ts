@@ -32,20 +32,6 @@ interface UserOptions {
   finaltime?: string;           // Absolute expiration time for user data
 }
 
-interface ConnectorOptions {
-  connectorname?: string;   // Name of the connector (e.g., "MySQL Production")
-  connectortype?: string;   // Type of the connector (e.g., 'mysql', 'postgresql', 'mongodb')
-  connectordesc?: string;   // Description of the connector's purpose
-  connectorid?: string | number;  // ID of the connector
-  username?: string;        // Username for database connection
-  apikey?: string;          // API key for authentication with the database
-  dbhost?: string;          // Database host address (e.g., "db.example.com")
-  dbport?: number;          // Database port number (e.g., 3306 for MySQL)
-  dbname?: string;          // Name of the database to connect to
-  tablename?: string;       // Specific table name if applicable
-  status?: string;          // Status of the connector (e.g., 'active', 'inactive')
-}
-
 interface SharedRecordOptions {
   fields?: string;  // A string containing names of fields to share separated by commas
   partner?: string; // It is used as a reference to partner name. It is not enforced.
@@ -148,7 +134,7 @@ declare class DatabunkerproAPI {
    */
   deleteUsersBulk(users: Array<{mode: string, identity: string}>, requestMetadata?: RequestMetadata): Promise<any>;
   requestUserDeletion(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
-  searchUser(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  searchUser(identity: string, unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
   listUserVersions(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
 
   // User Authentication
@@ -262,24 +248,6 @@ declare class DatabunkerproAPI {
    */
   unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata): Promise<any>;
 
-  // Connector Management
-  listSupportedConnectors(requestMetadata?: RequestMetadata): Promise<any>;
-  listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata): Promise<any>;
-  /**
-   * Creates a new database connector with the specified configuration
-   * @param {ConnectorOptions} options - The connector configuration options
-   * @param {RequestMetadata} [requestMetadata] - Additional metadata to include with the request
-   * @returns {Promise<Object>} The created connector details
-   */
-  createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata): Promise<any>;
-  updateConnector(connectorid: number, options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-  validateConnectorConnectivity(connectorref: string | number, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-  deleteConnector(connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-  getTableMetadata(connectorref: string | number, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-  connectorGetUserData(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-  connectorGetUserExtraData(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-  connectorDeleteUser(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-
   // Group Management
   createGroup(options: GroupOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
   getGroup(groupref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -374,6 +342,10 @@ declare class DatabunkerproAPI {
   // System Configuration
   getUIConf(): Promise<any>;
   getTenantConf(): Promise<any>;
+  getUserProfiles(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  searchUserProfiles(identity: string, unlockuuid: string, requestMetadata?: RequestMetadata): Promise<any>;
+  deleteUserProfiles(mode: string, identity: string, unlockuuid: string, tenantref?: string | number | null, requestMetadata?: RequestMetadata): Promise<any>;
+  restoreUserProfile(token: string, unlockuuid: string, tenantref: string | number, requestMetadata?: RequestMetadata): Promise<any>;
   getUserHTMLReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   getUserReport(mode: string, identity: string, requestMetadata?: RequestMetadata): Promise<any>;
   generateWrappingKey(key1: string, key2: string, key3: string, requestMetadata?: RequestMetadata): Promise<any>;
