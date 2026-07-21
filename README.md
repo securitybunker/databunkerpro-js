@@ -251,6 +251,27 @@ The library provides methods for interacting with all Databunkerpro endpoints:
 
 For detailed API documentation, please visit our [API Documentation](https://databunker.com/docs).
 
+## Security
+
+This library is scanned on every push and pull request, with a weekly scheduled sweep to catch drift:
+
+- **SAST (Semgrep):** static analysis using the `p/typescript`, `p/javascript`, `p/secrets`, `p/security-audit`, and `p/owasp-top-ten` rulesets. A finding fails the check, and results are published to the repository's **Code Scanning** tab. See [`.github/workflows/semgrep.yml`](.github/workflows/semgrep.yml).
+- **Supply-chain hardening:** every GitHub Action is pinned to a full commit SHA, so a mutable tag (`@v4`) cannot be silently repointed to malicious code.
+
+Reproduce the SAST scan locally:
+
+```bash
+pip install semgrep
+semgrep scan \
+    --config p/typescript \
+    --config p/javascript \
+    --config p/secrets \
+    --config p/security-audit \
+    --config p/owasp-top-ten
+```
+
+To report a security vulnerability, please email hello@databunker.org rather than opening a public issue.
+
 ## License
 
 MIT
