@@ -5,6 +5,17 @@ interface BasicOptions {
     finaltime?: string;
     slidingtime?: string;
 }
+interface FileOptions {
+    mimetype?: string;
+    tags?: string[] | string;
+    finaltime?: string;
+    slidingtime?: string;
+}
+interface FileSelector {
+    fileuuid?: string;
+    filename?: string;
+    raw?: boolean;
+}
 interface LegalBasisOptions {
     brief: string;
     status?: string;
@@ -39,19 +50,6 @@ interface UserOptions {
     roleid?: number;
     slidingtime?: string;
     finaltime?: string;
-}
-interface ConnectorOptions {
-    connectorid?: string | number;
-    connectorname?: string;
-    connectortype?: string;
-    apikey?: string;
-    username?: string;
-    connectordesc?: string;
-    dbhost?: string;
-    dbport?: number;
-    dbname?: string;
-    tablename?: string;
-    status?: string;
 }
 interface SharedRecordOptions {
     fields?: string;
@@ -201,6 +199,55 @@ export declare class DatabunkerproAPI {
     deleteAppData(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppDataVersions(mode: string, identity: string, appname: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAppNames(requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Stores an encrypted file for a user
+     * @param mode - User identification mode (e.g., 'email', 'phone', 'token')
+     * @param identity - User's identifier corresponding to the mode
+     * @param filename - Name of the file
+     * @param filedata - File content, base64-encoded
+     * @param options - Optional mimetype, tags and expiration
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns The stored file information, including its fileuuid
+     */
+    createFile(mode: string, identity: string, filename: string, filedata: string, options?: FileOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Gets a user file, selected by fileuuid or filename
+     * @param mode - User identification mode
+     * @param identity - User's identifier corresponding to the mode
+     * @param options - Selection options; at least one of fileuuid or filename is required
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns The file content and metadata
+     */
+    getFile(mode: string, identity: string, options?: FileSelector, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Downloads a user file as a Blob, suitable for a browser download link
+     * @param mode - User identification mode
+     * @param identity - User's identifier corresponding to the mode
+     * @param fileuuid - UUID of the file
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns The decrypted file content
+     */
+    downloadFile(mode: string, identity: string, fileuuid: string, requestMetadata?: RequestMetadata | null): Promise<Blob>;
+    /**
+     * Lists the metadata of files owned by a user
+     * @param mode - User identification mode
+     * @param identity - User's identifier corresponding to the mode
+     * @param tag - Return only files carrying this tag. A single tag only.
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns The list of files, each with its tags
+     */
+    listUserFiles(mode: string, identity: string, tag?: string | null, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Replaces the complete tag set on a file
+     * @param mode - User identification mode
+     * @param identity - User's identifier corresponding to the mode
+     * @param fileuuid - UUID of the file to retag
+     * @param tags - The complete replacement tag set
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns The normalised tag set now stored
+     */
+    replaceFileTags(mode: string, identity: string, fileuuid: string, tags: string[] | string, requestMetadata?: RequestMetadata | null): Promise<any>;
+    deleteFile(mode: string, identity: string, fileuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     createLegalBasis(options: LegalBasisOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     updateLegalBasis(brief: string, options: LegalBasisUpdateOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteLegalBasis(brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -280,16 +327,6 @@ export declare class DatabunkerproAPI {
      * @returns {Promise<Object>} The unlinking result
      */
     unlinkProcessingActivityFromLegalBasis(activity: string, brief: string, requestMetadata?: RequestMetadata | null): Promise<any>;
-    listSupportedConnectors(requestMetadata?: RequestMetadata | null): Promise<any>;
-    listConnectors(offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    createConnector(options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    updateConnector(connectorid: number, options: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    validateConnectorConnectivity(connectorref: string | number, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    deleteConnector(connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    getTableMetadata(connectorref: string | number, options?: ConnectorOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
-    connectorGetUserData(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    connectorGetUserExtraData(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
-    connectorDeleteUser(mode: string, identity: string, connectorref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     createGroup(options: GroupOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
     getGroup(groupref: string | number, requestMetadata?: RequestMetadata | null): Promise<any>;
     listAllGroups(requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -370,6 +407,16 @@ export declare class DatabunkerproAPI {
     bulkListGroupUsers(unlockuuid: string, groupref: string | number, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListAllUserRequests(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListAllAuditEvents(unlockuuid: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
+    /**
+     * Lists files carrying a tag, across all users in the tenant
+     * @param unlockuuid - UUID from bulk list unlock
+     * @param tag - The tag to filter on. A single tag only.
+     * @param offset - Offset for pagination
+     * @param limit - Limit for pagination
+     * @param requestMetadata - Additional metadata to include with the request
+     * @returns The matching files, each with its owner token
+     */
+    bulkListFilesByTag(unlockuuid: string, tag: string, offset?: number, limit?: number, requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkListTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     bulkDeleteTokens(unlockuuid: string, tokens: string[], requestMetadata?: RequestMetadata | null): Promise<any>;
     upsertSession(sessionuuid: string, sessiondata: any, options?: BasicOptions, requestMetadata?: RequestMetadata | null): Promise<any>;
@@ -377,7 +424,6 @@ export declare class DatabunkerproAPI {
     listUserSessions(mode: string, identity: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getSession(sessionuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     getUIConf(): Promise<any>;
-    getTenantConf(): Promise<any>;
     getUserProfiles(mode: string, identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     searchUserProfiles(identity: string, unlockuuid: string, requestMetadata?: RequestMetadata | null): Promise<any>;
     deleteUserProfiles(mode: string, identity: string, unlockuuid: string, tenantref?: string | number | null, requestMetadata?: RequestMetadata | null): Promise<any>;

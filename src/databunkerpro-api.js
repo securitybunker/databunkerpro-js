@@ -353,6 +353,101 @@ class DatabunkerproAPI {
     return this.makeRequest('AppdataListAppNames', null, requestMetadata);
   }
 
+  // File Storage
+  /**
+   * Stores an encrypted file for a user
+   * @param {string} mode - User identification mode (e.g., 'email', 'phone', 'token')
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {string} filename - Name of the file
+   * @param {string} filedata - File content, base64-encoded
+   * @param {Object} [options={}] - Optional parameters
+   * @param {string} [options.mimetype] - MIME type of the file
+   * @param {Array<string>|string} [options.tags] - Tags to attach. Lowercased and de-duplicated
+   *   by the server; each must match ^[a-z0-9][a-z0-9._-]{0,49}$ and at most 16 are kept.
+   * @param {string} [options.slidingtime] - Sliding retention window (e.g. '30d')
+   * @param {string} [options.finaltime] - Absolute expiration time
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The stored file information, including its fileuuid
+   */
+  async createFile(mode, identity, filename, filedata, options = {}, requestMetadata = null) {
+    const data = { mode, identity, filename, filedata };
+    for (const key of ['mimetype', 'tags', 'slidingtime', 'finaltime']) {
+      if (options[key] !== undefined) {
+        data[key] = options[key];
+      }
+    }
+    return this.makeRequest('FileCreate', data, requestMetadata);
+  }
+
+  /**
+   * Gets a user file, selected by fileuuid or filename
+   * @param {string} mode - User identification mode
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {Object} [options={}] - Selection options
+   * @param {string} [options.fileuuid] - UUID of the file
+   * @param {string} [options.filename] - Name of the file. The newest match is returned.
+   * @param {boolean} [options.raw] - Return the decrypted bytes directly instead of base64 JSON
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The file content and metadata
+   */
+  async getFile(mode, identity, options = {}, requestMetadata = null) {
+    const data = { mode, identity };
+    for (const key of ['fileuuid', 'filename', 'raw']) {
+      if (options[key] !== undefined) {
+        data[key] = options[key];
+      }
+    }
+    return this.makeRequest('FileGet', data, requestMetadata);
+  }
+
+  /**
+   * Downloads a user file as a Blob, suitable for a browser download link
+   * @param {string} mode - User identification mode
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {string} fileuuid - UUID of the file
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Blob>} The decrypted file content
+   */
+  async downloadFile(mode, identity, fileuuid, requestMetadata = null) {
+    const data = { mode, identity, fileuuid, raw: true };
+    return this.rawRequest('FileGet', data, requestMetadata);
+  }
+
+  /**
+   * Lists the metadata of files owned by a user
+   * @param {string} mode - User identification mode
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {string} [tag=null] - Return only files carrying this tag. A single tag only.
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The list of files, each with its tags
+   */
+  async listUserFiles(mode, identity, tag = null, requestMetadata = null) {
+    const data = { mode, identity };
+    if (tag !== null) {
+      data.tag = tag;
+    }
+    return this.makeRequest('FileListUserFiles', data, requestMetadata);
+  }
+
+  /**
+   * Replaces the complete tag set on a file
+   * @param {string} mode - User identification mode
+   * @param {string} identity - User's identifier corresponding to the mode
+   * @param {string} fileuuid - UUID of the file to retag
+   * @param {Array<string>|string} tags - The complete replacement tag set
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The normalised tag set now stored
+   */
+  async replaceFileTags(mode, identity, fileuuid, tags, requestMetadata = null) {
+    const data = { mode, identity, fileuuid, tags };
+    return this.makeRequest('FileReplaceTags', data, requestMetadata);
+  }
+
+  async deleteFile(mode, identity, fileuuid, requestMetadata = null) {
+    const data = { mode, identity, fileuuid };
+    return this.makeRequest('FileDelete', data, requestMetadata);
+  }
+
   // Legal Basis Management
   async createLegalBasis(options, requestMetadata = null) {
     const data = {
@@ -834,6 +929,20 @@ class DatabunkerproAPI {
     return this.makeRequest('BulkListAllAuditEvents', data, requestMetadata);
   }
 
+  /**
+   * Lists files carrying a tag, across all users in the tenant
+   * @param {string} unlockuuid - UUID from bulk list unlock
+   * @param {string} tag - The tag to filter on. A single tag only.
+   * @param {number} [offset=0] - Offset for pagination
+   * @param {number} [limit=10] - Limit for pagination
+   * @param {Object} [requestMetadata=null] - Additional metadata to include with the request
+   * @returns {Promise<Object>} The matching files, each with its owner token
+   */
+  async bulkListFilesByTag(unlockuuid, tag, offset = 0, limit = 10, requestMetadata = null) {
+    const data = { unlockuuid, tag, offset, limit };
+    return this.makeRequest('BulkListFilesByTag', data, requestMetadata);
+  }
+
   async bulkListTokens(unlockuuid, tokens, requestMetadata = null) {
     const data = { unlockuuid, tokens };
     return this.makeRequest('BulkListTokens', data, requestMetadata);
@@ -864,10 +973,6 @@ class DatabunkerproAPI {
 
   // System Configuration
   async getUIConf() {
-    return this.makeRequest('TenantGetUIConf');
-  }
-
-  async getTenantConf() {
     return this.makeRequest('TenantGetUIConf');
   }
 
