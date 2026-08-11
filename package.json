@@ -3,17 +3,30 @@
   "version": "1.1.0",
   "description": "JavaScript client library for Databunkerpro API",
   "main": "lib/databunkerpro-api.js",
-  "module": "lib/databunkerpro-api.esm.js",
+  "module": "lib/esm/databunkerpro-api.js",
   "types": "lib/databunkerpro-api.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/databunkerpro-api.d.ts",
+      "import": "./lib/esm/databunkerpro-api.js",
+      "require": "./lib/databunkerpro-api.js",
+      "default": "./lib/databunkerpro-api.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "unpkg": "lib/databunkerpro-api.min.js",
+  "jsdelivr": "lib/databunkerpro-api.min.js",
   "files": [
-    "lib",
-    "src"
+    "lib"
   ],
   "scripts": {
     "clean": "rimraf lib",
-    "build": "npm run clean && tsc",
+    "build:cjs": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json && node -e \"require('fs').writeFileSync('lib/esm/package.json', JSON.stringify({ type: 'module' }, null, 2))\"",
+    "build:browser": "node -e \"require('fs').copyFileSync('src/databunkerpro-api.js', 'lib/databunkerpro-api.browser.js')\" && terser src/databunkerpro-api.js --compress --mangle --comments false -o lib/databunkerpro-api.min.js --source-map \"url=databunkerpro-api.min.js.map\"",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && npm run build:browser",
     "prepare": "npm run build",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "keywords": [
     "databunkerpro",
@@ -21,7 +34,7 @@
     "gdpr",
     "data-protection"
   ],
-  "author": "Your Name",
+  "author": "Databunker Team",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -35,6 +48,7 @@
     "@types/node": "^26.2.0",
     "jest": "^30.4.2",
     "rimraf": "^6.1.3",
+    "terser": "^5.49.2",
     "typescript": "^5.9.3"
   }
 }

@@ -496,6 +496,6 @@ export declare class DatabunkerproAPI {
 export default DatabunkerproAPI;
 declare global {
     interface Window {
-        DatabunkerAPI: typeof DatabunkerproAPI;
+        DatabunkerproAPI: typeof DatabunkerproAPI;
     }
 }
