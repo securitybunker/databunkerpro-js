@@ -12,7 +12,7 @@ npm install databunkerpro-js
 
 ### CommonJS
 ```javascript
-const DatabunkerproAPI = require('databunkerpro-js');
+const { DatabunkerproAPI } = require('databunkerpro-js');
 
 const client = new DatabunkerproAPI('https://your-databunker-instance.com', 'your-token');
 ```

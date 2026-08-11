@@ -1,0 +1,264 @@
+# Publishes a new version to npm. Run manually: Actions > release > Run workflow, enter "1.1.0".
+#
+# Unlike Packagist (which serves the PHP SDK straight from the git tag), npm stores an
+# uploaded tarball. So "publishing" is four things: verify the version, tag the commit,
+# cut a GitHub Release, then upload to registry.npmjs.org.
+#
+# The workflow creates the tag itself — do not tag by hand first. package.json must already
+# carry the version being released; the check job refuses to publish a mismatch, so the
+# tag, the release and the tarball always agree. The test job gates everything, so a
+# version that fails the matrix is never tagged or published.
+#
+# Requires the NPM_TOKEN secret: an npm "Automation" access token (npmjs.com > Access
+# Tokens > Generate > Automation) with publish rights on databunkerpro-js. Automation
+# tokens bypass 2FA, which is why the classic Publish token will not work here.
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without the leading v (e.g. 1.1.0)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Run every check and pack the tarball, but do not tag, release, or publish'
+        required: false
+        default: false
+        type: boolean
+      npm_only:
+        description: 'Only publish to npm for an already-tagged version (retry a failed publish)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.validate.outputs.version }}
+      tag: ${{ steps.validate.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0     # need all tags to check for a collision
+
+      - name: Validate version, package.json and changelog
+        id: validate
+        env:
+          # Passed through env, never interpolated into the script body: ${{ }} inside a
+          # run: block splices raw input into the shell before it executes.
+          VERSION: ${{ inputs.version }}
+          NPM_ONLY: ${{ inputs.npm_only }}
+        run: |
+          set -euo pipefail
+          # Reject a leading v so the tag is never built as "vv1.1.0".
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; then
+            echo "::error::'$VERSION' is not a valid version. Use 1.1.0 or 1.1.0-rc1, with no leading v."
+            exit 1
+          fi
+          TAG="v$VERSION"
+
+          # npm resolves the tarball from package.json, not from the tag, so a mismatch
+          # would publish a version nobody can trace back to a commit.
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "$PKG_VERSION" != "$VERSION" ]; then
+            echo "::error::package.json is at $PKG_VERSION but you asked to release $VERSION. Commit the bump first."
+            exit 1
+          fi
+
+          if [ "$NPM_ONLY" = "true" ]; then
+            # Retry path: the tag must already exist, and there is nothing to write.
+            if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+              echo "::error::Tag $TAG does not exist. npm_only only re-publishes an existing release."
+              exit 1
+            fi
+            : > notes.md
+          else
+            if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+              echo "::error::Tag $TAG already exists. Releasing it again would move a published tag."
+              exit 1
+            fi
+            # Pull the body of "## [VERSION] - date" up to the next "## [" heading.
+            awk -v ver="$VERSION" '
+              $0 ~ "^## \\[" ver "\\]" { found = 1; next }
+              found && /^## \[/        { exit }
+              found                    { print }
+            ' CHANGELOG.md > notes.md
+            if [ ! -s notes.md ]; then
+              echo "::error::No CHANGELOG.md section found for [$VERSION]. Add one before releasing."
+              exit 1
+            fi
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Check the version is not already on npm
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          # npm versions are immutable: a name+version published once can never be
+          # replaced, so catch the collision here rather than at the upload.
+          if npm view "databunkerpro-js@$VERSION" version >/dev/null 2>&1; then
+            echo "::error::databunkerpro-js@$VERSION is already published. npm versions are immutable — bump instead."
+            exit 1
+          fi
+          echo "databunkerpro-js@$VERSION is free."
+
+      - name: Upload release notes
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-notes
+          path: notes.md
+
+  test:
+    name: Node ${{ matrix.node }}
+    needs: check
+    if: ${{ !inputs.npm_only }}     # the tagged commit was already tested
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['18', '20', '22', '24']
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Node ${{ matrix.node }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        # package-lock.json is currently gitignored; use the lockfile when it is present,
+        # fall back to a plain install when it is not.
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Pack and inspect the tarball
+        run: |
+          set -euo pipefail
+          npm pack --dry-run 2>&1 | tee pack.log
+          # Every published entry point must be in the tarball. A missing ESM build would
+          # still install, then fail only inside a bundler; a missing .min.js would break
+          # the unpkg/jsdelivr URLs that <script> users depend on.
+          for f in lib/databunkerpro-api.js lib/databunkerpro-api.d.ts lib/esm/databunkerpro-api.js \
+                   lib/databunkerpro-api.browser.js lib/databunkerpro-api.min.js; do
+            grep -q "$f" pack.log || { echo "::error::$f is missing from the package tarball."; exit 1; }
+          done
+
+  release:
+    name: tag and release
+    needs: [check, test]
+    if: ${{ !inputs.dry_run && !inputs.npm_only }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # push the tag, create the release
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Download release notes
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: release-notes
+
+      - name: Create and push tag
+        env:
+          TAG: ${{ needs.check.outputs.tag }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "Release $VERSION"
+          git push origin "$TAG"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.check.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # A hyphen in the version (1.1.0-rc1) marks it a prerelease.
+          PRERELEASE=""
+          case "$TAG" in
+            *-*) PRERELEASE="--prerelease" ;;
+          esac
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file notes.md \
+            --verify-tag \
+            $PRERELEASE
+
+  publish:
+    name: publish to npm
+    needs: [check, release]
+    # Runs after a normal release, or on its own via npm_only (where the release job is
+    # skipped, so this cannot depend on its success).
+    if: >-
+      ${{ !cancelled() && !inputs.dry_run && needs.check.result == 'success'
+          && (inputs.npm_only || needs.release.result == 'success') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write        # lets npm attach a provenance attestation to the tarball
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # Publish exactly what was tagged, not whatever main has drifted to since.
+          ref: ${{ needs.check.outputs.tag }}
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'   # writes the .npmrc NODE_AUTH_TOKEN reads
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::NPM_TOKEN is not set. Add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          # --access public: required for the first publish of any package, and harmless after.
+          # --provenance: signs the tarball with this workflow run, so npmjs.com can show
+          #   which commit and workflow built it. Needs id-token: write, set above.
+          # The prepare script rebuilds lib/ from src/ as part of publish.
+          npm publish --access public --provenance
+
+      - name: Verify it landed
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          set -euo pipefail
+          # The registry is read-through-cached; give it a moment before believing a 404.
+          for attempt in 1 2 3 4 5; do
+            if npm view "databunkerpro-js@$VERSION" version; then
+              echo "databunkerpro-js@$VERSION is live."
+              exit 0
+            fi
+            echo "Not visible yet (attempt $attempt/5); waiting 10s."
+            sleep 10
+          done
+          echo "::error::databunkerpro-js@$VERSION did not appear on the registry."
+          exit 1
