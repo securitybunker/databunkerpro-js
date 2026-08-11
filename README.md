@@ -138,80 +138,37 @@ const updateResult = await client.updateUser(
 );
 ```
 
-### Managing Database Connectors
+### Storing and Retrieving Files
 ```javascript
-// List supported connector types
-const supportedConnectors = await client.listSupportedConnectors();
-
-// Create a MySQL database connector
-const mysqlConnector = await client.createConnector({
-  connectorname: "MySQL Production",
-  connectortype: "mysql",
-  connectordesc: "Production user database",
-  username: "admin",
-  apikey: "api-key-123",
-  dbhost: "prod-db.example.com",
-  dbport: 3306,
-  dbname: "users",
-  status: "active"
-});
-
-// Create a PostgreSQL database connector
-const pgConnector = await client.createConnector({
-  connectorname: "PostgreSQL Analytics",
-  connectortype: "postgresql",
-  connectordesc: "Analytics database for user behavior",
-  username: "analyst",
-  apikey: "pg-api-key",
-  dbhost: "analytics.example.com",
-  dbport: 5432,
-  dbname: "analytics",
-  status: "active"
-});
-
-// Update connector configuration
-await client.updateConnector({
-  connectorid: "connector-123",
-  connectorname: "MySQL Production Updated",
-  connectortype: "mysql",
-  apikey: "new-api-key",
-  dbhost: "new-prod-db.example.com",
-  status: "active"
-});
-
-// Validate connector connectivity
-await client.validateConnectorConnectivity({
-  connectorid: "connector-123",
-  apikey: "new-api-key"
-});
-
-// Get table metadata
-await client.getTableMetadata({
-  connectorid: "connector-123",
-  dbname: "users",
-  tablename: "user_data"
-});
-
-// Get user data from connector
-const userData = await client.connectorsGetUserData(
+// Store an encrypted file against a user, with tags
+const file = await client.createFile(
   "email",
   "user@example.com",
-  "connector-123"
+  "passport.pdf",
+  base64Content,
+  {
+    mimetype: "application/pdf",
+    tags: ["identity", "verified"],
+    finaltime: "365d"
+  }
 );
+console.log("Stored file:", file.fileuuid);
 
-// Get additional user data from connector
-const extraData = await client.connectorsGetUserExtraData(
-  "email",
-  "user@example.com",
-  "connector-123"
-);
+// List a user's files, optionally filtered by a single tag
+const files = await client.listUserFiles("email", "user@example.com", "identity");
 
-// Delete user data from connector
-await client.connectorsDeleteUser(
-  "email",
-  "user@example.com",
-  "connector-123"
-);
+// Fetch a file by uuid, or by filename (newest match wins)
+const stored = await client.getFile("email", "user@example.com", {
+  fileuuid: file.fileuuid
+});
+
+// Download as a Blob, suitable for a browser download link
+const blob = await client.downloadFile("email", "user@example.com", file.fileuuid);
+
+// Replace the complete tag set on a file
+await client.replaceFileTags("email", "user@example.com", file.fileuuid, ["archived"]);
+
+await client.deleteFile("email", "user@example.com", file.fileuuid);
 ```
 
 ### System Operations
@@ -240,16 +197,20 @@ The library provides methods for interacting with all Databunkerpro endpoints:
 - User Management
 - App Data Management
 - Agreement Management (Legal Basis & Consent)
-- Connector Management
+- File Storage
 - Group Management
 - Token Management
+- Bulk Operations
+- Session Management
+- Shared Records
+- Processing Activity Management
 - Audit Management
 - Tenant Management
 - Role Management
 - Policy Management
 - System Operations
 
-For detailed API documentation, please visit our [API Documentation](https://databunker.com/docs).
+For detailed API documentation, please visit our [API Documentation](https://docs.databunker.org/pro/get-started/overview).
 
 ## Security
 
