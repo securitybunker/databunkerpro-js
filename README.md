@@ -8,6 +8,101 @@ A JavaScript client library for interacting with the Databunkerpro API.
 npm install databunkerpro-js
 ```
 
+## Quickstart
+
+You need a Databunker Pro instance to talk to. Demo mode gives you one in a single command — no database, no configuration, everything held in memory:
+
+```bash
+docker run -p 3000:3000 -d --rm --name databunkerpro securitybunker/databunkerpro demo
+```
+
+Check that it came up:
+
+```bash
+docker logs databunkerpro
+```
+
+```
+ Databunker Pro demo is ready
+  Web UI:            http://localhost:3000/
+  Root access token: DEMO
+  Database:          in-memory, erased on restart
+```
+
+The root access token in demo mode is the fixed string `DEMO`. Save this as `quickstart.js`:
+
+```javascript
+const { DatabunkerproAPI } = require('databunkerpro-js');
+
+const api = new DatabunkerproAPI('http://localhost:3000', 'DEMO');
+
+async function main() {
+  // Create a user record. The vault encrypts the profile and returns a user token.
+  const created = await api.createUser({
+    email: 'john@jstest.com',
+    name: 'John Doe',
+    phone: '+15551234567'
+  });
+  console.log('User token:', created.token);
+
+  // Read the record back by any indexed field: token, login, email, phone, custom.
+  const user = await api.getUser('email', 'john@jstest.com');
+  console.log('Profile:', user.profile);
+
+  // Store an encrypted file against that user, tagged by document type.
+  const file = await api.createFile(
+    'email',
+    'john@jstest.com',
+    'passport.jpg',
+    Buffer.from('fake passport scan bytes').toString('base64'),
+    { tags: ['passport', 'kyc'] }
+  );
+  console.log('File uuid:', file.fileuuid, '| tags:', file.tags);
+
+  // List the user's files, filtered by tag.
+  const listing = await api.listUserFiles('email', 'john@jstest.com', 'kyc');
+  console.log('Files tagged kyc:', listing.files.map(f => f.filename));
+
+  // Fetch the file back. Content returns base64-encoded in filedata.
+  const fetched = await api.getFile('email', 'john@jstest.com', {
+    fileuuid: file.fileuuid
+  });
+  console.log('Decrypted:', Buffer.from(fetched.filedata, 'base64').toString());
+
+  // Delete user record.
+  await api.deleteUser('email', 'john@jstest.com');
+  console.log('User deleted');
+}
+
+main().catch(err => {
+  console.error('Failed:', err.message);
+  process.exit(1);
+});
+```
+
+```bash
+node quickstart.js
+```
+
+```
+User token: 49e7c711-2c7d-9e99-2c9d-217a094e93e7
+Profile: { email: 'john@jstest.com', name: 'John Doe', phone: '+15551234567' }
+File uuid: cb8b6657-aef9-b54d-9beb-a99b8686fa66 | tags: [ 'kyc', 'passport' ]
+Files tagged kyc: [ 'passport.jpg' ]
+Decrypted: fake passport scan bytes
+User deleted
+```
+
+Tags are lowercased, de-duplicated and sorted on write, which is why they come back in a different order than they were sent.
+
+When you are done, stop the instance. It was started with `--rm`, so the container and its in-memory database are discarded:
+
+```bash
+docker stop databunkerpro
+```
+
+> **Demo mode is for evaluation only.** The database is in memory, the wrapping key is a fixed public value, and the root token is the well-known string `DEMO`. Never point it at real personal data. For a real deployment see the [installation guide](https://docs.databunker.org/pro/installation/docker-compose).
+
 ## Usage
 
 ### CommonJS
