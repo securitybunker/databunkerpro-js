@@ -266,6 +266,14 @@ await client.replaceFileTags("email", "user@example.com", file.fileuuid, ["archi
 await client.deleteFile("email", "user@example.com", file.fileuuid);
 ```
 
+Files can also be listed by tag across every user in the tenant, which needs a
+bulk-unlock uuid first:
+
+```javascript
+const unlock = await client.bulkListUnlock();
+const tagged = await client.bulkListFilesByTag(unlock.unlockuuid, "identity", 0, 100);
+```
+
 ### System Operations
 ```javascript
 // Get system statistics
@@ -291,18 +299,18 @@ The library provides methods for interacting with all Databunkerpro endpoints:
 
 - User Management
 - App Data Management
-- Agreement Management (Legal Basis & Consent)
 - File Storage
+- Tokenization
+- Legal Basis & Agreement Management
+- Processing Activity Management
 - Group Management
-- Token Management
-- Bulk Operations
+- Role & Policy Management
 - Session Management
 - Shared Records
-- Processing Activity Management
+- Bulk Operations
 - Audit Management
 - Tenant Management
-- Role Management
-- Policy Management
+- Authentication & Access Tokens
 - System Operations
 
 For detailed API documentation, please visit our [API Documentation](https://docs.databunker.org/pro/get-started/overview).
