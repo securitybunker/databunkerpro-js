@@ -45,10 +45,14 @@
   },
   "homepage": "https://github.com/securitybunker/databunkerpro-js#readme",
   "devDependencies": {
-    "@types/node": "^26.2.0",
-    "jest": "^30.4.2",
-    "rimraf": "^6.1.3",
+    "@types/node": "^26.6.6",
+    "jest": "^30.5.2",
+    "rimraf": "^6.1.4",
     "terser": "^5.49.2",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "glob": "^14.0.6",
+    "minimatch": "^11.0.8"
   }
 }
